@@ -9,7 +9,7 @@ import main.java.cn.domain.BackResult;
 import main.java.cn.domain.CvsFilePathDomain;
 
 @FeignClient(value = "credit-provider-service")
-public interface SchedualServiceHi {
+public interface CreditProviderService {
 	
 	@RequestMapping(value = "/hi", method = RequestMethod.GET)
 	String sayHiFromClientOne(@RequestParam(value = "name") String name);
