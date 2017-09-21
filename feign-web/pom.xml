@@ -47,6 +47,24 @@
 	      <artifactId>junit</artifactId>
 	    </dependency>
 	    
+	    <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+        </dependency>
+        
+        <!-- 使用Apache HttpClient替换Feign原生httpclient --> 
+		<dependency>
+		    <groupId>com.netflix.feign</groupId>
+		    <artifactId>feign-httpclient</artifactId>
+		    <version>8.14.2</version>
+		</dependency>
+		
+		<!-- redis -->
+		<dependency>  
+            <groupId>redis.clients</groupId>  
+            <artifactId>jedis</artifactId>  
+            </dependency>  
+	    
 	    <!-- 引用 子项目credit-interface-->
 		<dependency>
 			<groupId>credit-interface</groupId>
@@ -59,6 +77,7 @@
 		        <artifactId>spring-boot-starter-tomcat</artifactId>
 		        <scope>provided</scope>
 		</dependency>
+		
 		
     </dependencies>
     

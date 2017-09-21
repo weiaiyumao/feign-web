@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import main.java.cn.domain.BackResult;
+import main.java.cn.common.BackResult;
 import main.java.cn.domain.CvsFilePathDomain;
 
 @FeignClient(value = "credit-provider-service")
