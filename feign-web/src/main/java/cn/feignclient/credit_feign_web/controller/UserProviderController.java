@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import cn.feignclient.credit_feign_web.service.UserAccountFeignService;
+import cn.feignclient.credit_feign_web.utils.CommonUtils;
 import main.java.cn.common.BackResult;
 import main.java.cn.common.ResultCode;
 import main.java.cn.domain.TrdOrderDomain;
@@ -31,13 +32,25 @@ public class UserProviderController extends BaseController{
 		 response.setHeader("Access-Control-Allow-Origin", "*");   // 有效，前端可以访问
          response.setContentType("text/json;charset=UTF-8");
 		
-		Assert.notNull(mobile, "The param mobile not be null!");
-
 		BackResult<UserAccountDomain> result = new BackResult<UserAccountDomain>();
 		
-		if (isLogin(mobile, token)) {
+		if (CommonUtils.isNotString(mobile)) {
 			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("手机号码不能为空");
+			return result;
+		}
+
+		if (CommonUtils.isNotString(token)) {
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("token不能为空");
+			return result;
+		}
+		
+		
+		if (!isLogin(mobile, token)) {
+			result.setResultCode(ResultCode.RESULT_SESSION_STALED);
 			result.setResultMsg("注销校验失败无法注销");
+			return result;
 		}
 		
 		result = userAccountFeignService.findbyMobile(mobile);

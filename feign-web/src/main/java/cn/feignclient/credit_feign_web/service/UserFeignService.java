@@ -19,4 +19,7 @@ public interface UserFeignService {
 	@RequestMapping(value = "/user/findOrsaveUser", method = RequestMethod.GET,consumes = MediaType.APPLICATION_JSON_VALUE)
 	public BackResult<CreUserDomain> findOrsaveUser(@RequestBody CreUserDomain creUserDomain);
 	
+	@RequestMapping(value = "/updateCreUser", method = RequestMethod.GET,consumes = MediaType.APPLICATION_JSON_VALUE)
+	public BackResult<CreUserDomain> updateCreUser(@RequestBody CreUserDomain creUserDomain);
+	
 }

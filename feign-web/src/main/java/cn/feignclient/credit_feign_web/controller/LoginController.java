@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import cn.feignclient.credit_feign_web.domain.TokenUserDomain;
+import cn.feignclient.credit_feign_web.utils.CommonUtils;
 import cn.feignclient.credit_feign_web.utils.MD5Util;
 import main.java.cn.common.BackResult;
 import main.java.cn.common.ResultCode;
@@ -32,6 +33,13 @@ public class LoginController extends BaseController{
 		response.setContentType("text/json;charset=UTF-8");
 
 		Assert.notNull(mobile, "The param mobile not be null!");
+		BackResult<Boolean> result = new BackResult<Boolean>();
+		
+		if (CommonUtils.isNotString(mobile)) {
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("手机号码不能为空");
+			return result;
+		}
 
 		int code = (int)((Math.random()*9+1)*100000);
 		
@@ -42,7 +50,7 @@ public class LoginController extends BaseController{
 		}
 		
 		Boolean fag = ChuangLanSmsUtil.getInstance().sendSmsByMobile(mobile, sessionCode);
-		BackResult<Boolean> result = new BackResult<Boolean>();
+		
 		if (!fag) {
 			result.setResultMsg("发送失败！");
 			result.setResultCode(ResultCode.RESULT_FAILED);
@@ -55,6 +63,8 @@ public class LoginController extends BaseController{
 		
 		return result;
 	}
+	
+	
 	
 	/**
 	 * 登录
@@ -69,11 +79,21 @@ public class LoginController extends BaseController{
 
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
-
-		Assert.notNull(mobile, "The param mobile not be null!");
-		Assert.notNull(code, "The param code not be null!");
 		
 		BackResult<TokenUserDomain> result = new BackResult<TokenUserDomain>();
+
+		if (CommonUtils.isNotString(mobile)) {
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("手机号码不能为空");
+			return result;
+		}
+
+		if (CommonUtils.isNotString(code)) {
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("code不能为空");
+			return result;
+		}
+		
 		String sessionCode = redisClinet.get("se_ken_" + mobile);
 		
 		if (!sessionCode.equals(code)) {
@@ -124,18 +144,65 @@ public class LoginController extends BaseController{
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
 
-		Assert.notNull(mobile, "The param mobile not be null!");
-		Assert.notNull(token, "The param token not be null!");
+		BackResult<Boolean> result = new BackResult<Boolean>();
 		
-		BackResult<Boolean> result = new BackResult<>();
+		if (CommonUtils.isNotString(mobile)) {
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("手机号码不能为空");
+			return result;
+		}
+
+		if (CommonUtils.isNotString(token)) {
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("token不能为空");
+			return result;
+		}
 		
 		if (!isLogin(mobile, token)) {
-			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultCode(ResultCode.RESULT_SESSION_STALED);
 			result.setResultMsg("注销校验失败无法注销");
+			return result;
 		}
 		
 		// 清空 se_ken_
 		redisClinet.remove("user_token_"+mobile);
+		result.setResultObj(true);
+		
+		return result;
+	}
+	
+	/**
+	 * 检测是否已经登出
+	 * @param request
+	 * @param response
+	 * @param mobile
+	 * @param token
+	 * @return
+	 */
+	@RequestMapping("/isLogout")
+	public BackResult<Boolean> isLogout(HttpServletRequest request, HttpServletResponse response, String mobile,String token) {
+
+		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
+		response.setContentType("text/json;charset=UTF-8");
+
+		BackResult<Boolean> result = new BackResult<Boolean>();
+		
+		if (CommonUtils.isNotString(mobile)) {
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("手机号码不能为空");
+			return result;
+		}
+
+		if (CommonUtils.isNotString(token)) {
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("token不能为空");
+			return result;
+		}
+		
+		Boolean fag = isLogin(mobile, token);
+		
+		result.setResultObj(fag);
+		result.setResultMsg(fag ? "处于登录状态" : "用户已经注销登录");
 		
 		return result;
 	}

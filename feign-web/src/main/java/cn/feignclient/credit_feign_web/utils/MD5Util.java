@@ -6,7 +6,7 @@ import java.security.NoSuchAlgorithmException;
 public class MD5Util {
 	// 全局数组
     private final static String[] strDigits = { "0", "1", "2", "3", "4", "5",
-            "6", "7", "8", "9", "a", "b", "c", "d", "e", "f","g","h","j" };
+            "6", "7", "8", "9", "a", "b", "c", "d", "e", "f","g","h","j","?","~" };
 
     private static MD5Util mD5Util;
 	
@@ -56,6 +56,8 @@ public class MD5Util {
     }
     
     public static void main(String[] args) {
-        System.out.println(MD5Util.getInstance().getMD5Code("user_token_13817367247"));
+    	// e10adc3949ba59abbe56e057f20f883e
+    	
+        System.out.println(MD5Util.getInstance().getMD5Code("123456"));
     }
 }
