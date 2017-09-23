@@ -7,18 +7,15 @@ server:
 spring:
   application:
     name: service-feign    
-feign:
-  httpclient:
-    enabled: true 
+
     
 jedis :  
   pool :  
-    host : 127.0.0.1  
+    host : 172.16.4.218  
     port : 6379  
     config :  
       maxTotal: 100  
       maxIdle: 10  
       maxWaitMillis : 100000            
       
-hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds: 5000      
       

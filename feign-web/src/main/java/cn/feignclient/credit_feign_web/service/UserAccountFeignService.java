@@ -1,5 +1,7 @@
 package cn.feignclient.credit_feign_web.service;
 
+import java.util.List;
+
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,5 +19,8 @@ public interface UserAccountFeignService {
 	
 	@RequestMapping(value = "/userAccount/rechargeOrRefunds", method = RequestMethod.GET)
 	BackResult<Boolean> rechargeOrRefunds(TrdOrderDomain trdOrderDomain);
+	
+	@RequestMapping(value = "/userAccount/findTrdOrderByCreUserId", method = RequestMethod.GET)
+	BackResult<List<TrdOrderDomain>> findTrdOrderByCreUserId(@RequestParam("creUserId")Integer creUserId);
 	
 }

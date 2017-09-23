@@ -43,13 +43,7 @@ public class LoginController extends BaseController{
 
 		int code = (int)((Math.random()*9+1)*100000);
 		
-		String sessionCode = redisClinet.get("se_ken_" + mobile);
-		
-		if (null == sessionCode || sessionCode.equals("")) {
-			sessionCode = String.valueOf(code);
-		}
-		
-		Boolean fag = ChuangLanSmsUtil.getInstance().sendSmsByMobile(mobile, sessionCode);
+		Boolean fag = ChuangLanSmsUtil.getInstance().sendSmsByMobile(mobile,  String.valueOf(code));
 		
 		if (!fag) {
 			result.setResultMsg("发送失败！");
@@ -57,9 +51,9 @@ public class LoginController extends BaseController{
 			return result;
 		}
 		
-		System.out.println("验证码：" + sessionCode);
+		System.out.println("验证码：" +  String.valueOf(code));
 		
-		redisClinet.set("se_ken_" + mobile, sessionCode);
+		redisClinet.set("se_ken_" + mobile,  String.valueOf(code));
 		
 		return result;
 	}
