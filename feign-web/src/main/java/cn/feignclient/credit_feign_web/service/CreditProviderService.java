@@ -10,16 +10,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import main.java.cn.common.BackResult;
 import main.java.cn.domain.CvsFilePathDomain;
 import main.java.cn.domain.RunTestDomian;
-
+					 
 @FeignClient(value = "credit-provider-service")
 public interface CreditProviderService {
 	
-	@RequestMapping(value = "/credit/runTheTest", method = RequestMethod.POST)
-	BackResult<RunTestDomian> runTheTest(@RequestParam(value = "fileUrl")String fileUrl,@RequestParam(value = "userId")String userId,@RequestParam(value = "timestamp")String timestamp);
+	@RequestMapping(value = "/credit/runTheTest", method = RequestMethod.GET)
+	BackResult<RunTestDomian> runTheTest(@RequestParam(value = "fileUrl")String fileUrl,@RequestParam(value = "userId")String userId,@RequestParam(value = "timestamp")String timestamp,@RequestParam(value = "mobile")String mobile);
 	
-	@RequestMapping(value = "/credit/findByUserId", method = RequestMethod.POST)
+	@RequestMapping(value = "/credit/findByUserId", method = RequestMethod.GET)
 	BackResult<List<CvsFilePathDomain>> findByUserId(@RequestParam(value = "userId")String userId);
 	
-	@RequestMapping(value = "/credit/deleteCvsByIds", method = RequestMethod.POST)
+	@RequestMapping(value = "/credit/deleteCvsByIds", method = RequestMethod.GET)
 	public BackResult<Boolean> deleteCvsByIds(@RequestParam(value = "ids")String ids,@RequestParam(value = "userId")String userId);
 }

@@ -2,6 +2,7 @@ package cn.feignclient.credit_feign_web.redis;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 
 /**
  * http://www.cnblogs.com/0201zcr/p/5942748.html
@@ -10,11 +11,8 @@ import org.springframework.data.redis.core.RedisTemplate;
  */
 public class Test {
 
-	@Autowired  
-    RedisTemplate<String, Test> redisTemplate;  
-	
 	public static void main(String[] args) {
-		RedisTemplate<Object, Object> redisTemplate = new RedisTemplate<>();
+		StringRedisTemplate redisTemplate = new StringRedisTemplate();
 		RedisLock lock = new RedisLock(redisTemplate, "13817367247", 0, 0);
 		
 		try {

@@ -1,7 +1,7 @@
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://172.16.4.218:8080/eureka/
+      defaultZone: http://127.0.0.1:8080/eureka/
 server:
   port: 8765
 spring:
@@ -11,11 +11,16 @@ spring:
     
 jedis :  
   pool :  
-    host : 172.16.4.218  
+    host : 127.0.0.1  
     port : 6379  
     config :  
       maxTotal: 100  
       maxIdle: 10  
-      maxWaitMillis : 100000            
+      maxWaitMillis : 100000           
+      
+      
+      
+      
+      
       
       

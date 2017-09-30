@@ -1,5 +1,6 @@
 package cn.feignclient.credit_feign_web.utils;
 
+import java.math.BigDecimal;
 import java.util.Collection;
 
 public class CommonUtils {
@@ -20,6 +21,14 @@ public class CommonUtils {
 	 */
 	public static Boolean isNotString(String str){
 		return (null == str || "".equals(str));
+	}
+	
+	public static Boolean isNotIngeter(Integer str){
+		return (null == str || "".equals(str));
+	}
+	
+	public static Boolean isNotBigDecimal(BigDecimal bigDecimal){
+		return (null == bigDecimal || "".equals(bigDecimal));
 	}
 	
 	public static void main(String[] args) {

@@ -1,11 +1,26 @@
-server:
-  port: 8686
-
 eureka:
-  instance:
-    hostname: localhost
   client:
-    registerWithEureka: false
-    fetchRegistry: false
     serviceUrl:
-      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+      defaultZone: http://127.0.0.1:8080/eureka/
+server:
+  port: 8765
+spring:
+  application:
+    name: service-feign    
+
+    
+jedis :  
+  pool :  
+    host : 127.0.0.1  
+    port : 6379  
+    config :  
+      maxTotal: 100  
+      maxIdle: 10  
+      maxWaitMillis : 100000            
+      
+      
+      
+      
+      
+      
+      

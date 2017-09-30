@@ -71,7 +71,7 @@ public class CreditProviderController extends BaseController{
 			result.setResultMsg("用户已经注销登录无法进行操作");
 			return result;
 		}
-		return creditProviderService.runTheTest(fileUrl, userId,timestamp);
+		return creditProviderService.runTheTest(fileUrl, userId,timestamp,mobile);
 	} 
     
     @RequestMapping(value = "/findByUserId", method = RequestMethod.GET)
