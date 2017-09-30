@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.util.Date;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import cn.feignclient.credit_feign_web.domain.FileDomain;
 import cn.feignclient.credit_feign_web.utils.DateUtils;
+import cn.feignclient.credit_feign_web.utils.UUIDTool;
 import main.java.cn.common.BackResult;
 import main.java.cn.common.ResultCode;
 
@@ -63,8 +65,8 @@ public class FileController extends BaseController{
 		// 文件上传后的路径
 		String filePath = fielUrl + DateUtils.formatDate(new Date()) + "//";
 		// 解决中文问题，liunx下中文路径，图片显示问题
-		// fileName = UUID.randomUUID() + suffixName;
-		File dest = new File(filePath + fileName);
+		fileName = UUIDTool.getInstance().getUUID() + "_" + mobile + suffixName;
+		File dest = new File(filePath + fileName); 
 		// 检测是否存在目录
 		if (!dest.getParentFile().exists()) {
 			dest.getParentFile().mkdirs();
