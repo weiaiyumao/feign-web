@@ -133,7 +133,7 @@ public class LoginController extends BaseController{
 	 * @param code
 	 * @return
 	 */
-	@RequestMapping("/activateUser")
+	@RequestMapping("/api/activateUser")
 	public BackResult<Boolean> activateUser(HttpServletRequest request, HttpServletResponse response, String mobile,String timestamp,String token) {
 
 		BackResult<Boolean> result = new BackResult<Boolean>();

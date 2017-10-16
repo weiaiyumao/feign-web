@@ -72,7 +72,7 @@ public class UserProviderController extends BaseController {
 	 * @param token
 	 * @return
 	 */
-	@RequestMapping(value = "/findbyUserAccount", method = RequestMethod.POST)
+	@RequestMapping(value = "/api/findbyUserAccount", method = RequestMethod.POST)
 	public BackResult<UserAccountDomain> findbyUserAccount(String mobile, String timestamp,String token) {
 
 		BackResult<UserAccountDomain> result = new BackResult<UserAccountDomain>();
@@ -109,7 +109,7 @@ public class UserProviderController extends BaseController {
 		return result;
 	}
 	
-	@RequestMapping(value = "/rechargeOrRefunds", method = RequestMethod.POST)
+	@RequestMapping(value = "/api/rechargeOrRefunds", method = RequestMethod.POST)
 	public BackResult<Boolean> rechargeOrRefunds(HttpServletRequest request, HttpServletResponse response,TrdOrderDomain trdOrderDomain,String timestamp,String token) {
 
 		BackResult<Boolean> result = new BackResult<Boolean>();
@@ -163,12 +163,12 @@ public class UserProviderController extends BaseController {
 			return result;
 		}
 		
-//		if (null == trdOrderDomain.getPayTime()) {
-//			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
-//			result.setResultMsg("成功支付时间不能为空");
-//			result.setResultObj(Boolean.FALSE);
-//			return result;
-//		} 
+		if (null == trdOrderDomain.getPayTime()) {
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("成功支付时间不能为空");
+			result.setResultObj(Boolean.FALSE);
+			return result;
+		} 
 		
 		if (CommonUtils.isNotString(trdOrderDomain.getType())) {
 			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
