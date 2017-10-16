@@ -134,21 +134,21 @@ public class LoginController extends BaseController{
 	 * @return
 	 */
 	@RequestMapping("/api/activateUser")
-	public BackResult<Boolean> activateUser(HttpServletRequest request, HttpServletResponse response, String mobile,String timestamp,String token) {
+	public BackResult<String> activateUser(HttpServletRequest request, HttpServletResponse response, String mobile,String timestamp,String token) {
 
-		BackResult<Boolean> result = new BackResult<Boolean>();
+		BackResult<String> result = new BackResult<String>();
 
 		if (CommonUtils.isNotString(mobile)) {
 			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
 			result.setResultMsg("手机号码不能为空");
-			result.setResultObj(Boolean.FALSE);
+			result.setResultObj(null);
 			return result;
 		}
 
 		if (CommonUtils.isNotString(token)) {
 			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
 			result.setResultMsg("token不能为空");
-			result.setResultObj(Boolean.FALSE);
+			result.setResultObj(null);
 			return result;
 		}
 		
@@ -157,7 +157,7 @@ public class LoginController extends BaseController{
 		if (!md5Token.equals(token)) {
 			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
 			result.setResultMsg("签名验证失败");
-			result.setResultObj(Boolean.FALSE);
+			result.setResultObj(null);
 			return result;
 		}
 		
@@ -170,11 +170,11 @@ public class LoginController extends BaseController{
 		if(!creResult.getResultCode().equals(ResultCode.RESULT_SUCCEED)) {
 			result.setResultMsg("检查用户失败");
 			result.setResultCode(ResultCode.RESULT_FAILED);
-			result.setResultObj(Boolean.FALSE);
+			result.setResultObj(null);
 			return result;
 		}
 		
-		result.setResultObj(Boolean.TRUE);
+		result.setResultObj(creResult.getResultObj().getId().toString());
 		
 		return result;
 	}
