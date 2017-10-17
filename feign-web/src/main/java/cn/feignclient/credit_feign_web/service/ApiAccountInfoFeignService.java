@@ -18,4 +18,7 @@ public interface ApiAccountInfoFeignService {
 	
 	@RequestMapping(value = "/apiAccountInfo/updateApiAccountInfo", method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
 	public BackResult<ApiAccountInfoDomain> updateApiAccountInfo(@RequestBody ApiAccountInfoDomain domain);
+	
+	@RequestMapping(value = "/apiAccountInfo/checkApiAccount", method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
+	public BackResult<Integer> checkApiAccount(@RequestParam("apiName")String apiName, @RequestParam("password")String password, @RequestParam("ip")String ip, @RequestParam("checkCount")int checkCount);
 }

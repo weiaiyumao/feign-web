@@ -64,8 +64,8 @@ public class ApiAccountInfoController extends BaseController{
 		return result;
 	}
 	
-	@RequestMapping(value = "/findByCreUserId", method = RequestMethod.POST)
-	public BackResult<ApiAccountInfoDomain> findTrdOrderByMobile(HttpServletRequest request,
+	@RequestMapping(value = "/updateApiAccountInfo", method = RequestMethod.POST)
+	public BackResult<ApiAccountInfoDomain> updateApiAccountInfo(HttpServletRequest request,
 			HttpServletResponse response, String mobile, String token,ApiAccountInfoDomain domain) {
 
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
@@ -94,6 +94,12 @@ public class ApiAccountInfoController extends BaseController{
 		if (CommonUtils.isNotIngeter(domain.getId())) {
 			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
 			result.setResultMsg("API编号不能为空");
+			return result;
+		}
+		
+		if (CommonUtils.isNotIngeter(domain.getCreUserId())) {
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("用户编号不能为空");
 			return result;
 		}
 

@@ -23,4 +23,6 @@ public interface UserAccountFeignService {
 	@RequestMapping(value = "/userAccount/findTrdOrderByCreUserId", method = RequestMethod.GET)
 	BackResult<List<TrdOrderDomain>> findTrdOrderByCreUserId(@RequestParam("creUserId")Integer creUserId);
 	
+	@RequestMapping(value = "/userAccount/consumeApiAccount" , method = RequestMethod.POST)
+	public BackResult<Boolean> consumeApiAccount(@RequestParam("creUserId")String creUserId,@RequestParam("count")String count);
 }
