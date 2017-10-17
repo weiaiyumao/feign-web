@@ -64,8 +64,8 @@ public class ApiAccountInfoController extends BaseController{
 		return result;
 	}
 	
-	@RequestMapping(value = "/findByCreUserId", method = RequestMethod.POST)
-	public BackResult<ApiAccountInfoDomain> findTrdOrderByMobile(HttpServletRequest request,
+	@RequestMapping(value = "/updateApiAccountInfo", method = RequestMethod.POST)
+	public BackResult<ApiAccountInfoDomain> updateApiAccountInfo(HttpServletRequest request,
 			HttpServletResponse response, String mobile, String token,ApiAccountInfoDomain domain) {
 
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
