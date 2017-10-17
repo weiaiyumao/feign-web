@@ -30,4 +30,5 @@ public class BaseController {
 		
 		return redisToken.equals(token) ? true : false;
 	}
+
 }
