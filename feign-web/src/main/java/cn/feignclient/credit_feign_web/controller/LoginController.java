@@ -124,6 +124,61 @@ public class LoginController extends BaseController{
 		return result;
 	}
 	
+	
+	/**
+	 * erp调用激活账户
+	 * @param request
+	 * @param response
+	 * @param mobile
+	 * @param code
+	 * @return
+	 */
+	@RequestMapping("/api/activateUser")
+	public BackResult<String> activateUser(HttpServletRequest request, HttpServletResponse response, String mobile,String timestamp,String token) {
+
+		BackResult<String> result = new BackResult<String>();
+
+		if (CommonUtils.isNotString(mobile)) {
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("手机号码不能为空");
+			result.setResultObj(null);
+			return result;
+		}
+
+		if (CommonUtils.isNotString(token)) {
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("token不能为空");
+			result.setResultObj(null);
+			return result;
+		}
+		
+		String md5Token = MD5Util.getInstance().getMD5Code(timestamp + apiKey);
+		
+		if (!md5Token.equals(token)) {
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("签名验证失败");
+			result.setResultObj(null);
+			return result;
+		}
+		
+		CreUserDomain creUserDomain = new CreUserDomain();
+		creUserDomain.setUserPhone(mobile);
+		
+		// 查询用户
+		BackResult<CreUserDomain> creResult = userFeignService.findOrsaveUser(creUserDomain);
+		
+		if(!creResult.getResultCode().equals(ResultCode.RESULT_SUCCEED)) {
+			result.setResultMsg("检查用户失败");
+			result.setResultCode(ResultCode.RESULT_FAILED);
+			result.setResultObj(null);
+			return result;
+		}
+		
+		result.setResultObj(creResult.getResultObj().getId().toString());
+		
+		return result;
+	}
+	
 	/**
 	 * 登出
 	 * @param request
