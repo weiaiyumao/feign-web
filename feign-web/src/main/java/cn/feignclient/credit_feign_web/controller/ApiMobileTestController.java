@@ -2,6 +2,9 @@ package cn.feignclient.credit_feign_web.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +22,7 @@ import main.java.cn.domain.MobileInfoDomain;
 
 @RestController
 @RequestMapping("/feign/apiMobileTest")
-public class ApiMobileTestController {
+public class ApiMobileTestController extends BaseController{
 
 	private final static Logger logger = LoggerFactory.getLogger(ApiAccountInfoController.class);
 	
@@ -41,7 +44,8 @@ public class ApiMobileTestController {
 	 * @return
 	 */
 	@RequestMapping(value = "/findByMobileNumbers", method = RequestMethod.POST)
-	public BackResult<List<MobileInfoDomain>> findByMobileNumbers(String apiName,String password,String ip,String mobileNumbers){
+	public BackResult<List<MobileInfoDomain>> findByMobileNumbers(HttpServletRequest request,
+			HttpServletResponse response,String apiName,String password,String mobileNumbers){
 		
 		BackResult<List<MobileInfoDomain>> result = new BackResult<List<MobileInfoDomain>>();
 		
@@ -66,6 +70,8 @@ public class ApiMobileTestController {
 			}
 			
 			String[] phones = mobileNumbers.split(",");
+			
+			String ip = super.getIpAddr(request);
 			
 			// 1、账户信息检测
 			BackResult<Integer> resultCreUser = apiAccountInfoFeignService.checkApiAccount(apiName, password, ip, phones.length);
