@@ -19,24 +19,27 @@ import cn.feignclient.credit_feign_web.utils.CommonUtils;
 import main.java.cn.common.BackResult;
 import main.java.cn.common.ResultCode;
 import main.java.cn.domain.MobileInfoDomain;
+import main.java.cn.domain.MobileTestLogDomain;
+import main.java.cn.domain.page.PageDomain;
 
 @RestController
 @RequestMapping("/feign/apiMobileTest")
-public class ApiMobileTestController extends BaseController{
+public class ApiMobileTestController extends BaseController {
 
 	private final static Logger logger = LoggerFactory.getLogger(ApiAccountInfoController.class);
-	
+
 	@Autowired
 	private ApiAccountInfoFeignService apiAccountInfoFeignService;
-	
+
 	@Autowired
 	private ApiMobileTestService apiMobileTestService;
-	
+
 	@Autowired
 	private UserAccountFeignService userAccountFeignService;
-	
+
 	/**
 	 * 对外API账户2次清洗接口
+	 * 
 	 * @param apiName
 	 * @param password
 	 * @param ip
@@ -45,52 +48,53 @@ public class ApiMobileTestController extends BaseController{
 	 */
 	@RequestMapping(value = "/findByMobileNumbers", method = RequestMethod.POST)
 	public BackResult<List<MobileInfoDomain>> findByMobileNumbers(HttpServletRequest request,
-			HttpServletResponse response,String apiName,String password,String mobileNumbers){
-		
+			HttpServletResponse response, String apiName, String password, String mobileNumbers) {
+
 		BackResult<List<MobileInfoDomain>> result = new BackResult<List<MobileInfoDomain>>();
-		
+
 		try {
-			
+
 			if (CommonUtils.isNotString(apiName)) {
 				result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
 				result.setResultMsg("商户API账户名不能为空");
 				return result;
 			}
-			
+
 			if (CommonUtils.isNotString(password)) {
 				result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
 				result.setResultMsg("商户API账户密码不能为空");
 				return result;
 			}
-			
+
 			if (CommonUtils.isNotString(mobileNumbers)) {
 				result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
 				result.setResultMsg("检测的手机号码不能为空");
 				return result;
 			}
-			
+
 			String[] phones = mobileNumbers.split(",");
-			
+
 			String ip = super.getIpAddr(request);
-			
+
 			// 1、账户信息检测
-			BackResult<Integer> resultCreUser = apiAccountInfoFeignService.checkApiAccount(apiName, password, ip, phones.length);
-			
+			BackResult<Integer> resultCreUser = apiAccountInfoFeignService.checkApiAccount(apiName, password, ip,
+					phones.length);
+
 			if (!resultCreUser.getResultCode().equals(ResultCode.RESULT_SUCCEED)) {
 				result.setResultCode(resultCreUser.getResultCode());
 				result.setResultMsg(resultCreUser.getResultMsg());
 				return result;
 			}
-			
+
 			// 2、执行检测返回检测结果
-			result = apiMobileTestService.findByMobileNumbers(mobileNumbers,resultCreUser.getResultObj().toString());
-			
+			result = apiMobileTestService.findByMobileNumbers(mobileNumbers, resultCreUser.getResultObj().toString());
+
 			if (!result.getResultCode().equals(ResultCode.RESULT_SUCCEED)) {
 				return result;
 			}
-			
+
 			int changeCount = 0;
-			
+
 			if (!CommonUtils.isNotEmpty(result.getResultObj())) {
 				for (MobileInfoDomain domain : result.getResultObj()) {
 					if (domain.getChargesStatus().equals("1")) {
@@ -98,18 +102,19 @@ public class ApiMobileTestController extends BaseController{
 					}
 				}
 			}
-			
+
 			if (changeCount > 0) {
 				// 3、结算
-				BackResult<Boolean> resultConsume = userAccountFeignService.consumeApiAccount(resultCreUser.getResultObj().toString(), String.valueOf(result.getResultObj().size()));
-				
+				BackResult<Boolean> resultConsume = userAccountFeignService.consumeApiAccount(
+						resultCreUser.getResultObj().toString(), String.valueOf(result.getResultObj().size()));
+
 				if (!resultConsume.getResultCode().equals(ResultCode.RESULT_SUCCEED)) {
 					result.setResultCode(resultConsume.getResultCode());
 					result.setResultMsg(resultConsume.getResultMsg());
 					return result;
 				}
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error("商户号：" + apiName + "执行账户2次清洗出现系统异常：" + e.getMessage());
@@ -117,7 +122,68 @@ public class ApiMobileTestController extends BaseController{
 			result.setResultMsg("系统异常！");
 			result.setResultObj(null);
 		}
-		
+
 		return result;
 	}
+
+	@RequestMapping(value = "/getPageByUserId", method = RequestMethod.POST)
+	public BackResult<PageDomain<MobileTestLogDomain>> getPageByUserId(HttpServletRequest request,
+			HttpServletResponse response, int pageNo, int pageSize,  String creUserId,String mobile,String token) {
+
+		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
+		response.setContentType("text/json;charset=UTF-8");
+
+		BackResult<PageDomain<MobileTestLogDomain>> result = new BackResult<PageDomain<MobileTestLogDomain>>();
+
+		try {
+
+			if (CommonUtils.isNotIngeter(pageNo)) {
+				result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+				result.setResultMsg("分页PageNo不能为空");
+				return result;
+			}
+
+			if (CommonUtils.isNotIngeter(pageSize)) {
+				result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+				result.setResultMsg("分页pageSize不能为空");
+				return result;
+			}
+
+			if (CommonUtils.isNotString(creUserId)) {
+				result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+				result.setResultMsg("用户creUserId不能为空");
+				return result;
+			}
+
+			if (CommonUtils.isNotString(mobile)) {
+				result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+				result.setResultMsg("手机号码不能为空");
+				return result;
+			}
+
+			if (CommonUtils.isNotString(token)) {
+				result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+				result.setResultMsg("token不能为空");
+				return result;
+			}
+
+			if (!isLogin(mobile, token)) {
+				result.setResultCode(ResultCode.RESULT_SESSION_STALED);
+				result.setResultMsg("用户校验失败");
+				return result;
+			}
+
+			result = apiMobileTestService.getPageByUserId(pageNo, pageSize, creUserId);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error("用户ID：" + creUserId + "获取检测列表系统异常：" + e.getMessage());
+			result.setResultCode(ResultCode.RESULT_FAILED);
+			result.setResultMsg("系统异常！");
+			result.setResultObj(null);
+		}
+
+		return result;
+
+	}
+
 }
