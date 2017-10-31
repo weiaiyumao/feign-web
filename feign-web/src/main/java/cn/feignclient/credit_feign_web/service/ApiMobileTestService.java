@@ -14,6 +14,6 @@ import main.java.cn.domain.MobileInfoDomain;
 public interface ApiMobileTestService {
 	
 	@RequestMapping(value = "/apiMobileTest/findByMobileNumbers", method = RequestMethod.POST)
-	public BackResult<List<MobileInfoDomain>> findByMobileNumbers(@RequestParam(value = "mobileNumbers")String mobileNumbers);
+	public BackResult<List<MobileInfoDomain>> findByMobileNumbers(@RequestParam(value = "mobileNumbers")String mobileNumbers,@RequestParam(value = "userId")String userId);
 	
 }

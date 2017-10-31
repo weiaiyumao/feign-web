@@ -83,19 +83,31 @@ public class ApiMobileTestController extends BaseController{
 			}
 			
 			// 2、执行检测返回检测结果
-			result = apiMobileTestService.findByMobileNumbers(mobileNumbers);
+			result = apiMobileTestService.findByMobileNumbers(mobileNumbers,resultCreUser.getResultObj().toString());
 			
 			if (!result.getResultCode().equals(ResultCode.RESULT_SUCCEED)) {
 				return result;
 			}
 			
-			// 3、结算
-			BackResult<Boolean> resultConsume = userAccountFeignService.consumeApiAccount(resultCreUser.getResultObj().toString(), String.valueOf(phones.length));
+			int changeCount = 0;
 			
-			if (!resultConsume.getResultCode().equals(ResultCode.RESULT_SUCCEED)) {
-				result.setResultCode(resultConsume.getResultCode());
-				result.setResultMsg(resultConsume.getResultMsg());
-				return result;
+			if (!CommonUtils.isNotEmpty(result.getResultObj())) {
+				for (MobileInfoDomain domain : result.getResultObj()) {
+					if (domain.getChargesStatus().equals("1")) {
+						changeCount = changeCount + 1;
+					}
+				}
+			}
+			
+			if (changeCount > 0) {
+				// 3、结算
+				BackResult<Boolean> resultConsume = userAccountFeignService.consumeApiAccount(resultCreUser.getResultObj().toString(), String.valueOf(result.getResultObj().size()));
+				
+				if (!resultConsume.getResultCode().equals(ResultCode.RESULT_SUCCEED)) {
+					result.setResultCode(resultConsume.getResultCode());
+					result.setResultMsg(resultConsume.getResultMsg());
+					return result;
+				}
 			}
 			
 		} catch (Exception e) {
