@@ -75,6 +75,8 @@ public class ApiMobileTestController extends BaseController {
 			String[] phones = mobileNumbers.split(",");
 
 			String ip = super.getIpAddr(request);
+			
+			logger.info("账户号：" + apiName +"的IP地址是：" + ip);
 
 			// 1、账户信息检测
 			BackResult<Integer> resultCreUser = apiAccountInfoFeignService.checkApiAccount(apiName, password, ip,
