@@ -48,7 +48,7 @@ public class ApiMobileTestController extends BaseController {
 	 */
 	@RequestMapping(value = "/findByMobileNumbers", method = RequestMethod.POST)
 	public BackResult<List<MobileInfoDomain>> findByMobileNumbers(HttpServletRequest request,
-			HttpServletResponse response, String apiName, String password, String mobileNumbers) {
+			HttpServletResponse response, String apiName, String password, String mobile) {
 
 		BackResult<List<MobileInfoDomain>> result = new BackResult<List<MobileInfoDomain>>();
 
@@ -66,13 +66,13 @@ public class ApiMobileTestController extends BaseController {
 				return result;
 			}
 
-			if (CommonUtils.isNotString(mobileNumbers)) {
+			if (CommonUtils.isNotString(mobile)) {
 				result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
 				result.setResultMsg("检测的手机号码不能为空");
 				return result;
 			}
 
-			String[] phones = mobileNumbers.split(",");
+			String[] phones = mobile.split(",");
 
 			String ip = super.getIpAddr(request);
 			
@@ -89,7 +89,7 @@ public class ApiMobileTestController extends BaseController {
 			}
 
 			// 2、执行检测返回检测结果
-			result = apiMobileTestService.findByMobileNumbers(mobileNumbers, resultCreUser.getResultObj().toString());
+			result = apiMobileTestService.findByMobileNumbers(mobile, resultCreUser.getResultObj().toString());
 
 			if (!result.getResultCode().equals(ResultCode.RESULT_SUCCEED)) {
 				return result;
