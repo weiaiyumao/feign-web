@@ -47,7 +47,7 @@ public class ApiMobileTestController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(value = "/findByMobileNumbers", method = RequestMethod.POST)
-	public BackResult<List<MobileInfoDomain>> findByMobileNumbers(HttpServletRequest request,
+	public synchronized BackResult<List<MobileInfoDomain>> findByMobileNumbers(HttpServletRequest request,
 			HttpServletResponse response, String apiName, String password, String mobile) {
 
 		BackResult<List<MobileInfoDomain>> result = new BackResult<List<MobileInfoDomain>>();
