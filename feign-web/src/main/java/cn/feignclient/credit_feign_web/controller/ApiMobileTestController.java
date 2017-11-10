@@ -188,7 +188,7 @@ public class ApiMobileTestController extends BaseController {
 			String ip = super.getIpAddr(request);
 
 			// 1、账户信息检测
-			BackResult<Integer> resultCreUser = apiAccountInfoFeignService.checkApiAccount(apiName, password, ip);
+			BackResult<Integer> resultCreUser = apiAccountInfoFeignService.checkApiAccount(apiName, password, ip,phones.length);
 
 			if (!resultCreUser.getResultCode().equals(ResultCode.RESULT_SUCCEED)) {
 				result.setResultCode(resultCreUser.getResultCode());
@@ -211,18 +211,10 @@ public class ApiMobileTestController extends BaseController {
 				redisClinet.set(RedisKeys.getUserTestCountKey(resultCreUser.getResultObj()), 0,
 						RedisKeys.TEST_COUNT_EXPIRESECONDS);
 			}
-
-			// 开始检测账户余额同时开始结算
-			BackResult<Boolean> resultConsume = userAccountFeignService
-					.consumeApiAccount(resultCreUser.getResultObj().toString(), String.valueOf(phones.length));
-			if (!resultConsume.getResultCode().equals(ResultCode.RESULT_SUCCEED)) {
-				result.setResultCode(resultConsume.getResultCode());
-				result.setResultMsg(resultConsume.getResultMsg());
-				return result;
-			}
 			
 			// 开始检测
 
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error("商户号：" + apiName + "执行账户2次清洗出现系统异常：" + e.getMessage());
