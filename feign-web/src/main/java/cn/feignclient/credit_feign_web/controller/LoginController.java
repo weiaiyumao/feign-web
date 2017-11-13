@@ -57,10 +57,8 @@ public class LoginController extends BaseController {
 
 		// 将服务器状态设置到session中
 		redisClinet.set(gtSdk.gtServerStatusSessionKey + "_" + mobile, String.valueOf(gtServerStatus));
-		System.out.println(gtSdk.gtServerStatusSessionKey + "_" + mobile);
 		// 将userid设置到session中
 		redisClinet.set(gtSdk.gtServerStatusSessionKey + "_user_id_" + mobile, mobile);
-		System.out.println(gtSdk.gtServerStatusSessionKey + "_user_id_" + mobile);
 		String str = gtSdk.getResponseStr();
 
 		JSONObject json = JSONObject.parseObject(str);
@@ -96,7 +94,6 @@ public class LoginController extends BaseController {
 		String seccode = request.getParameter(GeetestLib.fn_geetest_seccode);
 		String mobile = request.getParameter("mobile");
 		//从session中获取gt-server状态
-		System.out.println(redisClinet.get(gtSdk.gtServerStatusSessionKey + "_" + mobile));
 		int gt_server_status_code = Integer.valueOf(redisClinet.get(gtSdk.gtServerStatusSessionKey + "_" + mobile));
 		
 		//从session中获取userid
@@ -125,7 +122,7 @@ public class LoginController extends BaseController {
 
 			ChuangLanSmsUtil.getInstance().sendSmsByMobile(mobile, String.valueOf(code));
 
-			System.out.println("验证码：" + String.valueOf(code));
+			System.out.println(mobile+"验证码：" + String.valueOf(code));
 
 			redisClinet.set("se_ken_" + mobile, String.valueOf(code));
 			
