@@ -69,6 +69,11 @@
 		    <groupId>org.springframework.data</groupId>  
 		    <artifactId>spring-data-redis</artifactId>  
 		</dependency>  
+		
+		<dependency>
+		    <groupId>org.json</groupId>
+		    <artifactId>json</artifactId>
+		</dependency>
 	    
 	    <!-- 引用 子项目credit-interface-->
 		<dependency>
