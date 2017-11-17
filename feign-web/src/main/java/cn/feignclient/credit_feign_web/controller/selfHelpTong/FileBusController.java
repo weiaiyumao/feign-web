@@ -48,6 +48,8 @@ public class FileBusController extends BaseController{
 	@ResponseBody
 	public BackResult<FileDomain> upload(HttpServletRequest request, MultipartFile file, String mobile) {
 
+		logger.info("自助通手机号：" + mobile + "请求上传文件");
+		
 		BackResult<FileDomain> result = new BackResult<FileDomain>();
 		
 		if (!checkSign(request)) {
@@ -112,7 +114,7 @@ public class FileBusController extends BaseController{
 
 		} catch (IllegalStateException e) {
 			e.printStackTrace();
-			logger.error("用户手机号：【" + mobile + "】执行文件上传出现系统异常：" + e.getMessage());
+			logger.error("自助通手机号：" + mobile + "请求上传文件出现系统异常：" + e.getMessage());
 			result.setResultCode(ResultCode.RESULT_FAILED);
 			result.setResultMsg("系统异常");
 		} catch (IOException e) {
@@ -125,7 +127,7 @@ public class FileBusController extends BaseController{
 				try {
 					rf.close();
 				} catch (IOException ee) {
-					logger.error("用户手机号：【" + mobile + "】执行文件上传出现系统异常：" + ee.getMessage());
+					logger.error("自助通手机号：" + mobile + "请求上传文件出现系统异常：" + ee.getMessage());
 					result.setResultCode(ResultCode.RESULT_FAILED);
 					result.setResultMsg("系统异常");
 				}

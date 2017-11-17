@@ -110,7 +110,7 @@ public class CreditBusController extends BaseController {
 	@RequestMapping(value = "/getPageByMobile", method = RequestMethod.POST)
 	public BackResult<PageDomain<CvsFilePathDomain>> getPageByUserId(HttpServletRequest request, int pageNo,
 			int pageSize, String mobile) {
-		logger.info("自助通手机号：" + mobile + "请求删除历史检测记录");
+		logger.info("自助通手机号：" + mobile + "请求分页获取历史检测记录");
 
 		BackResult<PageDomain<CvsFilePathDomain>> result = new BackResult<PageDomain<CvsFilePathDomain>>();
 
@@ -150,7 +150,7 @@ public class CreditBusController extends BaseController {
 			result = creditProviderService.getPageByUserId(pageNo, pageSize, String.valueOf(user.getId()));
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error("自助通手机号：" + mobile + "请求删除历史检测记录，出现系统异常：" + e.getMessage());
+			logger.error("自助通手机号：" + mobile + "请求分页获取历史检测记录，出现系统异常：" + e.getMessage());
 			result.setResultCode(ResultCode.RESULT_FAILED);
 			result.setResultMsg("系统异常");
 		}
