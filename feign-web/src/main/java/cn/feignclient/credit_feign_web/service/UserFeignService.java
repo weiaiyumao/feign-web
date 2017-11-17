@@ -22,4 +22,7 @@ public interface UserFeignService {
 	@RequestMapping(value = "/user/updateCreUser", method = RequestMethod.GET,consumes = MediaType.APPLICATION_JSON_VALUE)
 	public BackResult<CreUserDomain> updateCreUser(@RequestBody CreUserDomain creUserDomain);
 	
+	@RequestMapping(value = "/user/updateCreUserEmail", method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
+	public BackResult<CreUserDomain> updateCreUser(@RequestParam("userPhone")String userPhone, @RequestParam("email")String email);
+	
 }

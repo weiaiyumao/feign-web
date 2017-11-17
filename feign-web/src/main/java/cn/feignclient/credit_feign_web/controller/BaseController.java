@@ -1,9 +1,12 @@
 package cn.feignclient.credit_feign_web.controller;
 
-import javax.servlet.http.HttpServletRequest;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,58 +16,125 @@ import org.springframework.web.bind.annotation.InitBinder;
 
 import cn.feignclient.credit_feign_web.redis.RedisClient;
 import cn.feignclient.credit_feign_web.service.UserFeignService;
+import main.java.cn.common.BackResult;
+import main.java.cn.common.ResultCode;
+import main.java.cn.domain.CreUserDomain;
+import main.java.cn.hhtp.util.MD5Util;
 
 public class BaseController {
-	
+
 	@Autowired
-    protected UserFeignService userFeignService;
-	
-	@Autowired  
-    protected RedisClient redisClinet;  
-	
+	protected UserFeignService userFeignService;
+
+	@Autowired
+	protected RedisClient redisClinet;
+
 	@Value("${api_key}")
 	protected String apiKey;
-	
-	@InitBinder  
-    protected  void initBinder(WebDataBinder binder) {  
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
-        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));  
-    }
+
+	@InitBinder
+	protected void initBinder(WebDataBinder binder) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
+	}
 
 	/**
 	 * 检查是否登录
+	 * 
 	 * @param mobile
 	 * @param token
 	 * @return
 	 */
-	public Boolean isLogin(String mobile,String token){
+	public Boolean isLogin(String mobile, String token) {
 		String redisToken = redisClinet.get("user_token_" + mobile);
-		
+
 		if (null == redisToken || "".equals(redisToken)) {
 			return false;
 		}
-		
+
 		redisClinet.set("user_token_" + mobile, redisToken);
-		
+
 		return redisToken.equals(token) ? true : false;
 	}
 
 	/**
 	 * 获取请求的真实ＩＰ地址
+	 * 
 	 * @param request
 	 * @return
 	 */
-	public String getIpAddr(HttpServletRequest request) {     
-	      String ip = request.getHeader("x-forwarded-for");     
-	      if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {     
-	         ip = request.getHeader("Proxy-Client-IP");     
-	     }     
-	      if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {     
-	         ip = request.getHeader("WL-Proxy-Client-IP");     
-	      }     
-	     if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {     
-	          ip = request.getRemoteAddr();     
-	     }     
-	     return ip;     
-	}    
+	public String getIpAddr(HttpServletRequest request) {
+		String ip = request.getHeader("x-forwarded-for");
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+			ip = request.getHeader("Proxy-Client-IP");
+		}
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+			ip = request.getHeader("WL-Proxy-Client-IP");
+		}
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+			ip = request.getRemoteAddr();
+		}
+		return ip;
+	}
+
+	/**
+	 * 自助通的请求验证签名
+	 * @param request
+	 * @return
+	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	protected Boolean checkSign(HttpServletRequest request) {
+		
+		Enumeration paramNames = request.getParameterNames();
+		Map map = new HashMap();
+		while (paramNames.hasMoreElements()) {
+			String paramName = (String) paramNames.nextElement();
+			String[] paramValues = request.getParameterValues(paramName);
+			if (paramValues.length == 1) {
+				String paramValue = paramValues[0];
+				if (paramValue.length() != 0) {
+					map.put(paramName, paramValue);
+				}
+			}
+		}
+
+		if (map == null || map.size() <= 0) {
+			return Boolean.FALSE;
+		}
+		
+		if (map.get("timestamp") == null || map.get("timestamp").equals("null") ||  map.get("timestamp").equals("")) {
+			return Boolean.FALSE;
+		}
+		
+		if (map.get("token") == null || map.get("token").equals("null") ||  map.get("token").equals("")) {
+			return Boolean.FALSE;
+		}
+		
+		String timestamp = map.get("timestamp").toString();
+		String token = map.get("token").toString();
+		
+		String md5Token = MD5Util.getInstance().getMD5Code(timestamp + apiKey);
+		
+		if (!md5Token.equals(token)) {
+			return Boolean.FALSE;
+		}
+
+		return Boolean.TRUE;
+	}
+	
+	/**
+	 * 根据手机号码获取用户对象
+	 * @param mobile
+	 * @return
+	 */
+	protected CreUserDomain findByMobile(String mobile){
+		BackResult<CreUserDomain> userResult = userFeignService.findbyMobile(mobile);
+		
+		if (!userResult.getResultCode().equals(ResultCode.RESULT_SUCCEED)) {
+			return null;
+		}
+		
+		return userResult.getResultObj();
+	}
+
 }
