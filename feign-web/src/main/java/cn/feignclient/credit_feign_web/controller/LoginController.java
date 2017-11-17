@@ -276,10 +276,10 @@ public class LoginController extends BaseController {
 		creUserDomain.setUserPhone(mobile);
 
 		// 查询用户
-		BackResult<CreUserDomain> creResult = userFeignService.findOrsaveUser(creUserDomain);
+		BackResult<CreUserDomain> creResult = userFeignService.activateUser(creUserDomain);
 
 		if (!creResult.getResultCode().equals(ResultCode.RESULT_SUCCEED)) {
-			result.setResultMsg("检查用户失败");
+			result.setResultMsg(creResult.getResultMsg());
 			result.setResultCode(ResultCode.RESULT_FAILED);
 			result.setResultObj(null);
 			return result;
