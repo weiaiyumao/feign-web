@@ -5,8 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.util.Date;
-
-import javax.servlet.http.HttpServletRequest;
+import java.util.Iterator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 
 import cn.feignclient.credit_feign_web.controller.BaseController;
 import cn.feignclient.credit_feign_web.domain.FileDomain;
@@ -26,12 +27,13 @@ import main.java.cn.domain.CreUserDomain;
 
 /**
  * 自助通文件上传
+ * 
  * @author ChuangLan
  *
  */
 @RestController
 @RequestMapping("/fileBus")
-public class FileBusController extends BaseController{
+public class FileBusController extends BaseController {
 	private final static Logger logger = LoggerFactory.getLogger(FileBusController.class);
 
 	@Value("${fielUrl}")
@@ -39,6 +41,7 @@ public class FileBusController extends BaseController{
 
 	/**
 	 * 文件上传
+	 * 
 	 * @param request
 	 * @param file
 	 * @param mobile
@@ -46,46 +49,60 @@ public class FileBusController extends BaseController{
 	 */
 	@RequestMapping("/upload")
 	@ResponseBody
-	public BackResult<FileDomain> upload(HttpServletRequest request, MultipartFile file, String mobile) {
+	public BackResult<FileDomain> upload(StandardMultipartHttpServletRequest request, String mobile) {
 
 		logger.info("自助通手机号：" + mobile + "请求上传文件");
-		
+
+		 // 转型为MultipartHttpRequest：
+		 MultipartHttpServletRequest multipartRequest =
+		 (MultipartHttpServletRequest) request;
+		 // 从其中取出一个文件 后续可使用spring 上传文件方法：file.transferTo(destFile);
+		 MultipartFile file = null;
+		 for (Iterator<String> it = multipartRequest.getFileNames();
+		 it.hasNext();) {
+		 file = multipartRequest.getFile((String) it.next());
+		 }
+
 		BackResult<FileDomain> result = new BackResult<FileDomain>();
-		
+
 		if (!checkSign(request)) {
 			result.setResultCode(ResultCode.RESULT_FAILED);
 			result.setResultMsg("签名验证失败");
 			return result;
 		}
-		
-		
+
 		if (file.isEmpty()) {
 			logger.error("用户手机号：【" + mobile + "】执行文件上传出现异常文件不存在");
 			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
 			result.setResultMsg("文件地址为空");
 			return result;
 		}
-
+		
+		if (file.getSize() > 10485760) {
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("上传文件过大最大10M 10485760kb");
+			return result;
+		}
+		
 		// 获取文件名
 		String fileName = file.getOriginalFilename();
 		logger.info("上传的文件名为：" + fileName);
 		// 获取文件的后缀名
 		String suffixName = fileName.substring(fileName.lastIndexOf("."));
-		logger.info("上传的后缀名为：" + suffixName);
 		// 文件上传后的路径
 		String filePath = fielUrl + DateUtils.formatDate(new Date()) + "//";
 		// 解决中文问题，liunx下中文路径，图片显示问题
 		fileName = UUIDTool.getInstance().getUUID() + "_" + mobile + suffixName;
-		File dest = new File(filePath + fileName); 
+		File dest = new File(filePath + fileName);
 		// 检测是否存在目录
 		if (!dest.getParentFile().exists()) {
 			dest.getParentFile().mkdirs();
 		}
 
 		LineNumberReader rf = null;
-		
+
 		try {
-			
+
 			CreUserDomain user = findByMobile(mobile);
 
 			if (null == user) {
@@ -105,7 +122,7 @@ public class FileBusController extends BaseController{
 				lines = rf.getLineNumber();
 				rf.close();
 			}
-			
+
 			FileDomain fileDomain = new FileDomain();
 			fileDomain.setFileUploadUrl(filePath + fileName);
 			fileDomain.setTxtCount(lines);
