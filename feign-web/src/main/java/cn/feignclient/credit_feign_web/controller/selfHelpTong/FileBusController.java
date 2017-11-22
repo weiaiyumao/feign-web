@@ -7,7 +7,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.util.Date;
-import java.util.Iterator;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import cn.feignclient.credit_feign_web.controller.BaseController;
 import cn.feignclient.credit_feign_web.domain.FileDomain;
@@ -51,19 +49,11 @@ public class FileBusController extends BaseController {
 	 * @param mobile
 	 * @return
 	 */
-	@RequestMapping("/upload11111")
+	@RequestMapping("/uploadfile")
 	@ResponseBody
-	public BackResult<FileDomain> upload111(HttpServletRequest request, String mobile, String mobiles) {
+	public BackResult<FileDomain> uploadfile(HttpServletRequest request, MultipartFile file, String mobile) {
 
 		logger.info("自助通手机号：" + mobile + "请求上传文件");
-
-		// 转型为MultipartHttpRequest：
-		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
-		// 从其中取出一个文件 后续可使用spring 上传文件方法：file.transferTo(destFile);
-		MultipartFile file = null;
-		for (Iterator<String> it = multipartRequest.getFileNames(); it.hasNext();) {
-			file = multipartRequest.getFile((String) it.next());
-		}
 
 		BackResult<FileDomain> result = new BackResult<FileDomain>();
 
@@ -156,6 +146,26 @@ public class FileBusController extends BaseController {
 		return result;
 	}
 
+	@RequestMapping("/getUploadFileUrl")
+	@ResponseBody
+	public BackResult<String> getUploadFileUrl(HttpServletRequest request, String mobile){
+		BackResult<String> result = new BackResult<String>();
+		if (!checkSign(request)) {
+			result.setResultCode(ResultCode.RESULT_FAILED);
+			result.setResultMsg("签名验证失败");
+			return result;
+		}
+		
+		if (CommonUtils.isNotString(mobile)) {
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("手机号码不能为空");
+			return result;
+		}
+		
+		result.setResultObj("/fileBus/uploadfile");
+		return result;
+	}
+	
 	/**
 	 * 文件上传
 	 * 
@@ -169,6 +179,8 @@ public class FileBusController extends BaseController {
 	public BackResult<FileDomain> upload(HttpServletRequest request, String mobile, String mobiles) {
 
 		logger.info("自助通手机号：" + mobile + "请求上传文件");
+		
+		logger.info("自助通手机号【" + mobiles + "】请求上传文件");
 
 		BackResult<FileDomain> result = new BackResult<FileDomain>();
 
