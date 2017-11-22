@@ -194,7 +194,7 @@ public class FileBusController extends BaseController {
 		String filePath = fielUrl + DateUtils.formatDate(new Date()) + "//";
 		// 解决中文问题，liunx下中文路径，图片显示问题
 		String fileName = UUIDTool.getInstance().getUUID() + "_" + mobile + ".txt";
-		File dest = new File(filePath);
+		File dest = new File(filePath + fileName);
 		// 检测是否存在目录
 		if (!dest.getParentFile().exists()) {
 			dest.getParentFile().mkdirs();
