@@ -63,6 +63,13 @@ public class FileBusController extends BaseController {
 			return result;
 		}
 
+		if (null == file) {
+			logger.error("用户手机号：【" + mobile + "】执行文件上传出现异常文件不存在");
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("上传的文件为空");
+			return result;
+		}
+		
 		if (file.isEmpty()) {
 			logger.error("用户手机号：【" + mobile + "】执行文件上传出现异常文件不存在");
 			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
