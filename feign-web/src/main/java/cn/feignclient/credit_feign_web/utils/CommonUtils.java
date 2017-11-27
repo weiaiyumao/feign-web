@@ -31,6 +31,23 @@ public class CommonUtils {
 		return (null == bigDecimal || "".equals(bigDecimal));
 	}
 	
+	/**
+	 * 验证是否为13位有效数字
+	 * @param str
+	 * @return
+	 */
+	public static boolean isNumeric(String str) {
+		if (str.length() != 11) {
+			return false;
+		}
+		for (int i = 0; i < str.length(); i++) {
+			if (!Character.isDigit(str.charAt(i))) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
 	public static void main(String[] args) {
 		System.out.println(CommonUtils.isNotEmpty(null));
 		System.out.println(CommonUtils.isNotString(""));
