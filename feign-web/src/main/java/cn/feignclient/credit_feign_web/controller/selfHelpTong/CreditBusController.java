@@ -38,7 +38,6 @@ public class CreditBusController extends BaseController {
 	public BackResult<RunTestDomian> runTheTest(HttpServletRequest request, String fileUrl, String mobile,
 			String source,String startLine,String type) {
 
-		logger.info("自助通手机号：" + mobile + "请求进行实号检测");
 		BackResult<RunTestDomian> result = new BackResult<RunTestDomian>();
 
 		if (!checkSign(request)) {
@@ -76,6 +75,12 @@ public class CreditBusController extends BaseController {
 			result.setResultMsg("类型不能为空：1检测 2查询检测结果");
 			return result;
 		}
+		
+		if (type.equals("1")) {
+			logger.info("自助通手机号：" + mobile + "请求进行实号检测");
+		} else {
+			logger.info("自助通手机号：" + mobile + "请求进行实号检测，查询检测结果");
+		}
 
 		try {
 
@@ -86,7 +91,9 @@ public class CreditBusController extends BaseController {
 				result.setResultMsg("用户校验失败，系统不存在该手机号码的用户");
 				return result;
 			}
-
+			
+			
+			
 			result = creditProviderService.theTest(fileUrl, String.valueOf(user.getId()), source, mobile, startLine,type);
 		} catch (Exception e) {
 			e.printStackTrace();
