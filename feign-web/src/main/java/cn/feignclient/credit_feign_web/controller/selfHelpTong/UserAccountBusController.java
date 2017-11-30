@@ -122,6 +122,15 @@ public class UserAccountBusController extends BaseController {
 			return result;
 		} 
 		
+		if (trdOrderDomain.getType().equals("2")) {
+			if (CommonUtils.isNotIngeter(trdOrderDomain.getNumber())) {
+				result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+				result.setResultMsg("退款条数不能为空");
+				result.setResultObj(null);
+				return result;
+			}
+		} 
+		
 		if (CommonUtils.isNotString(trdOrderDomain.getMobile())) {
 			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
 			result.setResultMsg("手机号码不能为空");
