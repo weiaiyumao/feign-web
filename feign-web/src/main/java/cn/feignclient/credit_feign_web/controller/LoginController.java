@@ -7,6 +7,8 @@ import java.util.HashMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,6 +29,8 @@ import main.java.cn.sms.util.ChuangLanSmsUtil;
 @RequestMapping("/login")
 public class LoginController extends BaseController {
 
+	private final static Logger logger = LoggerFactory.getLogger(ApiAccountInfoController.class);
+	
 	/**
 	 * 加载极验 验证码
 	 * 
@@ -247,6 +251,8 @@ public class LoginController extends BaseController {
 	public BackResult<String> activateUser(HttpServletRequest request, HttpServletResponse response, String mobile,
 			String timestamp, String token) {
 
+		logger.info("自助通请求用户【" + mobile +"】，请求激活账户！token:"+token + "timestamp:" + timestamp);
+		
 		BackResult<String> result = new BackResult<String>();
 
 		if (CommonUtils.isNotString(mobile)) {
