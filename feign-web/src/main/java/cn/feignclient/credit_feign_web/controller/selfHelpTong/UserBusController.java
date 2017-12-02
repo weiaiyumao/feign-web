@@ -1,6 +1,7 @@
 package cn.feignclient.credit_feign_web.controller.selfHelpTong;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import cn.feignclient.credit_feign_web.controller.BaseController;
 import cn.feignclient.credit_feign_web.utils.CommonUtils;
+import cn.feignclient.credit_feign_web.utils.MD5Util;
 import main.java.cn.common.BackResult;
 import main.java.cn.common.ResultCode;
 import main.java.cn.domain.CreUserDomain;
@@ -26,6 +28,64 @@ public class UserBusController extends BaseController {
 
 	private final static Logger logger = LoggerFactory.getLogger(UserBusController.class);
 
+	/**
+	 * 自助通调用激活账户
+	 * 
+	 * @param request
+	 * @param response
+	 * @param mobile
+	 * @param code
+	 * @return
+	 */
+	@RequestMapping("/activateUser")
+	public BackResult<String> activateUser(HttpServletRequest request, HttpServletResponse response, String mobile,
+			String timestamp, String token) {
+
+		logger.info("自助通请求用户【" + mobile +"】，请求激活账户！token:"+token + "timestamp:" + timestamp);
+		
+		BackResult<String> result = new BackResult<String>();
+
+		if (CommonUtils.isNotString(mobile)) {
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("手机号码不能为空");
+			result.setResultObj(null);
+			return result;
+		}
+
+		if (CommonUtils.isNotString(token)) {
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("token不能为空");
+			result.setResultObj(null);
+			return result;
+		}
+
+		String md5Token = MD5Util.getInstance().getMD5Code(timestamp + apiKey);
+
+		if (!md5Token.equals(token)) {
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("签名验证失败");
+			result.setResultObj(null);
+			return result;
+		}
+
+		CreUserDomain creUserDomain = new CreUserDomain();
+		creUserDomain.setUserPhone(mobile);
+
+		// 查询用户
+		BackResult<CreUserDomain> creResult = userFeignService.activateUserZzt(creUserDomain);
+
+		if (!creResult.getResultCode().equals(ResultCode.RESULT_SUCCEED)) {
+			result.setResultMsg(creResult.getResultMsg());
+			result.setResultCode(ResultCode.RESULT_FAILED);
+			result.setResultObj(null);
+			return result;
+		}
+
+		result.setResultObj(creResult.getResultObj().getId().toString());
+
+		return result;
+	}
+	
 	/**
 	 * 查询账户信息
 	 * 

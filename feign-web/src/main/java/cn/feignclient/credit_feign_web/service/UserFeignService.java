@@ -28,4 +28,6 @@ public interface UserFeignService {
 	@RequestMapping(value = "/user/activateUser", method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
 	public BackResult<CreUserDomain> activateUser(@RequestBody CreUserDomain creUserDomain);
 	
+	@RequestMapping(value = "/user/activateUserZzt", method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
+	public BackResult<CreUserDomain> activateUserZzt(@RequestBody CreUserDomain creUserDomain);
 }
