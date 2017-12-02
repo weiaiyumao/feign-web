@@ -124,7 +124,7 @@ public class FileBusController extends BaseController {
 
 			FileDomain fileDomain = new FileDomain();
 			fileDomain.setFileUploadUrl(filePath + fileName);
-			fileDomain.setTxtCount(lines);
+			fileDomain.setTxtCount(lines + 1);
 			result.setResultObj(fileDomain);
 			result.setResultMsg("上传成功");
 
