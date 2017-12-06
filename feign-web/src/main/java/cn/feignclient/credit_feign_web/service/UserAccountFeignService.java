@@ -3,6 +3,7 @@ package cn.feignclient.credit_feign_web.service;
 import java.util.List;
 
 import org.springframework.cloud.netflix.feign.FeignClient;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -16,7 +17,7 @@ import main.java.cn.domain.UserAccountDomain;
 @FeignClient(value = "user-provider-service")
 public interface UserAccountFeignService {
 	
-	@RequestMapping(value = "/userAccount/findbyMobile", method = RequestMethod.GET)
+	@RequestMapping(value = "/userAccount/findbyMobile", method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
 	BackResult<UserAccountDomain> findbyMobile(@RequestParam("mobile")String mobile);
 	
 	@RequestMapping(value = "/userAccount/rechargeOrRefunds", method = RequestMethod.GET)
