@@ -139,9 +139,9 @@ public class CreditProviderController extends BaseController{
 		}
 
 		if (type.equals("1")) {
-			logger.info("自助通手机号：" + mobile + "请求进行实号检测");
+			logger.info("PC网站通手机号：" + mobile + "请求进行实号检测");
 		} else {
-			logger.info("自助通手机号：" + mobile + "请求进行实号检测，查询检测结果");
+			logger.info("PC网站手机号：" + mobile + "请求进行实号检测，查询检测结果");
 		}
 
 		try {
@@ -160,7 +160,7 @@ public class CreditProviderController extends BaseController{
 				// 文件检测
 				File file = new File(fileUrl);
 				if (!file.isFile() || !file.exists()) {
-					logger.error("自助通手机号：" + mobile + "执行实号检测发现文件不存在");
+					logger.error("PC网站手机号：" + mobile + "执行实号检测发现文件不存在");
 					result.setResultCode(ResultCode.RESULT_BUSINESS_EXCEPTIONS);
 					result.setResultMsg("执行号码检测发现文件地址不存在");
 					return result;
@@ -209,18 +209,18 @@ public class CreditProviderController extends BaseController{
 				if (!CommonUtils.isNotString(succeedClearingCount)) {
 					BackResult<Boolean> resultConsume = userAccountFeignService.consumeAccount(String.valueOf(user.getId()), succeedClearingCount);
 					if (!resultConsume.getResultCode().equals(ResultCode.RESULT_SUCCEED)) {
-						logger.error("自助通手机号：" + mobile + "请求进行实号检测，出现结算错误请查账");
+						logger.error("PC网站手机号：" + mobile + "请求进行实号检测，出现结算错误请查账");
 					}
 					redisClient.remove(succeedClearingCountkey);
-					logger.info("自助通手机号：" + mobile + "请求进行实号检测，检测完毕，执行结账成功");
+					logger.info("PC网站手机号：" + mobile + "请求进行实号检测，检测完毕，执行结账成功");
 				} else {
-					logger.error("自助通手机号：" + mobile + "请求进行实号检测，出现结算错误请查账");
+					logger.error("PC网站手机号：" + mobile + "请求进行实号检测，出现结算错误请查账");
 				}
 			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error("自助通手机号：" + mobile + "请求进行实号检测，出现系统异常" + e.getMessage());
+			logger.error("PC网站手机号：" + mobile + "请求进行实号检测，出现系统异常" + e.getMessage());
 			result.setResultCode(ResultCode.RESULT_FAILED);
 			result.setResultMsg("系统异常");
 		}
