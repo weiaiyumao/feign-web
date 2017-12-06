@@ -195,7 +195,7 @@ public class CreditProviderController extends BaseController{
 				String KhTestCountKey = RedisKeys.getInstance().getKhTestCountKey(String.valueOf(user.getId()));
 				int expire = 4 * 60 * 60 * 1000;
 				// 将需要检测的总条数放入redis
-				redisClient.set(KhTestCountKey, String.valueOf(lines + 1), expire);
+				redisClient.set(KhTestCountKey, String.valueOf(lines), expire);
 			}
 
 			result = creditProviderService.theTest(fileUrl, String.valueOf(user.getId()), source, mobile, startLine,
