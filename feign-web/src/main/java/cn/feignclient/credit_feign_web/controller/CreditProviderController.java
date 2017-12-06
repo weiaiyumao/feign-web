@@ -215,8 +215,9 @@ public class CreditProviderController extends BaseController{
 					if (resultConsume.getResultCode().equals(ResultCode.RESULT_SUCCEED)) {
 						redisClient.remove(succeedClearingCountkey);
 						logger.info("PC网站手机号：" + mobile + "请求进行实号检测，检测完毕，执行结账成功");
+					}else {
+						logger.error("自助通手机号：" + mobile + "请求进行实号检测，出现结算错误请查账");
 					}
-					logger.error("PC网站手机号：" + mobile + "请求进行实号检测，出现结算错误请查账");
 				} else {
 					logger.error("PC网站手机号：" + mobile + "请求进行实号检测，出现结算错误请查账");
 				}
