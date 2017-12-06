@@ -168,7 +168,8 @@ public class CreditProviderController extends BaseController{
 
 				int lines = FileUtils.getFileLinesNotNullRow(fileUrl);
 				// 检测条数限制
-				if ((lines + 1) < 2999) {
+				if ((lines) < 2999) {
+					result.setResultCode(ResultCode.RESULT_BUSINESS_EXCEPTIONS);
 					runTestDomian.setStatus("5"); // 1执行中 2执行结束 // 3执行异常4账户余额不足5检测的条数小于3000条
 					result.setResultObj(runTestDomian);
 					result.setResultMsg("检测条数必须大于3000条");
@@ -179,6 +180,7 @@ public class CreditProviderController extends BaseController{
 				BackResult<UserAccountDomain> resultUserAccount = userAccountFeignService.findbyMobile(mobile);
 				
 				if (!resultUserAccount.getResultCode().equals(ResultCode.RESULT_SUCCEED)) {
+					result.setResultCode(ResultCode.RESULT_BUSINESS_EXCEPTIONS);
 					runTestDomian.setStatus("3"); // 1执行中 2执行结束 3执行异常4账户余额不足
 					result.setResultObj(runTestDomian);
 					result.setResultMsg("检测用户余额信息失败");
@@ -186,9 +188,11 @@ public class CreditProviderController extends BaseController{
 				}
 				
 				if (resultUserAccount.getResultObj().getAccount() < lines) {
+					result.setResultCode(ResultCode.RESULT_BUSINESS_EXCEPTIONS);
 					runTestDomian.setStatus("4"); // 1执行中 2执行结束 3执行异常4账户余额不足
 					result.setResultObj(runTestDomian);
 					result.setResultMsg("账户余额不足");
+					return result;
 				}
 				
 				// 校验通过将检测的条数存入redis中
@@ -208,11 +212,11 @@ public class CreditProviderController extends BaseController{
 				
 				if (!CommonUtils.isNotString(succeedClearingCount)) {
 					BackResult<Boolean> resultConsume = userAccountFeignService.consumeAccount(String.valueOf(user.getId()), succeedClearingCount);
-					if (!resultConsume.getResultCode().equals(ResultCode.RESULT_SUCCEED)) {
-						logger.error("PC网站手机号：" + mobile + "请求进行实号检测，出现结算错误请查账");
+					if (resultConsume.getResultCode().equals(ResultCode.RESULT_SUCCEED)) {
+						redisClient.remove(succeedClearingCountkey);
+						logger.info("PC网站手机号：" + mobile + "请求进行实号检测，检测完毕，执行结账成功");
 					}
-					redisClient.remove(succeedClearingCountkey);
-					logger.info("PC网站手机号：" + mobile + "请求进行实号检测，检测完毕，执行结账成功");
+					logger.error("PC网站手机号：" + mobile + "请求进行实号检测，出现结算错误请查账");
 				} else {
 					logger.error("PC网站手机号：" + mobile + "请求进行实号检测，出现结算错误请查账");
 				}
