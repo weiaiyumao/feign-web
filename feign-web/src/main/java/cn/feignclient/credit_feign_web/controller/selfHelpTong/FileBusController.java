@@ -22,6 +22,7 @@ import cn.feignclient.credit_feign_web.controller.BaseController;
 import cn.feignclient.credit_feign_web.domain.FileDomain;
 import cn.feignclient.credit_feign_web.utils.CommonUtils;
 import cn.feignclient.credit_feign_web.utils.DateUtils;
+import cn.feignclient.credit_feign_web.utils.FileUtils;
 import cn.feignclient.credit_feign_web.utils.UUIDTool;
 import main.java.cn.common.BackResult;
 import main.java.cn.common.ResultCode;
@@ -98,8 +99,6 @@ public class FileBusController extends BaseController {
 			dest.getParentFile().mkdirs();
 		}
 
-		LineNumberReader rf = null;
-
 		try {
 
 			CreUserDomain user = findByMobile(mobile);
@@ -109,22 +108,12 @@ public class FileBusController extends BaseController {
 				result.setResultMsg("用户校验失败，系统不存在该手机号码的用户");
 				return result;
 			}
-
+			
 			file.transferTo(dest);
-			File test = new File(filePath + fileName);
-			long fileLength = test.length();
-
-			rf = new LineNumberReader(new FileReader(test));
-			int lines = 0;
-			if (rf != null) {
-				rf.skip(fileLength);
-				lines = rf.getLineNumber();
-				rf.close();
-			}
-
+			
 			FileDomain fileDomain = new FileDomain();
 			fileDomain.setFileUploadUrl(filePath + fileName);
-			fileDomain.setTxtCount(lines + 1);
+			fileDomain.setTxtCount(FileUtils.getFileLinesNotNullRow(filePath + fileName));
 			result.setResultObj(fileDomain);
 			result.setResultMsg("上传成功");
 
@@ -138,16 +127,6 @@ public class FileBusController extends BaseController {
 			logger.error("用户手机号：【" + mobile + "】执行文件上传出现系统异常：" + e.getMessage());
 			result.setResultCode(ResultCode.RESULT_FAILED);
 			result.setResultMsg("系统异常");
-
-			if (rf != null) {
-				try {
-					rf.close();
-				} catch (IOException ee) {
-					logger.error("自助通手机号：" + mobile + "请求上传文件出现系统异常：" + ee.getMessage());
-					result.setResultCode(ResultCode.RESULT_FAILED);
-					result.setResultMsg("系统异常");
-				}
-			}
 		}
 
 		return result;
