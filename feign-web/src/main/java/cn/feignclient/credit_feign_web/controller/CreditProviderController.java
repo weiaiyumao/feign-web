@@ -16,8 +16,10 @@ import cn.feignclient.credit_feign_web.service.CreditProviderService;
 import cn.feignclient.credit_feign_web.utils.CommonUtils;
 import main.java.cn.common.BackResult;
 import main.java.cn.common.ResultCode;
+import main.java.cn.domain.CreUserDomain;
 import main.java.cn.domain.CvsFilePathDomain;
 import main.java.cn.domain.RunTestDomian;
+import main.java.cn.domain.page.PageDomain;
 
 @RestController
 @RequestMapping("/credit")
@@ -116,6 +118,68 @@ public class CreditProviderController extends BaseController{
     	
     	return result;
     }
+    
+    /**
+	 * 分页获取实号检测下载列表
+	 * 
+	 * @param request
+	 * @param pageNo
+	 * @param pageSize
+	 * @param mobile
+	 * @return
+	 */
+	@RequestMapping(value = "/getPageByMobile", method = RequestMethod.POST)
+	public BackResult<PageDomain<CvsFilePathDomain>> getPageByUserId(HttpServletResponse response,String userId,String mobile,String token, int pageNo,
+			int pageSize) {
+		
+		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
+		response.setContentType("text/json;charset=UTF-8");
+		logger.info("PC网站手机号：" + mobile + "请求分页获取历史检测记录");
+
+		BackResult<PageDomain<CvsFilePathDomain>> result = new BackResult<PageDomain<CvsFilePathDomain>>();
+
+		if (CommonUtils.isNotString(mobile)) {
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("手机号码不能为空");
+			return result;
+		}
+
+		if (CommonUtils.isNotString(token)) {
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("token不能为空");
+			return result;
+		}
+		
+//		if (!isLogin(mobile, token)) {
+//			result.setResultCode(ResultCode.RESULT_SESSION_STALED);
+//			result.setResultMsg("用户已经注销登录无法进行操作");
+//			return result;
+//		}
+		
+		if (CommonUtils.isNotIngeter(pageNo)) {
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("页数不能为空");
+			return result;
+		}
+		
+		if (CommonUtils.isNotIngeter(pageSize)) {
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("每页条数不能为空");
+			return result;
+		}
+
+		try {
+			if(pageNo<1)pageNo=1;
+			if(pageSize<1)pageSize=10;
+			result = creditProviderService.getPageByUserId(pageNo, pageSize, String.valueOf(userId));
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error("自助通手机号：" + mobile + "请求分页获取历史检测记录，出现系统异常：" + e.getMessage());
+			result.setResultCode(ResultCode.RESULT_FAILED);
+			result.setResultMsg("系统异常");
+		}
+		return result;
+	}
     
     @RequestMapping(value = "/deleteCvsByIds", method = RequestMethod.GET)
 	public BackResult<Boolean> deleteCvsByIds(HttpServletRequest request, HttpServletResponse response,String ids,String userId,String token,String mobile) {
