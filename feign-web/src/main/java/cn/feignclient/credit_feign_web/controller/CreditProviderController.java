@@ -20,6 +20,7 @@ import main.java.cn.domain.CreUserDomain;
 import main.java.cn.domain.CvsFilePathDomain;
 import main.java.cn.domain.RunTestDomian;
 import main.java.cn.domain.page.PageDomain;
+import main.java.cn.domain.UserAccountDomain;
 
 @RestController
 @RequestMapping("/credit")

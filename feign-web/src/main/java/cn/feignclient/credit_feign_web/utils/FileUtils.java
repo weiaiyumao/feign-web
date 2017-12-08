@@ -1,11 +1,13 @@
 package cn.feignclient.credit_feign_web.utils;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.io.OutputStreamWriter;
 import java.text.DecimalFormat;
@@ -237,7 +239,7 @@ public class FileUtils {
 		}
 		return size;
 	}
-	
+
 	public static String getFileSize(File file) {
 		String size = "";
 		if (file.exists() && file.isFile()) {
@@ -287,13 +289,81 @@ public class FileUtils {
 		return mobiles;
 	}
 
+	/**
+	 * 获取文件行数
+	 * 
+	 * @param fileUrl
+	 * @return
+	 */
+	public static int getFileLines(String fileUrl) {
+		try {
+			LineNumberReader rf = null;
+			int lines = 0;
+			File test = new File(fileUrl);
+			File file1 = new File(fileUrl);
+			if (file1.isFile() && file1.exists()) {
+				long fileLength = test.length();
+				rf = new LineNumberReader(new FileReader(test));
+
+				if (rf != null) {
+					rf.skip(fileLength);
+					lines = rf.getLineNumber();
+					rf.close();
+				}
+			}
+			return lines;
+		} catch (Exception e) {
+			logger.error("获取文件行数异常：" + e.getMessage());
+		}
+		return 0;
+	}
+
+	/**
+	 * 读取文件行数去掉空行
+	 * @param fileUrl
+	 * @return
+	 */
+	public static int getFileLinesNotNullRow(String fileUrl) {
+		BufferedReader br = null;
+		int rows = 0;
+		try {
+			File file = new File(fileUrl);
+			if (file.isFile() && file.exists()) {
+
+				InputStreamReader isr = new InputStreamReader(new FileInputStream(file), "utf-8");
+				br = new BufferedReader(isr);
+				String lineTxt = null;
+
+				while ((lineTxt = br.readLine()) != null) {
+					if (CommonUtils.isNotString(lineTxt)) {
+						continue;
+					}
+					rows = rows + 1;
+				}
+
+			}
+		} catch (Exception e) {
+			logger.error("获取文件行数异常：" + e.getMessage());
+		} finally {
+			if (null != br) {
+				try {
+					br.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+					logger.error("文件流关闭异常：" + e.getMessage());
+				}
+			}
+		}
+		return rows;
+	}
+
 	public static void main(String[] args) {
 		// File[] files = {new File("C:/test/1255/20170913/3月实号包.csv"),new
 		// File("C:/test/1255/20170913/6月实号包.csv"),new
 		// File("C:/test/1255/20170913/未知号码包.csv")};
 		// FileUtils.createZip(files,"C:/test/1255/20170913/Demo.zip");
 
-		System.out.println(FileUtils.getFileSize("D:/test/mk0004.txt"));
+		System.out.println(FileUtils.getFileLinesNotNullRow("D:/test/mk000164.txt"));
 	}
 
 	// String therefileName = "thereCSV.csv";// 文件名称
