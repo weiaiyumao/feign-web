@@ -264,11 +264,11 @@ public class UserProviderController extends BaseController {
 			return result;
 		}
 
-//		if (!isLogin(mobile, token)) {
-//			result.setResultCode(ResultCode.RESULT_SESSION_STALED);
-//			result.setResultMsg("注销校验失败无法注销");
-//			return result;
-//		}
+		if (!isLogin(mobile, token)) {
+			result.setResultCode(ResultCode.RESULT_SESSION_STALED);
+			result.setResultMsg("注销校验失败无法注销");
+			return result;
+		}
 
 		if (CommonUtils.isNotIngeter(pageSize)) {
 			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);

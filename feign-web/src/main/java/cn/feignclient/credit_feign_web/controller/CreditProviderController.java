@@ -150,11 +150,11 @@ public class CreditProviderController extends BaseController{
 			return result;
 		}
 		
-//		if (!isLogin(mobile, token)) {
-//			result.setResultCode(ResultCode.RESULT_SESSION_STALED);
-//			result.setResultMsg("用户已经注销登录无法进行操作");
-//			return result;
-//		}
+		if (!isLogin(mobile, token)) {
+			result.setResultCode(ResultCode.RESULT_SESSION_STALED);
+			result.setResultMsg("用户已经注销登录无法进行操作");
+			return result;
+		}
 		
 		if (CommonUtils.isNotIngeter(pageNo)) {
 			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
