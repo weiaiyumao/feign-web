@@ -1,4 +1,4 @@
-package cn.thread;
+package cn.feignclient.credit_feign_web.thread;
 
 import java.util.ArrayList;
 import java.util.List;
