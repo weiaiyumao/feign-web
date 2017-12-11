@@ -16,11 +16,9 @@ import cn.feignclient.credit_feign_web.service.CreditProviderService;
 import cn.feignclient.credit_feign_web.utils.CommonUtils;
 import main.java.cn.common.BackResult;
 import main.java.cn.common.ResultCode;
-import main.java.cn.domain.CreUserDomain;
 import main.java.cn.domain.CvsFilePathDomain;
 import main.java.cn.domain.RunTestDomian;
 import main.java.cn.domain.page.PageDomain;
-import main.java.cn.domain.UserAccountDomain;
 
 @RestController
 @RequestMapping("/credit")
