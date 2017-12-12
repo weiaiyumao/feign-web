@@ -13,7 +13,7 @@ import main.java.cn.domain.CreUserDomain;
 @FeignClient(value = "user-provider-service")
 public interface UserFeignService {
 	
-	@RequestMapping(value = "/user/findbyMobile", method = RequestMethod.GET)
+	@RequestMapping(value = "/user/findbyMobile", method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
 	BackResult<CreUserDomain> findbyMobile(@RequestParam("mobile")String mobile);
 	
 	@RequestMapping(value = "/user/findOrsaveUser", method = RequestMethod.GET,consumes = MediaType.APPLICATION_JSON_VALUE)
