@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.InitBinder;
 
 import cn.feignclient.credit_feign_web.redis.RedisClient;
 import cn.feignclient.credit_feign_web.service.UserFeignService;
+import cn.feignclient.credit_feign_web.thread.ThreadExecutorService;
 import main.java.cn.common.BackResult;
 import main.java.cn.common.ResultCode;
 import main.java.cn.domain.CreUserDomain;
@@ -28,6 +29,9 @@ public class BaseController {
 
 	@Autowired
 	protected RedisClient redisClinet;
+	
+	@Autowired
+	protected ThreadExecutorService threadExecutorService;
 
 	@Value("${api_key}")
 	protected String apiKey;

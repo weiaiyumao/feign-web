@@ -13,6 +13,7 @@ import main.java.cn.common.BackResult;
 import main.java.cn.domain.ErpTradeDomain;
 import main.java.cn.domain.TrdOrderDomain;
 import main.java.cn.domain.UserAccountDomain;
+import main.java.cn.domain.page.PageDomain;
 
 @FeignClient(value = "user-provider-service")
 public interface UserAccountFeignService {
@@ -31,4 +32,7 @@ public interface UserAccountFeignService {
 	
 	@RequestMapping(value = "/userAccount/consumeAccount" , method = RequestMethod.POST)
 	BackResult<Boolean> consumeAccount(@RequestParam("creUserId")String creUserId,@RequestParam("count")String count);
+	
+	@RequestMapping(value = "/userAccount/pageFindTrdOrderByCreUserId", method = RequestMethod.POST)
+	public BackResult<PageDomain<TrdOrderDomain>> pageFindTrdOrderByCreUserId(@RequestParam("creUserId")Integer creUserId,@RequestParam("pageSize")Integer pageSize,@RequestParam("pageNum")Integer pageNum);
 }

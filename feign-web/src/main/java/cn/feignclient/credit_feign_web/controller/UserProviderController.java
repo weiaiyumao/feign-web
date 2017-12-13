@@ -20,6 +20,7 @@ import main.java.cn.common.ResultCode;
 import main.java.cn.domain.ErpTradeDomain;
 import main.java.cn.domain.TrdOrderDomain;
 import main.java.cn.domain.UserAccountDomain;
+import main.java.cn.domain.page.PageDomain;
 import main.java.cn.hhtp.util.MD5Util;
 
 @RestController
@@ -62,9 +63,10 @@ public class UserProviderController extends BaseController {
 
 		return result;
 	}
-	
+
 	/**
 	 * erp 调用查询账户余额接口
+	 * 
 	 * @param request
 	 * @param response
 	 * @param mobile
@@ -73,7 +75,7 @@ public class UserProviderController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(value = "/api/findbyUserAccount", method = RequestMethod.POST)
-	public BackResult<UserAccountDomain> findbyUserAccount(String mobile, String timestamp,String token) {
+	public BackResult<UserAccountDomain> findbyUserAccount(String mobile, String timestamp, String token) {
 
 		BackResult<UserAccountDomain> result = new BackResult<UserAccountDomain>();
 
@@ -90,7 +92,7 @@ public class UserProviderController extends BaseController {
 		}
 
 		String md5Token = MD5Util.getInstance().getMD5Code(timestamp + apiKey);
-		
+
 		if (!md5Token.equals(token)) {
 			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
 			result.setResultMsg("签名验证失败");
@@ -108,61 +110,62 @@ public class UserProviderController extends BaseController {
 
 		return result;
 	}
-	
+
 	@RequestMapping(value = "/api/rechargeOrRefunds", method = RequestMethod.POST)
-	public BackResult<ErpTradeDomain> rechargeOrRefunds(HttpServletRequest request, HttpServletResponse response,TrdOrderDomain trdOrderDomain,String timestamp,String token) {
+	public BackResult<ErpTradeDomain> rechargeOrRefunds(HttpServletRequest request, HttpServletResponse response,
+			TrdOrderDomain trdOrderDomain, String timestamp, String token) {
 
 		BackResult<ErpTradeDomain> result = new BackResult<ErpTradeDomain>();
-		
+
 		if (CommonUtils.isNotString(token)) {
 			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
 			result.setResultMsg("token不能为空");
 			result.setResultObj(null);
 			return result;
 		}
-		
+
 		if (null == trdOrderDomain) {
 			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
 			result.setResultMsg("参数不能为空");
 			result.setResultObj(null);
 			return result;
 		}
-		
+
 		if (CommonUtils.isNotString(trdOrderDomain.getClOrderNo())) {
 			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
 			result.setResultMsg("订单业务编号不能为空");
 			result.setResultObj(null);
 			return result;
 		}
-		
+
 		if (CommonUtils.isNotIngeter(trdOrderDomain.getProductsId())) {
 			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
 			result.setResultMsg("产品编号不能为空");
 			result.setResultObj(null);
 			return result;
 		}
-		
+
 		if (CommonUtils.isNotBigDecimal(trdOrderDomain.getMoney())) {
 			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
 			result.setResultMsg("金额不能为空");
 			result.setResultObj(null);
 			return result;
 		}
-		
+
 		if (null == trdOrderDomain.getPayTime()) {
 			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
 			result.setResultMsg("成功支付时间不能为空");
 			result.setResultObj(null);
 			return result;
-		} 
-		
+		}
+
 		if (CommonUtils.isNotString(trdOrderDomain.getType())) {
 			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
 			result.setResultMsg("类型不能为空 1：充值 2：退款");
 			result.setResultObj(null);
 			return result;
-		} 
-		
+		}
+
 		if (trdOrderDomain.getType().equals("2")) {
 			if (CommonUtils.isNotIngeter(trdOrderDomain.getNumber())) {
 				result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
@@ -170,17 +173,17 @@ public class UserProviderController extends BaseController {
 				result.setResultObj(null);
 				return result;
 			}
-		} 
-		
+		}
+
 		if (CommonUtils.isNotString(trdOrderDomain.getMobile())) {
 			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
 			result.setResultMsg("手机号码不能为空");
 			result.setResultObj(null);
 			return result;
 		}
-		
+
 		String md5Token = MD5Util.getInstance().getMD5Code(timestamp + apiKey);
-		
+
 		if (!md5Token.equals(token)) {
 			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
 			result.setResultMsg("签名验证失败");
@@ -196,13 +199,13 @@ public class UserProviderController extends BaseController {
 			result.setResultMsg("系统异常");
 			result.setResultObj(null);
 		}
-		
+
 		return result;
 	}
 
-	@RequestMapping(value = "/findTrdOrderByCreUserId", method = RequestMethod.GET)
+	@RequestMapping(value = "/findTrdOrderByCreUserId", method = RequestMethod.POST)
 	public BackResult<List<TrdOrderDomain>> findTrdOrderByMobile(HttpServletRequest request,
-			HttpServletResponse response, @RequestParam("mobile") String mobile, String token,Integer creUserId) {
+			HttpServletResponse response, @RequestParam("mobile") String mobile, String token, Integer creUserId) {
 
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
@@ -229,6 +232,60 @@ public class UserProviderController extends BaseController {
 
 		try {
 			result = userAccountFeignService.findTrdOrderByCreUserId(creUserId);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error("用户手机号：" + mobile + "执行查询订单信息出现异常：" + e.getMessage());
+			result.setResultCode(ResultCode.RESULT_FAILED);
+			result.setResultMsg("系统异常");
+		}
+
+		return result;
+	}
+
+	@RequestMapping(value = "/pageFindTrdOrderByCreUserId", method = RequestMethod.POST)
+	public BackResult<PageDomain<TrdOrderDomain>> pageFindTrdOrderByCreUserId(HttpServletRequest request,
+			HttpServletResponse response, String mobile, String token, Integer creUserId, Integer pageSize,
+			Integer pageNum) {
+
+		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
+		response.setContentType("text/json;charset=UTF-8");
+
+		BackResult<PageDomain<TrdOrderDomain>> result = new BackResult<PageDomain<TrdOrderDomain>>();
+
+		if (CommonUtils.isNotString(mobile)) {
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("手机号码不能为空");
+			return result;
+		}
+
+		if (CommonUtils.isNotString(token)) {
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("token不能为空");
+			return result;
+		}
+
+		if (!isLogin(mobile, token)) {
+			result.setResultCode(ResultCode.RESULT_SESSION_STALED);
+			result.setResultMsg("注销校验失败无法注销");
+			return result;
+		}
+
+		if (CommonUtils.isNotIngeter(pageSize)) {
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("pageSize不能为空");
+			return result;
+		}
+
+		if (CommonUtils.isNotIngeter(pageNum)) {
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("pageNum不能为空");
+			return result;
+		}
+
+		try {
+			if(pageNum<1)pageNum=1;
+			if(pageSize<1)pageSize=10;
+			result = userAccountFeignService.pageFindTrdOrderByCreUserId(creUserId, pageSize, pageNum);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error("用户手机号：" + mobile + "执行查询订单信息出现异常：" + e.getMessage());

@@ -75,8 +75,8 @@ public class ApiMobileTestController extends BaseController {
 			String[] phones = mobile.split(",");
 
 			String ip = super.getIpAddr(request);
-			
-			logger.info("账户号：" + apiName +"的IP地址是：" + ip);
+
+			logger.info("账户号：" + apiName + "的IP地址是：" + ip);
 
 			// 1、账户信息检测
 			BackResult<Integer> resultCreUser = apiAccountInfoFeignService.checkApiAccount(apiName, password, ip,
@@ -106,15 +106,26 @@ public class ApiMobileTestController extends BaseController {
 			}
 
 			if (changeCount > 0) {
-				// 3、结算
-				BackResult<Boolean> resultConsume = userAccountFeignService.consumeApiAccount(
-						resultCreUser.getResultObj().toString(), String.valueOf(result.getResultObj().size()));
+				
+				Runnable run = new Runnable() {
 
-				if (!resultConsume.getResultCode().equals(ResultCode.RESULT_SUCCEED)) {
-					result.setResultCode(resultConsume.getResultCode());
-					result.setResultMsg(resultConsume.getResultMsg());
-					return result;
-				}
+					@Override
+					public void run() {
+						// 3、结算
+						BackResult<Boolean> resultConsume = userAccountFeignService.consumeApiAccount(
+								resultCreUser.getResultObj().toString(), String.valueOf("1"));
+
+						if (!resultConsume.getResultCode().equals(ResultCode.RESULT_SUCCEED)) {
+							logger.error("------------------------------------商户号：" + apiName + "执行账户2次清洗出现记账系统异常："
+									+ resultConsume.getResultMsg());
+						}
+
+					}
+				};
+
+				// 加入线程池开始执行
+				threadExecutorService.execute(run);
+				
 			}
 
 		} catch (Exception e) {
@@ -130,7 +141,7 @@ public class ApiMobileTestController extends BaseController {
 
 	@RequestMapping(value = "/getPageByUserId", method = RequestMethod.POST)
 	public BackResult<PageDomain<MobileTestLogDomain>> getPageByUserId(HttpServletRequest request,
-			HttpServletResponse response, int pageNo, int pageSize,  String creUserId,String mobile,String token) {
+			HttpServletResponse response, int pageNo, int pageSize, String creUserId, String mobile, String token) {
 
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
@@ -187,7 +198,7 @@ public class ApiMobileTestController extends BaseController {
 		return result;
 
 	}
-	
+
 	/**
 	 * 对外API账户2次清洗接口
 	 * 
@@ -222,7 +233,7 @@ public class ApiMobileTestController extends BaseController {
 				result.setResultMsg("检测的手机号码不能为空");
 				return result;
 			}
-			
+
 			// 验证是否为正常的１１位有效数字
 			if (!CommonUtils.isNumeric(mobile)) {
 				result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
@@ -231,11 +242,11 @@ public class ApiMobileTestController extends BaseController {
 			}
 
 			String ip = super.getIpAddr(request);
-			
-			logger.info("---------不发短息----------账户号：" + apiName +"的IP地址是：" + ip);
+
+			logger.info("---------不发短息----------账户号：" + apiName + "的IP地址是：" + ip);
 
 			// 1、账户信息检测
-			BackResult<Integer> resultCreUser = apiAccountInfoFeignService.checkApiAccount(apiName, password, ip,1);
+			BackResult<Integer> resultCreUser = apiAccountInfoFeignService.checkApiAccount(apiName, password, ip, 1);
 
 			if (!resultCreUser.getResultCode().equals(ResultCode.RESULT_SUCCEED)) {
 				result.setResultCode(resultCreUser.getResultCode());
@@ -246,26 +257,31 @@ public class ApiMobileTestController extends BaseController {
 			// 2、执行检测返回检测结果
 			result = apiMobileTestService.findByMobile(mobile, resultCreUser.getResultObj().toString());
 
-			if (result.getResultCode().equals(ResultCode.RESULT_SUCCEED)) {
-				new Thread(new Runnable() {
-					
+			if (result.getResultCode().equals(ResultCode.RESULT_SUCCEED) && result.getResultObj().getChargesStatus().equals("1")) {
+				Runnable run = new Runnable() {
+
 					@Override
 					public void run() {
 						// 3、结算
-						BackResult<Boolean> resultConsume = userAccountFeignService.consumeApiAccount(
-								resultCreUser.getResultObj().toString(), String.valueOf(1));
+						BackResult<Boolean> resultConsume = userAccountFeignService
+								.consumeApiAccount(resultCreUser.getResultObj().toString(), String.valueOf(1));
 
 						if (!resultConsume.getResultCode().equals(ResultCode.RESULT_SUCCEED)) {
-							logger.error("------------------------------------商户号：" + apiName + "执行账户2次清洗出现记账系统异常：" + resultConsume.getResultMsg());
+							logger.error("------------------------------------商户号：" + apiName + "执行空号API出现记账系统异常："
+									+ resultConsume.getResultMsg());
 						}
-						
+
 					}
-				}, "商户号"+ apiName +"开始记账任务").start();
+				};
+
+				// 加入线程池开始执行
+				threadExecutorService.execute(run);
+				// new Thread(, "商户号"+ apiName +"开始记账任务").start();
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error("商户号：" + apiName + "执行账户2次清洗出现系统异常：" + e.getMessage());
+			logger.error("商户号：" + apiName + "执行空号API出现系统异常：" + e.getMessage());
 			result.setResultCode(ResultCode.RESULT_FAILED);
 			result.setResultMsg("系统异常！");
 		}
