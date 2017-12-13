@@ -34,25 +34,7 @@ public class RedisConfiguration {
 	// config.setMaxWaitMillis(maxWaitMillis);
 	// return config;
 	// }
-
-	@Bean(name = "jedis.pool")
-	@Autowired
-	public JedisPool jedisPool(@Qualifier("jedis.pool.config") JedisPoolConfig config,
-			@Value("${jedis.pool.host}") String host, @Value("${jedis.pool.port}") int port) {
-		return new JedisPool(config, host, port);
-	}
-
-	@Bean(name = "jedis.pool.config")
-	public JedisPoolConfig jedisPoolConfig(@Value("${jedis.pool.config.maxTotal}") int maxTotal,
-			@Value("${jedis.pool.config.maxIdle}") int maxIdle,
-			@Value("${jedis.pool.config.maxWaitMillis}") int maxWaitMillis) {
-		JedisPoolConfig config = new JedisPoolConfig();
-		config.setMaxTotal(maxTotal);
-		config.setMaxIdle(maxIdle);
-		config.setMaxWaitMillis(maxWaitMillis);
-		return config;
-	}
-
+	
 	@Value("${jedis.pool.host}")
 	private String host;
 
@@ -67,12 +49,28 @@ public class RedisConfiguration {
 
 	@Value("${jedis.pool.config.maxWaitMillis}")
 	private int maxWaitMillis;
+	
+
+	@Bean(name = "jedis.pool")
+	@Autowired
+	public JedisPool jedisPool(@Qualifier("jedis.pool.config") JedisPoolConfig config) {
+		return new JedisPool(config, host, port);
+	}
+
+	@Bean(name = "jedis.pool.config")
+	public JedisPoolConfig jedisPoolConfig() {
+		JedisPoolConfig config = new JedisPoolConfig();
+		config.setMaxTotal(maxTotal);
+		config.setMaxIdle(maxIdle);
+		config.setMaxWaitMillis(maxWaitMillis);
+		return config;
+	}
 
 	@Bean
 	public JedisConnectionFactory connectionFactory() {
 		JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory();
 		jedisConnectionFactory.setUsePool(true);
-		jedisConnectionFactory.setPoolConfig(this.jedisPoolConfig(maxTotal, maxIdle, maxWaitMillis));
+		jedisConnectionFactory.setPoolConfig(this.jedisPoolConfig());
 		jedisConnectionFactory.setHostName(host);
 		jedisConnectionFactory.setPort(port);
 		return jedisConnectionFactory;

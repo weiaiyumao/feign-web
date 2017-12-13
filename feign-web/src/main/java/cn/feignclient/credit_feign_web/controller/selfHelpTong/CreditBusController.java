@@ -48,7 +48,7 @@ public class CreditBusController extends BaseController {
 	private RedisClient redisClient;
 
 	@RequestMapping(value = "/theTest", method = RequestMethod.POST)
-	public BackResult<RunTestDomian> runTheTest(HttpServletRequest request, String fileUrl, String mobile,
+	public BackResult<RunTestDomian> theTest(HttpServletRequest request, String fileUrl, String mobile,
 			String source, String startLine, String type) {
 
 		BackResult<RunTestDomian> result = new BackResult<RunTestDomian>();
