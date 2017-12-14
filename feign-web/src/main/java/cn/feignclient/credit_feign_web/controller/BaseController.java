@@ -9,8 +9,6 @@ import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -29,8 +27,6 @@ import main.java.cn.hhtp.util.MD5Util;
 
 public class BaseController {
 	
-	private final static Logger logger = LoggerFactory.getLogger(BaseController.class);
-
 	@Autowired
 	protected UserFeignService userFeignService;
 
@@ -138,7 +134,7 @@ public class BaseController {
 	}
 
 	/**
-	 * 根据手机号码获取用户对象
+	 * 根据手机号码获取用户对象 (缓存30分钟)
 	 * 
 	 * @param mobile
 	 * @return
@@ -156,10 +152,7 @@ public class BaseController {
 				creuserdomain = result.getResultObj();
 				redisTemplate.opsForValue().set(skey, creuserdomain, 30 * 60, TimeUnit.SECONDS);
 			}
-			logger.info("不获取缓存用户对象");
-		} else {
-			logger.info("获取缓存用户对象");
-		}
+		} 
 		
 		return creuserdomain;
 
