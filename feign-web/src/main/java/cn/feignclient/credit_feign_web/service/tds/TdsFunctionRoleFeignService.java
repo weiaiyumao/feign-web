@@ -28,4 +28,5 @@ public interface TdsFunctionRoleFeignService {
 	
 	@RequestMapping(value="/functionRole/selectAll",method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
 	public BackResult<List<TdsFunctionRoleDomain>> selectAll(TdsFunctionRoleDomain tdsFunctionRoleDomain);
+	
 }

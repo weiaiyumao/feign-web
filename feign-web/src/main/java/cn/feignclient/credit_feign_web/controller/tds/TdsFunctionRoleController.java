@@ -32,8 +32,8 @@ public class TdsFunctionRoleController extends BaseController {
 	private TdsFunctionRoleFeignService tdsFunctionRoleFeignService;
 
 	@RequestMapping(value = "/loadById", method = RequestMethod.POST)
-	public BackResult<TdsFunctionRoleDomain> loadById(Integer id, HttpServletRequest request, HttpServletResponse response,
-			String token) {
+	public BackResult<TdsFunctionRoleDomain> loadById(Integer id, HttpServletRequest request,
+			HttpServletResponse response, String token) {
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
 		BackResult<TdsFunctionRoleDomain> result = new BackResult<TdsFunctionRoleDomain>();
@@ -52,16 +52,17 @@ public class TdsFunctionRoleController extends BaseController {
 	}
 
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
-	public BackResult<TdsFunctionRoleDomain> save(TdsFunctionRoleDomain tdsFunctionRoleDomain,HttpServletRequest request, HttpServletResponse response, String token) {
+	public BackResult<TdsFunctionRoleDomain> save(TdsFunctionRoleDomain tdsFunctionRoleDomain,
+			HttpServletRequest request, HttpServletResponse response, String token) {
 		BackResult<TdsFunctionRoleDomain> result = new BackResult<TdsFunctionRoleDomain>();
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
-		if (CommonUtils.isNotString(tdsFunctionRoleDomain.getFunId())) {
+		if (CommonUtils.isNotIngeter(tdsFunctionRoleDomain.getFunId())) {
 			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
 			result.setResultMsg("功能id不能为空");
 			return result;
 		}
-		if (CommonUtils.isNotString(tdsFunctionRoleDomain.getRoleId())) {
+		if (CommonUtils.isNotIngeter(tdsFunctionRoleDomain.getRoleId())) {
 			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
 			result.setResultMsg("角色id不能为空");
 			return result;
@@ -74,10 +75,10 @@ public class TdsFunctionRoleController extends BaseController {
 		result = tdsFunctionRoleFeignService.save(tdsFunctionRoleDomain);
 		return result;
 	}
-	
-	
-	@RequestMapping(value="/update",method = RequestMethod.POST)
-    public BackResult<TdsFunctionRoleDomain>  update(TdsFunctionRoleDomain tdsFunctionRoleDomain,HttpServletRequest request, HttpServletResponse response, String token){
+
+	@RequestMapping(value = "/update", method = RequestMethod.POST)
+	public BackResult<TdsFunctionRoleDomain> update(TdsFunctionRoleDomain tdsFunctionRoleDomain,
+			HttpServletRequest request, HttpServletResponse response, String token) {
 		BackResult<TdsFunctionRoleDomain> result = new BackResult<TdsFunctionRoleDomain>();
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
@@ -94,9 +95,10 @@ public class TdsFunctionRoleController extends BaseController {
 		result = tdsFunctionRoleFeignService.update(tdsFunctionRoleDomain);
 		return result;
 	}
-	
-	@RequestMapping(value="/deleteById")
-	public BackResult<Integer> deleteById(@RequestParam("id")Integer id,HttpServletRequest request, HttpServletResponse response,String token){
+
+	@RequestMapping(value = "/deleteById")
+	public BackResult<Integer> deleteById(@RequestParam("id") Integer id, HttpServletRequest request,
+			HttpServletResponse response, String token) {
 		BackResult<Integer> result = new BackResult<Integer>();
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
@@ -113,13 +115,14 @@ public class TdsFunctionRoleController extends BaseController {
 		result = tdsFunctionRoleFeignService.deleteById(id);
 		return result;
 	}
-	
-	@RequestMapping(value="selectAll")
-	public BackResult<List<TdsFunctionRoleDomain>> selectAll(TdsFunctionRoleDomain tdsFunctionRoleDomain,HttpServletRequest request, HttpServletResponse response,String token){
+
+	@RequestMapping(value = "selectAll")
+	public BackResult<List<TdsFunctionRoleDomain>> selectAll(TdsFunctionRoleDomain tdsFunctionRoleDomain,
+			HttpServletRequest request, HttpServletResponse response, String token) {
 		BackResult<List<TdsFunctionRoleDomain>> result = new BackResult<List<TdsFunctionRoleDomain>>();
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
-		
+
 		if (CommonUtils.isNotString(token)) {
 			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
 			result.setResultMsg("token不能为空");

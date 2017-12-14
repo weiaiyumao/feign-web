@@ -1,5 +1,7 @@
 package cn.feignclient.credit_feign_web.service.tds;
 
+
+
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,4 +30,7 @@ public interface TdsUserFeignService {
 	@RequestMapping(value = "/tdsUser/pageSelectAll", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public BackResult<PageDomain<TdsUserDomain>> pageSelectAll(TdsUserDomain tdsUserDomain,
 			@RequestParam("pageSize") Integer pageSize, @RequestParam("curPage") Integer curPage);
+	
+	
+	
 }
