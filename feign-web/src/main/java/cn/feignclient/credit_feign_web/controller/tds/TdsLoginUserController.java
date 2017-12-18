@@ -78,6 +78,7 @@ public class TdsLoginUserController extends BaseController {
 		}
 		// 生成tonke
 		String tokenUserId = MD5Util.getInstance().getMD5Code("tds_user_token_" + result.getResultObj().getId());
+		
 		// 清空 se_ken_
 		// redisClinet.remove("tdsse_ken_" + mobile);//
 		redisClinet.set("tds_user_token_" + result.getResultObj().getPhone(), tokenUserId);

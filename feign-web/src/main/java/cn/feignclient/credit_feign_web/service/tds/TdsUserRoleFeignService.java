@@ -28,4 +28,7 @@ public interface TdsUserRoleFeignService {
 	
 	@RequestMapping(value="/userRole/selectAll",method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
 	public BackResult<List<TdsUserRoleDomain>> selectAll(TdsUserRoleDomain tdsUserRoleDomain);
+	
+	@RequestMapping(value="/userRole/upStatusByUserId",method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
+	public BackResult<Integer> upStatusByUserId(TdsUserRoleDomain tdsUserRoleDomain);
 }

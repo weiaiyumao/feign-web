@@ -9,16 +9,18 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import cn.feignclient.credit_feign_web.controller.BaseController;
-import cn.feignclient.credit_feign_web.service.tds.TdsSuperFeignService;
+import cn.feignclient.credit_feign_web.service.tds.TdsDeparTmentFeignService;
 import cn.feignclient.credit_feign_web.utils.CommonUtils;
 import main.java.cn.common.BackResult;
 import main.java.cn.common.ResultCode;
 import main.java.cn.domain.page.PageDomain;
+import main.java.cn.domain.tds.TdsDepartmentDomain;
 import main.java.cn.domain.tds.TdsFunctionDomain;
 import main.java.cn.domain.tds.UserRoleDepartmentViewDomain;
 
@@ -29,7 +31,7 @@ public class TdsDepartmentController extends BaseController {
 	private final static Logger logger = LoggerFactory.getLogger(TdsDepartmentController.class);
 
 	@Autowired
-	private TdsSuperFeignService tdsSuperFeignService;
+	private TdsDeparTmentFeignService tdsDeparTmentFeignService;
 
 	/**
 	 * 账号权限
@@ -62,7 +64,7 @@ public class TdsDepartmentController extends BaseController {
 			if(null==roleName || "".equals(roleName)){
 				logger.info("查询全部角色");
 			}
-	   	   result=tdsSuperFeignService.pageUserRoleDepartmentView(departName,roleName,createTime,contact,currentPage,numPerPage);
+	   	   result=tdsDeparTmentFeignService.pageUserRoleDepartmentView(departName,roleName,createTime,contact,currentPage,numPerPage);
 		   logger.info("账号权限查询分页列表");
     	return result;
 	}
@@ -78,8 +80,20 @@ public class TdsDepartmentController extends BaseController {
 			result.setResultMsg("userid不能为空");
 			return result;
 		}
-	 	result=tdsSuperFeignService.funByuserId(usreId);
+	 	result=tdsDeparTmentFeignService.funByuserId(usreId);
 		return result;
 	}
+	
+	
+	  /**
+	   * 查询所有部门列表
+	   * @return
+	   */
+	  @RequestMapping(value="/selectAll",method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
+	  public BackResult<List<TdsDepartmentDomain>> selectAll(TdsDepartmentDomain domain,HttpServletRequest request, HttpServletResponse response){
+		  response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
+		  response.setContentType("text/json;charset=UTF-8");
+		  return tdsDeparTmentFeignService.selectAll(domain);
+	  }
 	 
 }

@@ -128,5 +128,19 @@ public class TdsUserRoleController extends BaseController {
 		result = tdsUserRoleFeignService.selectAll(tdsUserRoleDomain);
 		return result;
 	}
+	
+	@RequestMapping(value="/upStatusByUserId",method = RequestMethod.POST)
+	public BackResult<Integer> upStatusByUserId(TdsUserRoleDomain tdsUserRoleDomain,String token){
+		BackResult<Integer> result=new BackResult<Integer>();
+		
+		if (CommonUtils.isNotString(token)) {
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("token不能为空");
+			return result;
+		}
+		
+		result=tdsUserRoleFeignService.upStatusByUserId(tdsUserRoleDomain);
+		return result;
+	}
 
 }

@@ -19,7 +19,6 @@ import main.java.cn.common.BackResult;
 import main.java.cn.common.ResultCode;
 import main.java.cn.domain.page.PageDomain;
 import main.java.cn.domain.tds.TdsUserDomain;
-import main.java.cn.hhtp.util.MD5Util;
 
 @RestController
 @RequestMapping("/tdsUser")
@@ -97,10 +96,7 @@ public class TdsUserController extends BaseController {
 		if (CommonUtils.isNotString(token)) {
 			 return new BackResult<TdsUserDomain>(ResultCode.RESULT_PARAM_EXCEPTIONS,"token不能为空");
 		}
-		//如果修改的是密码，进行加密
-		if(!CommonUtils.isNotString(tdsUserDomain.getPassword())){
-			tdsUserDomain.setPassword(MD5Util.getInstance().getMD5Code(tdsUserDomain.getPassword()));
-		}
+		
 		//TODO
 //		if (!isLogin(tdsUserDomain.getPhone(), token)) {
 //			 return new BackResult<TdsUserDomain>(ResultCode.RESULT_SESSION_STALED,"注销校验失败无法注销");
@@ -149,7 +145,7 @@ public class TdsUserController extends BaseController {
 			return new BackResult<PageDomain<TdsUserDomain>>(ResultCode.RESULT_PARAM_EXCEPTIONS,"token不能为空");
 		}
 		
-		logger.info("用户id分页查询"+tdsUserDomain.getId());
+		logger.info("============用户分页查询==========");
 		
 		result = tdsUserFeignService.pageSelectAll(tdsUserDomain, pageSize, curPage);
 		return result;

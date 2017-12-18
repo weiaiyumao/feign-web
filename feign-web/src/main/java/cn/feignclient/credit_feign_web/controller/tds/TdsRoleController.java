@@ -31,6 +31,15 @@ public class TdsRoleController extends BaseController {
 	@Autowired
 	private TdsRoleFeignService tdsRoleFeignService;
 
+	
+	/**
+	 * 根据id查询角色信息
+	 * @param id
+	 * @param request
+	 * @param response
+	 * @param token
+	 * @return
+	 */
 	@RequestMapping(value = "/loadById", method = RequestMethod.POST)
 	public BackResult<TdsRoleDomain> loadById(Integer id, HttpServletRequest request, HttpServletResponse response,
 			String token) {
@@ -50,7 +59,15 @@ public class TdsRoleController extends BaseController {
 		result = tdsRoleFeignService.loadById(id);
 		return result;
 	}
-
+    
+	 /**
+	  * 新增角色
+	  * @param tdsRoleDomain
+	  * @param request
+	  * @param response
+	  * @param token
+	  * @return
+	  */
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	public BackResult<TdsRoleDomain> saveTdsFunction(TdsRoleDomain tdsRoleDomain,HttpServletRequest request, HttpServletResponse response, String token) {
 		BackResult<TdsRoleDomain> result = new BackResult<TdsRoleDomain>();
@@ -71,6 +88,14 @@ public class TdsRoleController extends BaseController {
 	}
 	
 	
+	/**
+	 * 修改角色
+	 * @param tdsRoleDomain
+	 * @param request
+	 * @param response
+	 * @param token
+	 * @return
+	 */
 	@RequestMapping(value="/update",method = RequestMethod.POST)
     public BackResult<TdsRoleDomain>  update(TdsRoleDomain tdsRoleDomain,HttpServletRequest request, HttpServletResponse response, String token){
 		BackResult<TdsRoleDomain> result = new BackResult<TdsRoleDomain>();
@@ -90,6 +115,15 @@ public class TdsRoleController extends BaseController {
 		return result;
 	}
 	
+	
+	/**
+	 * 删除角色
+	 * @param id
+	 * @param request
+	 * @param response
+	 * @param token
+	 * @return
+	 */
 	@RequestMapping(value="/deleteById")
 	public BackResult<Integer> deleteById(@RequestParam("id")Integer id,HttpServletRequest request, HttpServletResponse response,String token){
 		BackResult<Integer> result = new BackResult<Integer>();
@@ -109,6 +143,15 @@ public class TdsRoleController extends BaseController {
 		return result;
 	}
 	
+	
+	/**
+	 * 查询所有角色名称列表
+	 * @param tdsRoleDomain
+	 * @param request
+	 * @param response
+	 * @param token
+	 * @return
+	 */
 	@RequestMapping(value="selectAll")
 	public BackResult<List<TdsRoleDomain>> selectAll(TdsRoleDomain tdsRoleDomain,HttpServletRequest request, HttpServletResponse response,String token){
 		BackResult<List<TdsRoleDomain>> result = new BackResult<List<TdsRoleDomain>>();
