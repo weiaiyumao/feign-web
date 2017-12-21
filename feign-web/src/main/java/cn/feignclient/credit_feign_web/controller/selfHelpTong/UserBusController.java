@@ -5,15 +5,18 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import cn.feignclient.credit_feign_web.controller.BaseController;
+import cn.feignclient.credit_feign_web.service.ApiAccountInfoFeignService;
 import cn.feignclient.credit_feign_web.utils.CommonUtils;
 import cn.feignclient.credit_feign_web.utils.MD5Util;
 import main.java.cn.common.BackResult;
 import main.java.cn.common.ResultCode;
+import main.java.cn.domain.ApiAccountInfoDomain;
 import main.java.cn.domain.CreUserDomain;
 
 /**
@@ -27,6 +30,9 @@ import main.java.cn.domain.CreUserDomain;
 public class UserBusController extends BaseController {
 
 	private final static Logger logger = LoggerFactory.getLogger(UserBusController.class);
+	
+	@Autowired
+	private ApiAccountInfoFeignService apiAccountInfoFeignService;
 
 	/**
 	 * 自助通调用激活账户
@@ -161,6 +167,46 @@ public class UserBusController extends BaseController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error("自助通手机号：" + mobile + "请求修改账户信息，出现系统异常：" + e.getMessage());
+			result.setResultCode(ResultCode.RESULT_FAILED);
+			result.setResultMsg("系统异常");
+		}
+
+		return result;
+	}
+	
+	@RequestMapping(value = "/findAPIInfo", method = RequestMethod.POST)
+	public BackResult<ApiAccountInfoDomain> findTrdOrderByMobile(HttpServletRequest request,String mobile) {
+
+		logger.info("自助通手机号：" + mobile + "请求查看API账户信息");
+
+		BackResult<ApiAccountInfoDomain> result = new BackResult<ApiAccountInfoDomain>();
+
+		if (!checkSign(request)) {
+			result.setResultCode(ResultCode.RESULT_FAILED);
+			result.setResultMsg("签名验证失败");
+			return result;
+		}
+		
+		if (CommonUtils.isNotString(mobile)) {
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("手机号码不能为空");
+			return result;
+		}
+
+		try {
+			
+			CreUserDomain user = findByMobile(mobile);
+
+			if (null == user) {
+				result.setResultCode(ResultCode.RESULT_SESSION_STALED);
+				result.setResultMsg("用户校验失败，系统不存在该手机号码的用户");
+				return result;
+			}
+			
+			result = apiAccountInfoFeignService.findByCreUserId(user.getId().toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error("用户手机号：" + mobile + "执行查询API账户信息出现异常：" + e.getMessage());
 			result.setResultCode(ResultCode.RESULT_FAILED);
 			result.setResultMsg("系统异常");
 		}

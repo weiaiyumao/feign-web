@@ -19,7 +19,7 @@ public interface TdsUserFeignService {
 	public BackResult<TdsUserDomain> loadById(@RequestParam("id") Integer id);
 
 	@RequestMapping(value = "/tdsUser/save", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public BackResult<TdsUserDomain> save(TdsUserDomain tdsUserDomain);
+	public BackResult<TdsUserDomain> save(TdsUserDomain tdsUserDomain,@RequestParam("comName")String comName,@RequestParam("comUrl")String comUrl);
 
 	@RequestMapping(value = "/tdsUser/update", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public BackResult<TdsUserDomain> update(TdsUserDomain tdsUserDomain);
@@ -31,6 +31,7 @@ public interface TdsUserFeignService {
 	public BackResult<PageDomain<TdsUserDomain>> pageSelectAll(TdsUserDomain tdsUserDomain,
 			@RequestParam("pageSize") Integer pageSize, @RequestParam("curPage") Integer curPage);
 	
-	
+	@RequestMapping(value = "/tdsUser/loadByPhone", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public BackResult<TdsUserDomain> loadByPhone(@RequestParam("phone")String phone);
 	
 }

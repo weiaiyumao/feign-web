@@ -17,6 +17,7 @@ import cn.feignclient.credit_feign_web.service.tds.TdsUserFeignService;
 import cn.feignclient.credit_feign_web.utils.CommonUtils;
 import main.java.cn.common.BackResult;
 import main.java.cn.common.ResultCode;
+import main.java.cn.common.StatusType;
 import main.java.cn.domain.page.PageDomain;
 import main.java.cn.domain.tds.TdsUserDomain;
 
@@ -62,7 +63,7 @@ public class TdsUserController extends BaseController {
 	 */
 	//TODO
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
-	public BackResult<TdsUserDomain> save(TdsUserDomain tdsUserDomain,HttpServletRequest request, HttpServletResponse response, String token) {
+	public BackResult<TdsUserDomain> save(TdsUserDomain tdsUserDomain,HttpServletRequest request, HttpServletResponse response,String comName, String comUrl) {
 		BackResult<TdsUserDomain> result = new BackResult<TdsUserDomain>();
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
@@ -76,7 +77,14 @@ public class TdsUserController extends BaseController {
 		if (CommonUtils.isNotString(tdsUserDomain.getPassword())){
 			return new BackResult<TdsUserDomain>(ResultCode.RESULT_PARAM_EXCEPTIONS,"密码不能为空");
 		}
-		result = tdsUserFeignService.save(tdsUserDomain);
+		if (CommonUtils.isNotString(comName)){
+			return new BackResult<TdsUserDomain>(ResultCode.RESULT_PARAM_EXCEPTIONS,"公司不能为空");
+		}
+		if (CommonUtils.isNotString(comUrl)){
+			return new BackResult<TdsUserDomain>(ResultCode.RESULT_PARAM_EXCEPTIONS,"公司网址不能为空");
+		}
+		tdsUserDomain.setRegisterSource(StatusType.ADD_CUSTOMER);
+		result = tdsUserFeignService.save(tdsUserDomain,comName,comUrl);
 		return result;
 	}
 	
@@ -128,8 +136,9 @@ public class TdsUserController extends BaseController {
 	
 	
 	@RequestMapping(value="/pageSelectAll",method = RequestMethod.POST)
-	public BackResult<PageDomain<TdsUserDomain>> pageSelectAll(TdsUserDomain tdsUserDomain,Integer pageSize,Integer curPage,HttpServletRequest request,HttpServletResponse response,String token){
+	public BackResult<PageDomain<TdsUserDomain>> pageSelectAll(TdsUserDomain tdsUserDomain,Integer pageSize,Integer curPage,HttpServletRequest request,HttpServletResponse response){
 		BackResult<PageDomain<TdsUserDomain>> result=new BackResult<PageDomain<TdsUserDomain>>();
+		
 		response.setHeader("Access-Control-Allow-Origin","*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
   
@@ -141,9 +150,7 @@ public class TdsUserController extends BaseController {
 			return new BackResult<PageDomain<TdsUserDomain>>(ResultCode.RESULT_PARAM_EXCEPTIONS,"显示页码不能为空");
 		}
 		
-		if (CommonUtils.isNotString(token)) {
-			return new BackResult<PageDomain<TdsUserDomain>>(ResultCode.RESULT_PARAM_EXCEPTIONS,"token不能为空");
-		}
+
 		
 		logger.info("============用户分页查询==========");
 		

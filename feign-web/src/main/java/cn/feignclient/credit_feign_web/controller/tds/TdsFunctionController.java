@@ -115,11 +115,7 @@ public class TdsFunctionController extends BaseController {
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
 		
-		if (CommonUtils.isNotIngeter(tdsFunctionDomain.getId())) {
-			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
-			result.setResultMsg("id不能为空");
-			return result;
-		}
+		
 		if (CommonUtils.isNotString(token)) {
 			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
 			result.setResultMsg("token不能为空");

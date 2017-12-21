@@ -16,6 +16,7 @@ import cn.feignclient.credit_feign_web.service.tds.TdsRoleFeignService;
 import cn.feignclient.credit_feign_web.utils.CommonUtils;
 import main.java.cn.common.BackResult;
 import main.java.cn.common.ResultCode;
+import main.java.cn.domain.tds.TdsFunctionDomain;
 import main.java.cn.domain.tds.TdsRoleDomain;
 
 @RestController
@@ -148,23 +149,30 @@ public class TdsRoleController extends BaseController {
 	 * 查询所有角色名称列表
 	 * @param tdsRoleDomain
 	 * @param request
-	 * @param response
 	 * @param token
 	 * @return
 	 */
 	@RequestMapping(value="selectAll")
-	public BackResult<List<TdsRoleDomain>> selectAll(TdsRoleDomain tdsRoleDomain,HttpServletRequest request, HttpServletResponse response,String token){
+	public BackResult<List<TdsRoleDomain>> selectAll(TdsRoleDomain tdsRoleDomain,HttpServletRequest request, HttpServletResponse response){
 		BackResult<List<TdsRoleDomain>> result = new BackResult<List<TdsRoleDomain>>();
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
 		
+		result = tdsRoleFeignService.selectAll(tdsRoleDomain);
+		return result;
+	}
 	
-		if (CommonUtils.isNotString(token)) {
+	
+	
+	@RequestMapping(value ="/queryfunByRoleId", method = RequestMethod.POST)
+	public BackResult<List<TdsFunctionDomain>> queryfunByRoleId(Integer roleId,HttpServletRequest request, HttpServletResponse response){
+		BackResult<List<TdsFunctionDomain>> result = new BackResult<List<TdsFunctionDomain>>();
+		if (CommonUtils.isNotIngeter(roleId)) {
 			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
-			result.setResultMsg("token不能为空");
+			result.setResultMsg("roleId不能为空");
 			return result;
 		}
-		result = tdsRoleFeignService.selectAll(tdsRoleDomain);
+		result = tdsRoleFeignService.queryfunByRoleId(roleId);
 		return result;
 	}
 

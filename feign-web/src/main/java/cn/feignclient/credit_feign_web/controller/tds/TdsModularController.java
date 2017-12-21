@@ -110,21 +110,11 @@ public class TdsModularController extends BaseController {
 	}
 	
 	@RequestMapping(value="selectAll")
-	public BackResult<List<TdsModularDomain>> selectAll(TdsModularDomain tdsModularDomain,HttpServletRequest request, HttpServletResponse response,String token){
+	public BackResult<List<TdsModularDomain>> selectAll(TdsModularDomain tdsModularDomain,HttpServletRequest request, HttpServletResponse response){
 		BackResult<List<TdsModularDomain>> result = new BackResult<List<TdsModularDomain>>();
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
-		
-		if (CommonUtils.isNotIngeter(tdsModularDomain.getId())) {
-			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
-			result.setResultMsg("模块id不能为空");
-			return result;
-		}
-		if (CommonUtils.isNotString(token)) {
-			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
-			result.setResultMsg("token不能为空");
-			return result;
-		}
+
 		result = tdsModularFeignService.selectAll(tdsModularDomain);
 		return result;
 	}

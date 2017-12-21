@@ -63,6 +63,7 @@ public class SmsCallBackController {
 	
 	private Map<String, String> getParamsMap(HttpServletRequest request) throws UnsupportedEncodingException {
 		Map<String, String> params = new HashMap<String, String>();
+		@SuppressWarnings("unchecked")
 		Map<String, String[]> requestParams = request.getParameterMap();
 		for (Iterator<String> iter = requestParams.keySet().iterator(); iter.hasNext();) {
 			String name = (String) iter.next();

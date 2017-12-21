@@ -1,6 +1,5 @@
 package cn.feignclient.credit_feign_web.controller.tds;
 
-
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,9 +18,11 @@ import cn.feignclient.credit_feign_web.service.tds.TdsDeparTmentFeignService;
 import cn.feignclient.credit_feign_web.utils.CommonUtils;
 import main.java.cn.common.BackResult;
 import main.java.cn.common.ResultCode;
+import main.java.cn.domain.page.PageAuto;
 import main.java.cn.domain.page.PageDomain;
 import main.java.cn.domain.tds.TdsDepartmentDomain;
 import main.java.cn.domain.tds.TdsFunctionDomain;
+import main.java.cn.domain.tds.TdsUserDomain;
 import main.java.cn.domain.tds.UserRoleDepartmentViewDomain;
 
 @RestController
@@ -34,66 +35,200 @@ public class TdsDepartmentController extends BaseController {
 	private TdsDeparTmentFeignService tdsDeparTmentFeignService;
 
 	/**
-	 * 账号权限
+	 * 账号权限-配置列表
+	 * 
 	 * @param id
 	 * @param request
 	 * @param response
 	 */
 	@RequestMapping(value = "/pageUserRoleDepartmentView", method = RequestMethod.POST)
-	public BackResult<PageDomain<UserRoleDepartmentViewDomain>>  pageUserRoleDepartmentView(String token,
-			HttpServletRequest request, HttpServletResponse response,String departName,String roleName,String createTime,String contact,
-			Integer currentPage,Integer numPerPage) {
+	public BackResult<PageDomain<UserRoleDepartmentViewDomain>> pageUserRoleDepartmentView(String token,
+			HttpServletRequest request, HttpServletResponse response,PageAuto auto) {
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
 		BackResult<PageDomain<UserRoleDepartmentViewDomain>> result = new BackResult<PageDomain<UserRoleDepartmentViewDomain>>();
-		
+
 		if (CommonUtils.isNotString(token)) {
-				result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
-				result.setResultMsg("token不能为空");
-				return result;
-			}
-			if(null==departName || "".equals(departName)){
-				logger.info("查询全部部门");
-			} 
-			if(null==createTime || "".equals(roleName)){
-				logger.info("查询全部注册时间");
-			}
-			if(null==contact || "".equals(contact)){
-				logger.info("查询全部联系人");
-			}
-			if(null==roleName || "".equals(roleName)){
-				logger.info("查询全部角色");
-			}
-	   	   result=tdsDeparTmentFeignService.pageUserRoleDepartmentView(departName,roleName,createTime,contact,currentPage,numPerPage);
-		   logger.info("账号权限查询分页列表");
-    	return result;
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("token不能为空");
+			return result;
+		}
+		result = tdsDeparTmentFeignService.pageUserRoleDepartmentView(auto);
+		logger.info("账号权限查询分页列表");
+		return result;
 	}
-	
-	
-	@RequestMapping(value="funByUserId",method = RequestMethod.POST)
-    public BackResult<List<TdsFunctionDomain>> funByuserId(Integer usreId,HttpServletRequest request, HttpServletResponse response){
+
+	@RequestMapping(value = "funByUserId", method = RequestMethod.POST)
+	public BackResult<List<TdsFunctionDomain>> funByuserId(Integer userId, HttpServletRequest request,
+			HttpServletResponse response) {
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
-		BackResult<List<TdsFunctionDomain>> result=new BackResult<List<TdsFunctionDomain>>();
-		if (CommonUtils.isNotIngeter(usreId)) {
+		BackResult<List<TdsFunctionDomain>> result = new BackResult<List<TdsFunctionDomain>>();
+		if (CommonUtils.isNotIngeter(userId)) {
 			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
 			result.setResultMsg("userid不能为空");
 			return result;
 		}
-	 	result=tdsDeparTmentFeignService.funByuserId(usreId);
+		result = tdsDeparTmentFeignService.funByuserId(userId);
 		return result;
+	}
+
+	/**
+	 * 查询所有部门列表
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/selectAll", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public BackResult<List<TdsDepartmentDomain>> selectAll(TdsDepartmentDomain domain, HttpServletRequest request,
+			HttpServletResponse response) {
+		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
+		response.setContentType("text/json;charset=UTF-8");
+		return tdsDeparTmentFeignService.selectAll(domain);
+	}
+
+	/**
+	 * 添加账号  模块功能
+	 * 
+	 * @param tdsUserDomain
+	 *            用户信息
+	 * @param departmentId
+	 *            部门id
+	 * @param positionId
+	 *            职位id
+	 * @param comId
+	 *            公司id
+	 * @param checkboxRole
+	 *            角色
+	 * @return
+	 */
+	@RequestMapping(value = "/addUserConfig")
+	public BackResult<Integer> addUserConfig(String token, Integer departmentId, Integer positionId, Integer comId,
+			Integer[] arrRoles, HttpServletRequest request, HttpServletResponse response, String loginMobile,
+			String name, String passWord, String phone) {
+		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
+		response.setContentType("text/json;charset=UTF-8");
+		BackResult<Integer> result = new BackResult<Integer>();
+		if (CommonUtils.isNotString(token)) {
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("token不能为空");
+			return result;
+		}
+		if (CommonUtils.isNotString(loginMobile)) {
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("登录者手机号不能为空");
+			return result;
+		}
+		if (CommonUtils.isNotString(name)) {
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("姓名不能为空");
+			return result;
+		}
+		if (CommonUtils.isNotString(passWord)) {
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("密码不能为空");
+			return result;
+		}
+		
+		if (CommonUtils.isNotString(phone)) {
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("注册手机号不能为空");
+			return result;
+		}
+		if (CommonUtils.isNotIngeter(departmentId)) {
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("部门id不能为空");
+			return result;
+		}
+		if (CommonUtils.isNotIngeter(positionId)) {
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("职位id不能为空");
+			return result;
+		}
+		if (CommonUtils.isNotIngeter(comId)) {
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("公司id不能为空");
+			return result;
+		}
+		if (arrRoles.length < 1) {
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("角色分配不能为空");
+			return result;
+		}
+		TdsUserDomain loginUser = this.getUserInfo(loginMobile); // 获取登录用户信息
+		result = tdsDeparTmentFeignService.addUserConfig(name, passWord, phone, departmentId, positionId, comId,
+				arrRoles, loginUser.getId());
+		return result;
+	}
+
+	/**
+	 * 自定义角色权限
+	 * 
+	 * @param token
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/addCustomPermissions")
+	public BackResult<Integer> addCustomPermissions(String token, HttpServletRequest request,
+			HttpServletResponse response, String soleName, String loginMobile, Integer[] arrfuns) {
+		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
+		response.setContentType("text/json;charset=UTF-8");
+		BackResult<Integer> result = new BackResult<Integer>();
+
+		if (CommonUtils.isNotString(token)) {
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("token不能为空");
+			return result;
+		}
+		TdsUserDomain loginUser = this.getUserInfo(loginMobile); // 获取登录用户信息
+		result = tdsDeparTmentFeignService.addCustomPermissions(soleName, loginUser.getId(), arrfuns);
+		return result;
+
 	}
 	
 	
-	  /**
-	   * 查询所有部门列表
-	   * @return
-	   */
-	  @RequestMapping(value="/selectAll",method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
-	  public BackResult<List<TdsDepartmentDomain>> selectAll(TdsDepartmentDomain domain,HttpServletRequest request, HttpServletResponse response){
-		  response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
-		  response.setContentType("text/json;charset=UTF-8");
-		  return tdsDeparTmentFeignService.selectAll(domain);
-	  }
-	 
+	/**
+	 * 自定义模块
+	 * @return
+	 */
+	@RequestMapping(value = "/addModularFun",method = RequestMethod.POST)
+	public BackResult<Integer> addModularFun(String token, HttpServletRequest request,
+			HttpServletResponse response,String loginMobile,TdsFunctionDomain domain,Integer parentId) {
+		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
+		response.setContentType("text/json;charset=UTF-8");
+		BackResult<Integer> result = new BackResult<Integer>();
+
+		if (CommonUtils.isNotString(token)) {
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("token不能为空");
+			return result;
+		}
+		if(CommonUtils.isNotString(loginMobile)){
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("loginMobile不能为空");
+			return result;
+		}
+		if(CommonUtils.isNotString(domain.getName())){
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("权限名称不能为空");
+			return result;
+		}
+		if(CommonUtils.isNotString(domain.getUrl())){
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("权限url不能为空");
+			return result;
+		}
+		if(CommonUtils.isNotIngeter(parentId)){
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("父级id不能为空");
+			return result;
+		}
+		
+		TdsUserDomain loginUser = this.getUserInfo(loginMobile); // 获取登录用户信息
+		domain.setCreater(loginUser.getId()); //创建人
+		result = tdsDeparTmentFeignService.addModularFun(domain,parentId);
+		return result;
+
+	}
+
 }

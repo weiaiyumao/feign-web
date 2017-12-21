@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import main.java.cn.common.BackResult;
+import main.java.cn.domain.tds.TdsFunctionDomain;
 import main.java.cn.domain.tds.TdsRoleDomain;
 
 @FeignClient(value = "user-provider-service")
@@ -28,4 +29,7 @@ public interface TdsRoleFeignService {
 	
 	@RequestMapping(value="/role/selectAll",method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
 	public BackResult<List<TdsRoleDomain>> selectAll(TdsRoleDomain tdsRoleDomain);
+	
+	@RequestMapping(value ="/role/queryfunByRoleId", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public BackResult<List<TdsFunctionDomain>> queryfunByRoleId(@RequestParam("roleId")Integer roleId); 
 }

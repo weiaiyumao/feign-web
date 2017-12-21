@@ -56,12 +56,13 @@ public class TdsLoginUserController extends BaseController {
 			result.setResultMsg("密码不能为空");
 			return result;
 		}
-
-		if (CommonUtils.isNotString(code)) {
-			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
-			result.setResultMsg("验证码不能为空");
-			return result;
-		}
+         
+		//TODO
+//		if (CommonUtils.isNotString(code)) {
+//			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+//			result.setResultMsg("验证码不能为空");
+//			return result;
+//		}
 		
 		TdsUserDomain tdsUserDomain = new TdsUserDomain();
 		tdsUserDomain.setName(name);
@@ -77,12 +78,15 @@ public class TdsLoginUserController extends BaseController {
 			return result;
 		}
 		// 生成tonke
-		String tokenUserId = MD5Util.getInstance().getMD5Code("tds_user_token_" + result.getResultObj().getId());
+		String tokenUserPhone = MD5Util.getInstance().getMD5Code("tds_user_token_" + result.getResultObj().getPhone());
+		//根据电话保存对象redis
+		this.getUserInfo(result.getResultObj().getPhone());
+		
 		
 		// 清空 se_ken_
 		// redisClinet.remove("tdsse_ken_" + mobile);//
-		redisClinet.set("tds_user_token_" + result.getResultObj().getPhone(), tokenUserId);
-		result.getResultObj().setToken(tokenUserId);
+		redisClinet.set("tds_user_token_" + result.getResultObj().getPhone(), tokenUserPhone);
+		result.getResultObj().setToken(tokenUserPhone);
 		logger.info("=========用户名：" +name+ "用户登录成功============");
 		return result;
 	}
@@ -118,11 +122,85 @@ public class TdsLoginUserController extends BaseController {
 		 result=tdsUserLoginFeignService.moduleLoadingByUsreId(userId);
 		 
 		 // TODO redis保存
-		  
+		 
+		 	 
 		 //end
 		 logger.info("用户id"+userId+"==========模块加载成功============！");
 		 return result;
 		
  	 }
+	
+	   
+	@RequestMapping("/signOut")
+	public BackResult<Boolean> signOut(String mobile,String token,HttpServletRequest request,HttpServletResponse response){
+		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
+		response.setContentType("text/json;charset=UTF-8");
+		BackResult<Boolean> result = new BackResult<Boolean>();
+   
+		if (CommonUtils.isNotString(mobile)) {
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("手机号码不能为空");
+			return result;
+		}
+
+		if (CommonUtils.isNotString(token)) {
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("token不能为空");
+			return result;
+		}
+
+		     // 清空 se_ken_
+			redisClinet.remove("tds_user_token_" + mobile);
+			result.setResultObj(true);
+			return result;
+	}
+	
+	
+	
+//	/**
+//	 * 检测是否已经登出
+//	 * 
+//	 * @param request
+//	 * @param response
+//	 * @param mobile
+//	 * @param token
+//	 * @return
+//	 */
+//	@RequestMapping("/isLogout")
+//	public BackResult<Boolean> isLogout(HttpServletRequest request, HttpServletResponse response, String mobile,
+//			String token) {
+//
+//		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
+//		response.setContentType("text/json;charset=UTF-8");
+//
+//		BackResult<Boolean> result = new BackResult<Boolean>();
+//
+//		if (CommonUtils.isNotString(mobile)) {
+//			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+//			result.setResultMsg("手机号码不能为空");
+//			return result;
+//		}
+//
+//		if (CommonUtils.isNotString(token)) {
+//			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+//			result.setResultMsg("token不能为空");
+//			return result;
+//		}
+//
+//		Boolean fag = isLogin(mobile, token);
+//
+//		result.setResultObj(fag);
+//		result.setResultMsg(fag ? "处于登录状态" : "用户已经注销登录");
+//
+//		return result;
+//	}
+//	
+
+
+
+
+	
+	
+	
 
 }
