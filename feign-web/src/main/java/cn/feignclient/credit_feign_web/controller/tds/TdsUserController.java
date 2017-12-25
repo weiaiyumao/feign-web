@@ -26,14 +26,13 @@ import main.java.cn.domain.tds.TdsUserDomain;
 public class TdsUserController extends BaseController {
    
 	private final static Logger logger = LoggerFactory.getLogger(TdsUserController.class);
-	/**
-	 * 检测token, 检测 是否登录， 登录的用户是否该有操作权限
-	 * 
-	 * 
-	 */
-
+	
+	
+	
 	@Autowired
 	private TdsUserFeignService tdsUserFeignService;
+	
+	
 
 	@RequestMapping(value = "/loadById", method = RequestMethod.POST)
 	public BackResult<TdsUserDomain> loadById(Integer id, HttpServletRequest request, HttpServletResponse response,
@@ -54,7 +53,7 @@ public class TdsUserController extends BaseController {
 	
 	/**
 	 * 注册
-	 * 发送验证码，接收验证码，进行判断
+	 * 发送验证码，接收验证码，进行判断  TODO
 	 * @param tdsUserDomain
 	 * @param request
 	 * @param response
@@ -83,35 +82,13 @@ public class TdsUserController extends BaseController {
 		if (CommonUtils.isNotString(comUrl)){
 			return new BackResult<TdsUserDomain>(ResultCode.RESULT_PARAM_EXCEPTIONS,"公司网址不能为空");
 		}
-		tdsUserDomain.setRegisterSource(StatusType.ADD_CUSTOMER);
+		tdsUserDomain.setRegisterSource(StatusType.ADD_REGISTER);
 		result = tdsUserFeignService.save(tdsUserDomain,comName,comUrl);
 		return result;
 	}
 	
 	
-	@RequestMapping(value="/update",method = RequestMethod.POST)
-    public BackResult<TdsUserDomain>  update(TdsUserDomain tdsUserDomain,HttpServletRequest request, HttpServletResponse response, String token){
-		BackResult<TdsUserDomain> result = new BackResult<TdsUserDomain>();
-		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
-		response.setContentType("text/json;charset=UTF-8");
-		if (CommonUtils.isNotString(tdsUserDomain.getPhone())){
-			return new BackResult<TdsUserDomain>(ResultCode.RESULT_PARAM_EXCEPTIONS,"电话号码不能为空");
-		}
-		
-		if (CommonUtils.isNotIngeter(tdsUserDomain.getId())){
-			return new BackResult<TdsUserDomain>(ResultCode.RESULT_PARAM_EXCEPTIONS,"用户id不能为空");
-		}
-		if (CommonUtils.isNotString(token)) {
-			 return new BackResult<TdsUserDomain>(ResultCode.RESULT_PARAM_EXCEPTIONS,"token不能为空");
-		}
-		
-		//TODO
-//		if (!isLogin(tdsUserDomain.getPhone(), token)) {
-//			 return new BackResult<TdsUserDomain>(ResultCode.RESULT_SESSION_STALED,"注销校验失败无法注销");
-//		}
-		result = tdsUserFeignService.update(tdsUserDomain);
-		return result;
-	}
+
 	
 	@RequestMapping(value="/deleteById")
 	public BackResult<Integer> deleteById(@RequestParam("id")Integer id,HttpServletRequest request, HttpServletResponse response,String token,String phone){
@@ -127,9 +104,6 @@ public class TdsUserController extends BaseController {
 		if (CommonUtils.isNotString(token)) {
 			return new BackResult<Integer>(ResultCode.RESULT_PARAM_EXCEPTIONS,"token不能为空");
 		}
-//		if (!isLogin(phone,token)) {
-//			return new BackResult<Integer>(ResultCode.RESULT_SESSION_STALED,"注销校验失败无法注销");
-//		}
 		result = tdsUserFeignService.deleteById(id);
 		return result;
 	}
@@ -149,8 +123,6 @@ public class TdsUserController extends BaseController {
 		if(CommonUtils.isNotIngeter(curPage)){
 			return new BackResult<PageDomain<TdsUserDomain>>(ResultCode.RESULT_PARAM_EXCEPTIONS,"显示页码不能为空");
 		}
-		
-
 		
 		logger.info("============用户分页查询==========");
 		

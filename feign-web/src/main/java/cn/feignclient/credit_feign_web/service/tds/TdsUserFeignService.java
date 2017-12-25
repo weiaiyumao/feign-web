@@ -21,8 +21,8 @@ public interface TdsUserFeignService {
 	@RequestMapping(value = "/tdsUser/save", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public BackResult<TdsUserDomain> save(TdsUserDomain tdsUserDomain,@RequestParam("comName")String comName,@RequestParam("comUrl")String comUrl);
 
-	@RequestMapping(value = "/tdsUser/update", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public BackResult<TdsUserDomain> update(TdsUserDomain tdsUserDomain);
+//	@RequestMapping(value = "/tdsUser/update", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+//	public BackResult<TdsUserDomain> update(TdsUserDomain tdsUserDomain);
 
 	@RequestMapping(value = "/tdsUser/deleteById", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public BackResult<Integer> deleteById(@RequestParam("id") Integer id);
