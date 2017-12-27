@@ -101,7 +101,7 @@ public class TdsDepartmentController extends BaseController {
 	 *            角色
 	 * @return
 	 */
-	@RequestMapping(value = "/addUserConfig")
+	@RequestMapping(value = "/addUserConfig",method = RequestMethod.POST)
 	public BackResult<Integer> addUserConfig(String token, Integer departmentId, Integer positionId, Integer comId,
 			Integer[] arrRoles, HttpServletRequest request, HttpServletResponse response, String loginMobile,
 			String name, String passWord, String phone) {
@@ -168,7 +168,7 @@ public class TdsDepartmentController extends BaseController {
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(value = "/addCustomPermissions")
+	@RequestMapping(value = "/addCustomPermissions",method = RequestMethod.POST)
 	public BackResult<Integer> addCustomPermissions(String token, HttpServletRequest request,
 			HttpServletResponse response, String soleName, String loginMobile, Integer[] arrfuns) {
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
@@ -180,6 +180,7 @@ public class TdsDepartmentController extends BaseController {
 			result.setResultMsg("token不能为空");
 			return result;
 		}
+		
 		TdsUserDomain loginUser = this.getUserInfo(loginMobile); // 获取登录用户信息
 		result = tdsDeparTmentFeignService.addCustomPermissions(soleName, loginUser.getId(), arrfuns);
 		return result;
@@ -188,12 +189,12 @@ public class TdsDepartmentController extends BaseController {
 	
 	
 	/**
-	 * 自定义模块
+	 * 自定义功能
 	 * @return
 	 */
 	@RequestMapping(value = "/addModularFun",method = RequestMethod.POST)
 	public BackResult<Integer> addModularFun(String token, HttpServletRequest request,
-			HttpServletResponse response,String loginMobile,TdsFunctionDomain domain,Integer parentId) {
+			HttpServletResponse response,Integer loginUserId,TdsFunctionDomain domain,Integer parentId) {
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
 		BackResult<Integer> result = new BackResult<Integer>();
@@ -203,9 +204,9 @@ public class TdsDepartmentController extends BaseController {
 			result.setResultMsg("token不能为空");
 			return result;
 		}
-		if(CommonUtils.isNotString(loginMobile)){
+		if(CommonUtils.isNotIngeter(loginUserId)){
 			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
-			result.setResultMsg("loginMobile不能为空");
+			result.setResultMsg("loginUserId登录用户id不能为空");
 			return result;
 		}
 		if(CommonUtils.isNotString(domain.getName())){
@@ -224,8 +225,7 @@ public class TdsDepartmentController extends BaseController {
 			return result;
 		}
 		
-		TdsUserDomain loginUser = this.getUserInfo(loginMobile); // 获取登录用户信息
-		domain.setCreater(loginUser.getId()); //创建人
+		domain.setCreater(loginUserId); //创建人
 		result = tdsDeparTmentFeignService.addModularFun(domain,parentId);
 		return result;
 

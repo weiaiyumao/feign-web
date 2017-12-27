@@ -10,23 +10,22 @@ import main.java.cn.common.BackResult;
 import main.java.cn.domain.page.PageAuto;
 import main.java.cn.domain.page.PageDomain;
 import main.java.cn.domain.tds.TdsCustomerViewDomain;
-import main.java.cn.domain.tds.TdsUserDomain;
 
 @FeignClient(value = "user-provider-service")
 public interface TdsCustomerFeignService {
-	
-	
-	@RequestMapping(value = "/customer/update", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public BackResult<TdsUserDomain> update(TdsUserDomain tdsUserDomain,@RequestParam("departmentId")Integer departmentId,@RequestParam("comUrl")String comUrl);
 
-	
-    
+	@RequestMapping(value = "/customer/update", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public BackResult<Integer> update(@RequestParam("loginUserId") Integer loginUserId, PageAuto auto,
+			@RequestParam("upUserId") Integer upUserId, @RequestParam("arrRoles") Integer[] arrRoles);
+
 	@RequestMapping(value = "/customer/pageTdsCustomer", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public BackResult<PageDomain<TdsCustomerViewDomain>> pageTdsCustomer(PageAuto auto);
-	
-	
-	
+
 	@RequestMapping(value = "/customer/attorn", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public BackResult<PageAuto> attorn(PageAuto auto);
+
+	@RequestMapping(value = "/customer/addTdsCustomer", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public BackResult<Integer> addTdsCustomer(PageAuto auto, @RequestParam("loginUserId") Integer loginUserId,
+			@RequestParam("arrRoles") Integer[] arrRoles);
 
 }

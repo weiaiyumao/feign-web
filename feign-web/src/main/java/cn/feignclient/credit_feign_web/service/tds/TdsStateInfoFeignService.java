@@ -25,4 +25,11 @@ public interface TdsStateInfoFeignService {
 	
 	@RequestMapping(value = "/state/pageTdsStateInfo", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public BackResult<PageDomain<TdsStateInfoDomain>> pageTdsStateInfo(PageAuto auto);
+	
+	
+	
+	@RequestMapping(value = "/state/save", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public BackResult<Integer> save(@RequestParam("userId")Integer userId,TdsStateInfoDomain tdsStateInfoDomain);
+	
+	
 }

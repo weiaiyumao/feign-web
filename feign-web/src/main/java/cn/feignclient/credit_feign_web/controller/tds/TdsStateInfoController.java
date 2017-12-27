@@ -1,5 +1,7 @@
 package cn.feignclient.credit_feign_web.controller.tds;
 
+import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -38,7 +40,7 @@ public class TdsStateInfoController  extends BaseController{
 		response.setContentType("text/json;charset=UTF-8");
 		
 		if (CommonUtils.isNotIngeter(tdsStateInfoDomain.getId())) {
-			return new BackResult<Integer>(ResultCode.RESULT_PARAM_EXCEPTIONS,"用户id不能为空");
+			return new BackResult<Integer>(ResultCode.RESULT_PARAM_EXCEPTIONS,"id不能为空");
 		}
 		if (CommonUtils.isNotString(token)) {
 			 return new BackResult<Integer>(ResultCode.RESULT_PARAM_EXCEPTIONS,"token不能为空");
@@ -71,16 +73,32 @@ public class TdsStateInfoController  extends BaseController{
 	public BackResult<PageDomain<TdsStateInfoDomain>> pageTdsStateInfo(PageAuto auto,HttpServletRequest request,HttpServletResponse response){
 		response.setHeader("Access-Control-Allow-Origin","*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
-		
-		if(CommonUtils.isNotIngeter(auto.getNumPerPage())){
-			return new BackResult<PageDomain<TdsStateInfoDomain>>(ResultCode.RESULT_PARAM_EXCEPTIONS,"显示条数不能为空");
-		}
-		
-		if(CommonUtils.isNotIngeter(auto.getCurrentPage())){
-			return new BackResult<PageDomain<TdsStateInfoDomain>>(ResultCode.RESULT_PARAM_EXCEPTIONS,"显示页码不能为空");
-		}
 		logger.info("============用户分页查询==========");
+		if(CommonUtils.isNotString(auto.getRinput())){
+			auto.setRinput(null);
+		}
 		return tdsStateInfoFeignService.pageTdsStateInfo(auto);
+	}
+	
+	
+	@RequestMapping(value="/save",method = RequestMethod.POST)
+    public BackResult<Integer>  save(TdsStateInfoDomain tdsStateInfoDomain,HttpServletRequest request, HttpServletResponse response, String token,Integer userId){
+		BackResult<Integer> result = new BackResult<Integer>();
+		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
+		response.setContentType("text/json;charset=UTF-8");
+
+		if (CommonUtils.isNotString(token)) {
+			 return new BackResult<Integer>(ResultCode.RESULT_PARAM_EXCEPTIONS,"token不能为空");
+		}
+		if (CommonUtils.isNotIngeter(userId)) {
+			 return new BackResult<Integer>(ResultCode.RESULT_PARAM_EXCEPTIONS,"token不能为空");
+		}
+		tdsStateInfoDomain.setCreater(userId);
+		tdsStateInfoDomain.setUpdater(userId);
+		tdsStateInfoDomain.setUpdateTime(new Date());
+		tdsStateInfoDomain.setCreateTime(new Date());
+		result=tdsStateInfoFeignService.save(userId, tdsStateInfoDomain);
+		return result;
 	}
 	
 }
