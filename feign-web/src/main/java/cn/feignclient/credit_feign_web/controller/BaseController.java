@@ -18,11 +18,13 @@ import org.springframework.web.bind.annotation.InitBinder;
 
 import cn.feignclient.credit_feign_web.redis.RedisClient;
 import cn.feignclient.credit_feign_web.service.UserFeignService;
+import cn.feignclient.credit_feign_web.service.tds.TdsUserFeignService;
 import cn.feignclient.credit_feign_web.thread.ThreadExecutorService;
 import main.java.cn.common.BackResult;
 import main.java.cn.common.RedisKeys;
 import main.java.cn.common.ResultCode;
 import main.java.cn.domain.CreUserDomain;
+import main.java.cn.domain.tds.TdsUserDomain;
 import main.java.cn.hhtp.util.MD5Util;
 
 public class BaseController {
@@ -35,12 +37,19 @@ public class BaseController {
 
 	@Autowired
 	protected ThreadExecutorService threadExecutorService;
+	
+	@Autowired
+	protected TdsUserFeignService tdsUserFeignService;
 
 	@Value("${api_key}")
 	protected String apiKey;
 
 	@Autowired
 	private RedisTemplate<String, CreUserDomain> redisTemplate;
+	
+	
+	@Autowired
+	private RedisTemplate<String,TdsUserDomain> redisTemplateTds;
 
 	@InitBinder
 	protected void initBinder(WebDataBinder binder) {
@@ -133,6 +142,7 @@ public class BaseController {
 		return Boolean.TRUE;
 	}
 
+	
 	/**
 	 * 根据手机号码获取用户对象 (缓存30分钟)
 	 * 
@@ -153,9 +163,32 @@ public class BaseController {
 				redisTemplate.opsForValue().set(skey, creuserdomain, 30 * 60, TimeUnit.SECONDS);
 			}
 		} 
-		
 		return creuserdomain;
-
 	}
+	
+	
+	/**
+	 * 根据手机号码获取用户对象 (缓存30分钟)
+	 * @param mobile
+	 * @return tds
+	 */
+	protected TdsUserDomain getUserInfo(String mobile) {
+
+		TdsUserDomain tdsUserDomain = new TdsUserDomain();
+		String skey = RedisKeys.getInstance().getUserInfokey(mobile);
+		tdsUserDomain = redisTemplateTds.opsForValue().get(skey);
+
+		if (null == tdsUserDomain) {
+			BackResult<TdsUserDomain> result = tdsUserFeignService.loadByPhone(mobile);
+
+			if (result.getResultCode().equals(ResultCode.RESULT_SUCCEED)) {
+				tdsUserDomain = result.getResultObj();
+				redisTemplateTds.opsForValue().set(skey, tdsUserDomain, 30 * 60, TimeUnit.SECONDS);
+			}
+		} 
+		return tdsUserDomain;
+	}
+	
+	
 
 }
