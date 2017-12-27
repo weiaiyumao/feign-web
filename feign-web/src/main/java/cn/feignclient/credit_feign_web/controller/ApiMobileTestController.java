@@ -106,14 +106,14 @@ public class ApiMobileTestController extends BaseController {
 			}
 
 			if (changeCount > 0) {
-				
+
 				Runnable run = new Runnable() {
 
 					@Override
 					public void run() {
 						// 3、结算
-						BackResult<Boolean> resultConsume = userAccountFeignService.consumeApiAccount(
-								resultCreUser.getResultObj().toString(), String.valueOf("1"));
+						BackResult<Boolean> resultConsume = userAccountFeignService
+								.consumeApiAccount(resultCreUser.getResultObj().toString(), String.valueOf("1"));
 
 						if (!resultConsume.getResultCode().equals(ResultCode.RESULT_SUCCEED)) {
 							logger.error("------------------------------------商户号：" + apiName + "执行账户2次清洗出现记账系统异常："
@@ -125,7 +125,7 @@ public class ApiMobileTestController extends BaseController {
 
 				// 加入线程池开始执行
 				threadExecutorService.execute(run);
-				
+
 			}
 
 		} catch (Exception e) {
@@ -257,28 +257,43 @@ public class ApiMobileTestController extends BaseController {
 			// 2、执行检测返回检测结果
 			result = apiMobileTestService.findByMobile(mobile, resultCreUser.getResultObj().toString());
 
+			// if (result.getResultCode().equals(ResultCode.RESULT_SUCCEED) &&
+			// result.getResultObj().getChargesStatus().equals("1")) {
+			// Runnable run = new Runnable() {
+			//
+			// @Override
+			// public void run() {
+			// // 3、结算
+			// BackResult<Boolean> resultConsume = userAccountFeignService
+			// .consumeApiAccount(resultCreUser.getResultObj().toString(),
+			// String.valueOf(1));
+			//
+			// if
+			// (!resultConsume.getResultCode().equals(ResultCode.RESULT_SUCCEED))
+			// {
+			// logger.error("------------------------------------商户号：" + apiName
+			// + "执行空号API出现记账系统异常："
+			// + resultConsume.getResultMsg());
+			// }
+			//
+			// }
+			// };
+			//
+			// // 加入线程池开始执行
+			// threadExecutorService.execute(run);
+			// // new Thread(, "商户号"+ apiName +"开始记账任务").start();
+			// }
 			if (result.getResultCode().equals(ResultCode.RESULT_SUCCEED) && result.getResultObj().getChargesStatus().equals("1")) {
-				Runnable run = new Runnable() {
+				// 3、结算
+				BackResult<Boolean> resultConsume = userAccountFeignService
+						.consumeApiAccount(resultCreUser.getResultObj().toString(), String.valueOf(1));
 
-					@Override
-					public void run() {
-						// 3、结算
-						BackResult<Boolean> resultConsume = userAccountFeignService
-								.consumeApiAccount(resultCreUser.getResultObj().toString(), String.valueOf(1));
+				if (!resultConsume.getResultCode().equals(ResultCode.RESULT_SUCCEED)) {
+					logger.error("------------------------------------商户号：" + apiName + "执行空号API出现记账系统异常："
+							+ resultConsume.getResultMsg());
+				}
 
-						if (!resultConsume.getResultCode().equals(ResultCode.RESULT_SUCCEED)) {
-							logger.error("------------------------------------商户号：" + apiName + "执行空号API出现记账系统异常："
-									+ resultConsume.getResultMsg());
-						}
-
-					}
-				};
-
-				// 加入线程池开始执行
-				threadExecutorService.execute(run);
-				// new Thread(, "商户号"+ apiName +"开始记账任务").start();
 			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error("商户号：" + apiName + "执行空号API出现系统异常：" + e.getMessage());

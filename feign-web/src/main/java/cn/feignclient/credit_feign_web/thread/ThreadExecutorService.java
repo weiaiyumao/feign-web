@@ -44,6 +44,8 @@ public class ThreadExecutorService {
 		} catch (Throwable e) {
 			logger.error("==========end Throwable ThreadExecutorService============");
 			logger.error(e.getMessage(), e);
+		}finally {
+			this.shutdown();
 		}
 	}
 }
