@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import main.java.cn.common.BackResult;
 import main.java.cn.domain.TrdOrderDomain;
 
-@FeignClient(value = "user-provider-service")
+@FeignClient(value = "user-provider-service",fallback = TrdOrderFeignServiceHiHystric.class)
 public interface TrdOrderFeignService {
 
 	@RequestMapping(value = "/trdorder/alipayrecharge", method = RequestMethod.GET)

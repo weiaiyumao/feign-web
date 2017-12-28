@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import main.java.cn.common.BackResult;
 import main.java.cn.domain.ApiAccountInfoDomain;
 
-@FeignClient(value = "user-provider-service")
+@FeignClient(value = "user-provider-service",fallback = ApiAccountInfoFeignServiceHiHystric.class)
 public interface ApiAccountInfoFeignService {
 
 	@RequestMapping(value = "/apiAccountInfo/findByCreUserId", method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)

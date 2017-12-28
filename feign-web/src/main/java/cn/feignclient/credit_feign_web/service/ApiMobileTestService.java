@@ -12,7 +12,7 @@ import main.java.cn.domain.MobileInfoDomain;
 import main.java.cn.domain.MobileTestLogDomain;
 import main.java.cn.domain.page.PageDomain;
 
-@FeignClient(value = "credit-provider-service")
+@FeignClient(value = "credit-provider-service",fallback = ApiMobileTestServiceHiHystric.class)
 public interface ApiMobileTestService {
 	
 	@RequestMapping(value = "/apiMobileTest/findByMobileNumbers", method = RequestMethod.POST)
