@@ -1,6 +1,5 @@
 package cn.feignclient.credit_feign_web.controller.tds;
 
-import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -82,7 +81,7 @@ public class TdsStateInfoController  extends BaseController{
 	
 	
 	@RequestMapping(value="/save",method = RequestMethod.POST)
-    public BackResult<Integer>  save(TdsStateInfoDomain tdsStateInfoDomain,HttpServletRequest request, HttpServletResponse response, String token,Integer userId){
+    public BackResult<Integer>  save(TdsStateInfoDomain tdsStateInfoDomain,HttpServletRequest request, HttpServletResponse response, String token){
 		BackResult<Integer> result = new BackResult<Integer>();
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
@@ -90,15 +89,24 @@ public class TdsStateInfoController  extends BaseController{
 		if (CommonUtils.isNotString(token)) {
 			 return new BackResult<Integer>(ResultCode.RESULT_PARAM_EXCEPTIONS,"token不能为空");
 		}
-		if (CommonUtils.isNotIngeter(userId)) {
-			 return new BackResult<Integer>(ResultCode.RESULT_PARAM_EXCEPTIONS,"token不能为空");
-		}
-		tdsStateInfoDomain.setCreater(userId);
-		tdsStateInfoDomain.setUpdater(userId);
-		tdsStateInfoDomain.setUpdateTime(new Date());
-		tdsStateInfoDomain.setCreateTime(new Date());
-		result=tdsStateInfoFeignService.save(userId, tdsStateInfoDomain);
+		result=tdsStateInfoFeignService.save(tdsStateInfoDomain);
 		return result;
+	}
+	
+	
+	
+	@RequestMapping(value = "/loadById", method = RequestMethod.POST)
+	public BackResult<TdsStateInfoDomain> loadById(Integer id,HttpServletRequest request,HttpServletResponse response,String token){
+		response.setHeader("Access-Control-Allow-Origin","*"); // 有效，前端可以访问
+		response.setContentType("text/json;charset=UTF-8");
+		logger.info("============用户分页查询==========");
+		if (CommonUtils.isNotString(token)) {
+			 return new BackResult<TdsStateInfoDomain>(ResultCode.RESULT_PARAM_EXCEPTIONS,"token不能为空");
+		}
+		if (CommonUtils.isNotIngeter(id)) {
+			 return new BackResult<TdsStateInfoDomain>(ResultCode.RESULT_PARAM_EXCEPTIONS,"id不能为空");
+		}
+		return tdsStateInfoFeignService.loadById(id);
 	}
 	
 }

@@ -38,8 +38,8 @@ public interface TdsDeparTmentFeignService {
 	public BackResult<Integer> addCustomPermissions(@RequestParam("soleName") String soleName,
 			@RequestParam("loginUserId") Integer loginUserId, @RequestParam("arrfuns") Integer[] arrfuns);
 	
-	@RequestMapping(value = "/super/addModularFun", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public BackResult<Integer> addModularFun(@RequestBody TdsFunctionDomain domain,@RequestParam("parentId")Integer parentId);
+	@RequestMapping(value = "/super/addFun", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public BackResult<Integer> addFun(@RequestBody TdsFunctionDomain domain);
 	
 	
 	

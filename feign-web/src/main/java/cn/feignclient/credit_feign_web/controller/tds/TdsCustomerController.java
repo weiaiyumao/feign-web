@@ -81,7 +81,12 @@ public class TdsCustomerController extends BaseController {
 
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
+		
+		if (CommonUtils.isNotString(auto.getParentUserId())) {
+			return new BackResult<>(ResultCode.RESULT_PARAM_EXCEPTIONS, "登录者id不能为空");
+		}
 		logger.info("===客户列表显示===");
+		
 		result = tdsCustomerFeignService.pageTdsCustomer(auto);
 		return result;
 

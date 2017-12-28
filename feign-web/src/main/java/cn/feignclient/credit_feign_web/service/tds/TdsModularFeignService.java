@@ -18,7 +18,7 @@ public interface TdsModularFeignService {
     public BackResult<TdsModularDomain> loadById(@RequestParam("id")Integer id);
 	
 	@RequestMapping(value="/modular/save",method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
-	public BackResult<TdsModularDomain> save(TdsModularDomain tdsModularDomain);
+	public BackResult<Integer> save(TdsModularDomain tdsModularDomain);
 	
 	@RequestMapping(value="/modular/update",method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
     public BackResult<TdsModularDomain>  update(TdsModularDomain tdsModularDomain);

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import main.java.cn.common.BackResult;
+import main.java.cn.domain.tds.TdsCompanyDomain;
 import main.java.cn.domain.tds.TdsFunctionDomain;
 import main.java.cn.domain.tds.TdsUserDomain;
 
@@ -23,6 +24,11 @@ public interface TdsUserLoginFeignService {
 	
 	@RequestMapping(value="/userLogin/moduleLoadingByUsreId",method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public BackResult<List<TdsFunctionDomain>> moduleLoadingByUsreId(@RequestParam("userId")Integer userId);
+	
+	
+	
+	@RequestMapping(value = "/userLogin/loadComById", method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
+	public BackResult<TdsCompanyDomain> loadComById(@RequestParam("id")Integer id);
 	
 	
 }

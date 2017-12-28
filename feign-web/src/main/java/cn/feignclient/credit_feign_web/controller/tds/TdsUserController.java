@@ -47,31 +47,23 @@ public class TdsUserController extends BaseController {
 	}
 
 	/**
-	 * 注册 发送验证码，接收验证码，进行判断 TODO
-	 * 
-	 * @param tdsUserDomain
-	 * @param request
-	 * @param response
-	 * @param token
-	 * @return
+	 * 注册 
 	 */
-	// TODO
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
-	public BackResult<TdsUserDomain> save(TdsUserDomain tdsUserDomain, HttpServletRequest request,
+	public BackResult<Integer> save(TdsUserDomain tdsUserDomain, HttpServletRequest request,
 			HttpServletResponse response) {
-		BackResult<TdsUserDomain> result = new BackResult<TdsUserDomain>();
+		BackResult<Integer> result = new BackResult<Integer>();
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
 
 		if (CommonUtils.isNotString(tdsUserDomain.getPhone())) {
-			return new BackResult<TdsUserDomain>(ResultCode.RESULT_PARAM_EXCEPTIONS, "电话号码不能为空");
+			return new BackResult<Integer>(ResultCode.RESULT_PARAM_EXCEPTIONS, "电话号码不能为空");
 		}
 		if (CommonUtils.isNotString(tdsUserDomain.getPassword())) {
-			return new BackResult<TdsUserDomain>(ResultCode.RESULT_PARAM_EXCEPTIONS, "密码不能为空");
+			return new BackResult<Integer>(ResultCode.RESULT_PARAM_EXCEPTIONS, "密码不能为空");
 		}
 
 		tdsUserDomain.setUserName(tdsUserDomain.getPhone());// 用户名先默认手机号码
-		// tdsUserDomain.setRegisterSource(StatusType.ADD_REGISTER);
 		tdsUserDomain.setSource(StatusType.ADD_REGISTER);
 		result = tdsUserFeignService.save(tdsUserDomain);
 		return result;
@@ -144,16 +136,15 @@ public class TdsUserController extends BaseController {
 	}
 
 	/**
-	 * 编辑个人或者企业用户信息
-	 * 
+	 * 编辑个人
 	 * @param domain
 	 * @param isPersOrCom
 	 * @return
 	 */
 	@RequestMapping(value = "/editUserInfo", method = RequestMethod.POST)
 	public BackResult<Integer> editUserInfo(Integer userId, String token, TdsUserDomain domain,
-			HttpServletRequest request, HttpServletResponse response) {
-
+			HttpServletRequest request, HttpServletResponse response,String phone) {
+		BackResult<Integer> result=new BackResult<Integer>();
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
 		if (CommonUtils.isNotString(token)) {
@@ -162,8 +153,17 @@ public class TdsUserController extends BaseController {
 
 		logger.info("用户Id:" + userId + "===编辑个人信息===");
 		domain.setId(userId);
-		return tdsUserFeignService.editUserInfo(domain);
+		result=tdsUserFeignService.editUserInfo(domain);
+		if(result.getResultCode().equals("000000")){	
+			this.replaceAndSaveObj(phone);
+		}
+	
+		return result;
 	}
+	
+	
+	
+	
 
 	/**
 	 * 编辑企业信息
@@ -185,15 +185,18 @@ public class TdsUserController extends BaseController {
 	@RequestMapping(value = "/editComInfo", method = RequestMethod.POST)
 	public BackResult<Integer> editComInfo(String token, HttpServletRequest request, HttpServletResponse response,
 			TdsCompanyDomain domain, Integer userId, String userName, String phone, String contact) {
-
+		BackResult<Integer> result=new BackResult<Integer>();
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
 		if (CommonUtils.isNotString(token)) {
 			return new BackResult<Integer>(ResultCode.RESULT_PARAM_EXCEPTIONS, "token不能为空");
 		}
+		result=tdsUserFeignService.editComInfo(domain, userId, userName, phone, contact);
+		if(result.getResultCode().equals("000000")){	
+			this.replaceAndSaveObj(phone);
+		}
 
-		logger.info("用户Id:" + userId + "===编辑企业信息===");
-		return tdsUserFeignService.editComInfo(domain, userId, userName, phone, contact);
+		return result;
 	}
 
 }

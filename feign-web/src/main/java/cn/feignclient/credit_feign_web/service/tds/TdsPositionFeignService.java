@@ -23,4 +23,6 @@ public interface TdsPositionFeignService {
 	@RequestMapping(value = "/position/selectCompanyAll", method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
 	public BackResult<List<TdsCompanyDomain>> selectCompanyAll();
 	
+	
+	
 }

@@ -18,7 +18,7 @@ public interface TdsUserFeignService {
 	public BackResult<TdsUserDomain> loadById(@RequestParam("id") Integer id);
 
 	@RequestMapping(value = "/tdsUser/save", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public BackResult<TdsUserDomain> save(TdsUserDomain tdsUserDomain);
+	public BackResult<Integer> save(TdsUserDomain tdsUserDomain);
 
 	@RequestMapping(value = "/tdsUser/deleteById", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public BackResult<Integer> deleteById(@RequestParam("id") Integer id);

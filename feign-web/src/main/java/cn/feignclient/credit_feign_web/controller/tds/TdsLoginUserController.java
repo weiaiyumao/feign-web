@@ -1,6 +1,8 @@
 package cn.feignclient.credit_feign_web.controller.tds;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,6 +18,7 @@ import cn.feignclient.credit_feign_web.service.tds.TdsUserLoginFeignService;
 import cn.feignclient.credit_feign_web.utils.CommonUtils;
 import main.java.cn.common.BackResult;
 import main.java.cn.common.ResultCode;
+import main.java.cn.domain.tds.TdsCompanyDomain;
 import main.java.cn.domain.tds.TdsFunctionDomain;
 import main.java.cn.domain.tds.TdsUserDomain;
 import main.java.cn.hhtp.util.MD5Util;
@@ -39,21 +42,22 @@ public class TdsLoginUserController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping("/login")
-	public BackResult<TdsUserDomain> userLogin(HttpServletRequest request, HttpServletResponse response, String name,
+	public BackResult<Map<String,Object>> userLogin(HttpServletRequest request, HttpServletResponse response, String name,
 			String passWord) {
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
 		BackResult<TdsUserDomain> result = new BackResult<TdsUserDomain>();
+		BackResult<Map<String,Object>> resultMap=new BackResult<Map<String,Object>>();
 		if (CommonUtils.isNotString(name)) {
 			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
 			result.setResultMsg("用户名不能为空");
-			return result;
+			return resultMap;
 		}
 
 		if (CommonUtils.isNotString(passWord)) {
 			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
 			result.setResultMsg("密码不能为空");
-			return result;
+			return resultMap;
 		}
 		
 		TdsUserDomain tdsUserDomain = new TdsUserDomain();
@@ -65,8 +69,8 @@ public class TdsLoginUserController extends BaseController {
 		//登录
 		result = tdsUserLoginFeignService.login(tdsUserDomain);
 		// 登录失败
-		if (!result.getResultCode().equals(ResultCode.RESULT_SUCCEED)) {
-			return result;
+		if (result.getResultCode().equals(ResultCode.RESULT_FAILED)) {
+			return new BackResult<>(ResultCode.RESULT_FAILED,result.getResultMsg());
 		}
 		// 生成tonke
 		String tokenUserPhone = MD5Util.getInstance().getMD5Code("tds_user_token_" + result.getResultObj().getPhone());
@@ -79,7 +83,15 @@ public class TdsLoginUserController extends BaseController {
 		redisClinet.set("tds_user_token_" + result.getResultObj().getPhone(), tokenUserPhone);
 		result.getResultObj().setToken(tokenUserPhone);
 		logger.info("=========用户名：" +name+ "用户登录成功============");
-		return result;
+		BackResult<TdsCompanyDomain> comDomain=new BackResult<TdsCompanyDomain>();
+		Map<String,Object> map=new HashMap<>();
+		if(null!=result.getResultObj().getComId() && !"".equals(result.getResultObj().getComId())){
+			comDomain=tdsUserLoginFeignService.loadComById(result.getResultObj().getComId());
+			map.put("com", comDomain.getResultObj());
+		}
+		map.put("user", result.getResultObj());
+		resultMap.setResultObj(map);
+		return resultMap;
 	}
 	
 	
@@ -113,6 +125,7 @@ public class TdsLoginUserController extends BaseController {
 		 result=tdsUserLoginFeignService.moduleLoadingByUsreId(userId);
 		 
 		 // TODO redis保存
+		 
 		  	 
 		 //end
 		 logger.info("用户id"+userId+"==========模块加载成功============！");
