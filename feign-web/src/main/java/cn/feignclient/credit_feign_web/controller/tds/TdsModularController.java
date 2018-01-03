@@ -52,8 +52,8 @@ public class TdsModularController extends BaseController {
 	}
 
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
-	public BackResult<TdsModularDomain> saveTdsFunction(TdsModularDomain tdsModularDomain,HttpServletRequest request, HttpServletResponse response, String token) {
-		BackResult<TdsModularDomain> result = new BackResult<TdsModularDomain>();
+	public BackResult<Integer> saveTdsFunction(TdsModularDomain tdsModularDomain,HttpServletRequest request, HttpServletResponse response, String token) {
+		BackResult<Integer> result = new BackResult<Integer>();
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
 		if (CommonUtils.isNotString(tdsModularDomain.getName())) {

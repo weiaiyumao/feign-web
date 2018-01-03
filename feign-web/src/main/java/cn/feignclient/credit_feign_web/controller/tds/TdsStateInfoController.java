@@ -1,5 +1,6 @@
 package cn.feignclient.credit_feign_web.controller.tds;
 
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -38,7 +39,7 @@ public class TdsStateInfoController  extends BaseController{
 		response.setContentType("text/json;charset=UTF-8");
 		
 		if (CommonUtils.isNotIngeter(tdsStateInfoDomain.getId())) {
-			return new BackResult<Integer>(ResultCode.RESULT_PARAM_EXCEPTIONS,"用户id不能为空");
+			return new BackResult<Integer>(ResultCode.RESULT_PARAM_EXCEPTIONS,"id不能为空");
 		}
 		if (CommonUtils.isNotString(token)) {
 			 return new BackResult<Integer>(ResultCode.RESULT_PARAM_EXCEPTIONS,"token不能为空");
@@ -71,16 +72,41 @@ public class TdsStateInfoController  extends BaseController{
 	public BackResult<PageDomain<TdsStateInfoDomain>> pageTdsStateInfo(PageAuto auto,HttpServletRequest request,HttpServletResponse response){
 		response.setHeader("Access-Control-Allow-Origin","*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
-		
-		if(CommonUtils.isNotIngeter(auto.getNumPerPage())){
-			return new BackResult<PageDomain<TdsStateInfoDomain>>(ResultCode.RESULT_PARAM_EXCEPTIONS,"显示条数不能为空");
-		}
-		
-		if(CommonUtils.isNotIngeter(auto.getCurrentPage())){
-			return new BackResult<PageDomain<TdsStateInfoDomain>>(ResultCode.RESULT_PARAM_EXCEPTIONS,"显示页码不能为空");
-		}
 		logger.info("============用户分页查询==========");
+		if(CommonUtils.isNotString(auto.getRinput())){
+			auto.setRinput(null);
+		}
 		return tdsStateInfoFeignService.pageTdsStateInfo(auto);
+	}
+	
+	
+	@RequestMapping(value="/save",method = RequestMethod.POST)
+    public BackResult<Integer>  save(TdsStateInfoDomain tdsStateInfoDomain,HttpServletRequest request, HttpServletResponse response, String token){
+		BackResult<Integer> result = new BackResult<Integer>();
+		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
+		response.setContentType("text/json;charset=UTF-8");
+
+		if (CommonUtils.isNotString(token)) {
+			 return new BackResult<Integer>(ResultCode.RESULT_PARAM_EXCEPTIONS,"token不能为空");
+		}
+		result=tdsStateInfoFeignService.save(tdsStateInfoDomain);
+		return result;
+	}
+	
+	
+	
+	@RequestMapping(value = "/loadById", method = RequestMethod.POST)
+	public BackResult<TdsStateInfoDomain> loadById(Integer id,HttpServletRequest request,HttpServletResponse response,String token){
+		response.setHeader("Access-Control-Allow-Origin","*"); // 有效，前端可以访问
+		response.setContentType("text/json;charset=UTF-8");
+		logger.info("============用户分页查询==========");
+		if (CommonUtils.isNotString(token)) {
+			 return new BackResult<TdsStateInfoDomain>(ResultCode.RESULT_PARAM_EXCEPTIONS,"token不能为空");
+		}
+		if (CommonUtils.isNotIngeter(id)) {
+			 return new BackResult<TdsStateInfoDomain>(ResultCode.RESULT_PARAM_EXCEPTIONS,"id不能为空");
+		}
+		return tdsStateInfoFeignService.loadById(id);
 	}
 	
 }

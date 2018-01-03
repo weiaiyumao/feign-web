@@ -1,5 +1,6 @@
 package cn.feignclient.credit_feign_web.service.tds;
 
+
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,4 +26,14 @@ public interface TdsStateInfoFeignService {
 	
 	@RequestMapping(value = "/state/pageTdsStateInfo", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public BackResult<PageDomain<TdsStateInfoDomain>> pageTdsStateInfo(PageAuto auto);
+	
+	
+	
+	@RequestMapping(value = "/state/save", method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
+	public BackResult<Integer> save(TdsStateInfoDomain tdsStateInfoDomain);
+	
+	
+	@RequestMapping(value = "/state/loadById", method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
+	public BackResult<TdsStateInfoDomain> loadById(@RequestParam("id")Integer id);
+	
 }

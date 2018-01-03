@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -47,12 +46,6 @@ public class TdsDepartmentController extends BaseController {
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
 		BackResult<PageDomain<UserRoleDepartmentViewDomain>> result = new BackResult<PageDomain<UserRoleDepartmentViewDomain>>();
-
-		if (CommonUtils.isNotString(token)) {
-			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
-			result.setResultMsg("token不能为空");
-			return result;
-		}
 		result = tdsDeparTmentFeignService.pageUserRoleDepartmentView(auto);
 		logger.info("账号权限查询分页列表");
 		return result;
@@ -78,7 +71,7 @@ public class TdsDepartmentController extends BaseController {
 	 * 
 	 * @return
 	 */
-	@RequestMapping(value = "/selectAll", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/selectAll", method = RequestMethod.POST)
 	public BackResult<List<TdsDepartmentDomain>> selectAll(TdsDepartmentDomain domain, HttpServletRequest request,
 			HttpServletResponse response) {
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
@@ -101,7 +94,7 @@ public class TdsDepartmentController extends BaseController {
 	 *            角色
 	 * @return
 	 */
-	@RequestMapping(value = "/addUserConfig")
+	@RequestMapping(value = "/addUserConfig",method = RequestMethod.POST)
 	public BackResult<Integer> addUserConfig(String token, Integer departmentId, Integer positionId, Integer comId,
 			Integer[] arrRoles, HttpServletRequest request, HttpServletResponse response, String loginMobile,
 			String name, String passWord, String phone) {
@@ -168,7 +161,7 @@ public class TdsDepartmentController extends BaseController {
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(value = "/addCustomPermissions")
+	@RequestMapping(value = "/addCustomPermissions",method = RequestMethod.POST)
 	public BackResult<Integer> addCustomPermissions(String token, HttpServletRequest request,
 			HttpServletResponse response, String soleName, String loginMobile, Integer[] arrfuns) {
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
@@ -180,6 +173,7 @@ public class TdsDepartmentController extends BaseController {
 			result.setResultMsg("token不能为空");
 			return result;
 		}
+		
 		TdsUserDomain loginUser = this.getUserInfo(loginMobile); // 获取登录用户信息
 		result = tdsDeparTmentFeignService.addCustomPermissions(soleName, loginUser.getId(), arrfuns);
 		return result;
@@ -188,12 +182,12 @@ public class TdsDepartmentController extends BaseController {
 	
 	
 	/**
-	 * 自定义模块
+	 * 自定义功能
 	 * @return
 	 */
-	@RequestMapping(value = "/addModularFun",method = RequestMethod.POST)
-	public BackResult<Integer> addModularFun(String token, HttpServletRequest request,
-			HttpServletResponse response,String loginMobile,TdsFunctionDomain domain,Integer parentId) {
+	@RequestMapping(value = "/addFun",method = RequestMethod.POST)
+	public BackResult<Integer> addFun(String token, HttpServletRequest request,
+			HttpServletResponse response,Integer loginUserId,TdsFunctionDomain domain) {
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
 		BackResult<Integer> result = new BackResult<Integer>();
@@ -203,9 +197,9 @@ public class TdsDepartmentController extends BaseController {
 			result.setResultMsg("token不能为空");
 			return result;
 		}
-		if(CommonUtils.isNotString(loginMobile)){
+		if(CommonUtils.isNotIngeter(loginUserId)){
 			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
-			result.setResultMsg("loginMobile不能为空");
+			result.setResultMsg("loginUserId登录用户id不能为空");
 			return result;
 		}
 		if(CommonUtils.isNotString(domain.getName())){
@@ -218,15 +212,8 @@ public class TdsDepartmentController extends BaseController {
 			result.setResultMsg("权限url不能为空");
 			return result;
 		}
-		if(CommonUtils.isNotIngeter(parentId)){
-			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
-			result.setResultMsg("父级id不能为空");
-			return result;
-		}
-		
-		TdsUserDomain loginUser = this.getUserInfo(loginMobile); // 获取登录用户信息
-		domain.setCreater(loginUser.getId()); //创建人
-		result = tdsDeparTmentFeignService.addModularFun(domain,parentId);
+		domain.setCreater(loginUserId); //创建人
+		result = tdsDeparTmentFeignService.addFun(domain);
 		return result;
 
 	}

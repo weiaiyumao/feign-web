@@ -17,7 +17,7 @@ import cn.feignclient.credit_feign_web.utils.CommonUtils;
 import main.java.cn.common.BackResult;
 import main.java.cn.common.ResultCode;
 import main.java.cn.domain.page.PageAuto;
-import main.java.cn.domain.tds.TdsUserDomain;
+import main.java.cn.domain.page.PageDomain;
 import main.java.cn.domain.tds.TdsUserRoleDomain;
 
 @RestController
@@ -131,28 +131,33 @@ public class TdsUserRoleController extends BaseController {
 		return result;
 	}
 	
+	
 	@RequestMapping(value="/upStatusById",method = RequestMethod.POST)
-	public BackResult<Integer> upStatusById(TdsUserRoleDomain tdsUserRoleDomain,String token,String loginMobile){
+	public BackResult<Integer> upStatusById(String token,String status,Integer id){
 		BackResult<Integer> result=new BackResult<Integer>();
-		if (CommonUtils.isNotString(loginMobile)) {
-				result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
-				result.setResultMsg("登录手机号码不能为空");
-				return result;
-		}
 		if (CommonUtils.isNotString(token)) {
 			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
 			result.setResultMsg("token不能为空");
 			return result;
 		}
-		TdsUserDomain loginUser=this.getUserInfo(loginMobile);
-		//tdsUserRoleDomain.getStatus 0：正常  1：禁用
-		result=tdsUserRoleFeignService.upStatusById(tdsUserRoleDomain,loginUser.getId());
+		if (CommonUtils.isNotString(status)) {
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("status禁用解禁参数不能为空");
+			return result;
+		}
+		if (CommonUtils.isNotIngeter(id)) {
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("用户id不能为空");
+			return result;
+		}
+		//Status 0：正常  1：禁用
+		result=tdsUserRoleFeignService.upStatusById(id,status);
 		return result;
 	}
 	
 	
 	@RequestMapping(value="/queryRoleIsStatus",method = RequestMethod.POST)
-	public BackResult<List<PageAuto>> queryRoleIsStatus(PageAuto auto){
+	public BackResult<PageDomain<PageAuto>> queryRoleIsStatus(PageAuto auto){
 		return tdsUserRoleFeignService.queryRoleIsStatus(auto);
 	}
 

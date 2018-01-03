@@ -1,9 +1,11 @@
 package cn.feignclient.credit_feign_web.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -19,11 +21,13 @@ import org.springframework.web.bind.annotation.InitBinder;
 import cn.feignclient.credit_feign_web.redis.RedisClient;
 import cn.feignclient.credit_feign_web.service.UserFeignService;
 import cn.feignclient.credit_feign_web.service.tds.TdsUserFeignService;
+import cn.feignclient.credit_feign_web.service.tds.TdsUserLoginFeignService;
 import cn.feignclient.credit_feign_web.thread.ThreadExecutorService;
 import main.java.cn.common.BackResult;
 import main.java.cn.common.RedisKeys;
 import main.java.cn.common.ResultCode;
 import main.java.cn.domain.CreUserDomain;
+import main.java.cn.domain.tds.TdsFunctionDomain;
 import main.java.cn.domain.tds.TdsUserDomain;
 import main.java.cn.hhtp.util.MD5Util;
 
@@ -40,6 +44,10 @@ public class BaseController {
 	
 	@Autowired
 	protected TdsUserFeignService tdsUserFeignService;
+	
+	
+	@Autowired
+	private TdsUserLoginFeignService tdsUserLoginFeignService;
 
 	@Value("${api_key}")
 	protected String apiKey;
@@ -50,6 +58,10 @@ public class BaseController {
 	
 	@Autowired
 	private RedisTemplate<String,TdsUserDomain> redisTemplateTds;
+	
+	
+	@Autowired
+	private RedisTemplate<String,List<TdsFunctionDomain>> redisTemplateTdList;
 
 	@InitBinder
 	protected void initBinder(WebDataBinder binder) {
@@ -189,6 +201,40 @@ public class BaseController {
 		return tdsUserDomain;
 	}
 	
+	
+//	/**
+//	 * 根据手机号码获取用户对象 (缓存30分钟)
+//	 * @param mobile
+//	 * @return tds
+//	 */
+//	protected TdsUserDomain getUserModuRole(Integer userId) {
+//
+//		List<TdsFunctionDomain> tdsFunctionDomain = new ArrayList<TdsFunctionDomain>();
+//		String skey = RedisKeys.getInstance().getUserInfokey(userId);
+//		tdsFunctionDomain= redisTemplateTdList.opsForValue().get(skey);
+//
+//		if (null == tdsFunctionDomain) {
+//			BackResult<List<TdsFunctionDomain>> result = tdsUserLoginFeignService.moduleLoadingByUsreId(userId);
+//
+//			if (result.getResultCode().equals(ResultCode.RESULT_SUCCEED)) {
+//				tdsFunctionDomain = result.getResultObj();
+//				redisTemplateTds.opsForValue().set(skey, tdsFunctionDomain, 30 * 60, TimeUnit.SECONDS);
+//			}
+//		} 
+//		return tdsFunctionDomain;
+//	}
+	
+	
+	
+	/**
+	 * 根据手机号码重新覆盖对象信息
+	 */
+	protected void replaceAndSaveObj(String mobile){
+		BackResult<TdsUserDomain> result = tdsUserFeignService.loadByPhone(mobile);
+		String skey = RedisKeys.getInstance().getUserInfokey(mobile);
+		redisTemplateTds.opsForValue().set(skey,result.getResultObj(),30 * 60, TimeUnit.SECONDS);
+	 
+	}
 	
 
 }

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import main.java.cn.common.BackResult;
 import main.java.cn.domain.page.PageAuto;
+import main.java.cn.domain.page.PageDomain;
 import main.java.cn.domain.tds.TdsUserRoleDomain;
 
 @FeignClient(value = "user-provider-service")
@@ -31,9 +32,9 @@ public interface TdsUserRoleFeignService {
 	public BackResult<List<TdsUserRoleDomain>> selectAll(TdsUserRoleDomain tdsUserRoleDomain);
 	
 	@RequestMapping(value="/userRole/upStatusById",method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
-	public BackResult<Integer> upStatusById(TdsUserRoleDomain tdsUserRoleDomain,@RequestParam("loginUserId")Integer loginUserId);
+	public BackResult<Integer> upStatusById(@RequestParam("id")Integer id,@RequestParam("status")String status);
 
 
 	@RequestMapping(value="/userRole/queryRoleIsStatus",method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
-	public BackResult<List<PageAuto>> queryRoleIsStatus(PageAuto auto);
+	public BackResult<PageDomain<PageAuto>> queryRoleIsStatus(PageAuto auto);
 }
