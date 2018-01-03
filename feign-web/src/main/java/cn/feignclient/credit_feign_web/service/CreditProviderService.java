@@ -12,7 +12,7 @@ import main.java.cn.domain.CvsFilePathDomain;
 import main.java.cn.domain.RunTestDomian;
 import main.java.cn.domain.page.PageDomain;
 					 
-@FeignClient(value = "credit-provider-service")
+@FeignClient(value = "credit-provider-service",fallback = CreditProviderServiceHiHystric.class)
 public interface CreditProviderService {
 	
 	@RequestMapping(value = "/credit/runTheTest", method = RequestMethod.GET)

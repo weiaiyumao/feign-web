@@ -107,24 +107,25 @@ public class ApiMobileTestController extends BaseController {
 
 			if (changeCount > 0) {
 
-				Runnable run = new Runnable() {
+//				Runnable run = new Runnable() {
+//
+//					@Override
+//					public void run() {
+//						
+//
+//					}
+//				};
+//
+//				// 加入线程池开始执行
+//				threadExecutorService.execute(run);
+				// 3、结算
+				BackResult<Boolean> resultConsume = userAccountFeignService
+						.consumeApiAccount(resultCreUser.getResultObj().toString(), String.valueOf("1"));
 
-					@Override
-					public void run() {
-						// 3、结算
-						BackResult<Boolean> resultConsume = userAccountFeignService
-								.consumeApiAccount(resultCreUser.getResultObj().toString(), String.valueOf("1"));
-
-						if (!resultConsume.getResultCode().equals(ResultCode.RESULT_SUCCEED)) {
-							logger.error("------------------------------------商户号：" + apiName + "执行账户2次清洗出现记账系统异常："
-									+ resultConsume.getResultMsg());
-						}
-
-					}
-				};
-
-				// 加入线程池开始执行
-				threadExecutorService.execute(run);
+				if (!resultConsume.getResultCode().equals(ResultCode.RESULT_SUCCEED)) {
+					logger.error("------------------------------------商户号：" + apiName + "执行账户2次清洗出现记账系统异常："
+							+ resultConsume.getResultMsg());
+				}
 
 			}
 

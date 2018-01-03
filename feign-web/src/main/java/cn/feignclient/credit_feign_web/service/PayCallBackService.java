@@ -7,9 +7,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import main.java.cn.common.BackResult;
 
-@FeignClient(value = "user-provider-service")
+@FeignClient(value = "user-provider-service",fallback = PayCallBackServiceHiHystric.class)
 public interface PayCallBackService {
-	
 	
 	@RequestMapping(value = "/payCallback/alipayRecharge", method = RequestMethod.GET)
 	BackResult<Boolean> recharge(@RequestParam("outTrdOrder")String outTrdOrder,@RequestParam("orderStatus")String orderStatus,@RequestParam("traOrder")String traOrder);
