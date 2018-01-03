@@ -42,17 +42,17 @@ public class PayRechargeController extends BaseController{
 			
 		}
 
-		if (CommonUtils.isNotString(token)) {
-			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
-			result.setResultMsg("token不能为空");
-			return result;
-		}
-
-		if (!isLogin(mobile, token)) {
-			result.setResultCode(ResultCode.RESULT_SESSION_STALED);
-			result.setResultMsg("注销校验失败无法注销");
-			return result;
-		} 
+//		if (CommonUtils.isNotString(token)) {
+//			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+//			result.setResultMsg("token不能为空");
+//			return result;
+//		}
+//
+//		if (!isLogin(mobile, token)) {
+//			result.setResultCode(ResultCode.RESULT_SESSION_STALED);
+//			result.setResultMsg("注销校验失败无法注销");
+//			return result;
+//		} 
 		
 		if (CommonUtils.isNotIngeter(creUserId)) {
 			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
