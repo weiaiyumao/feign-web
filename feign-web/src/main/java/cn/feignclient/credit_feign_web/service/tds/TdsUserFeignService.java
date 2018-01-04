@@ -41,5 +41,9 @@ public interface TdsUserFeignService {
 	public BackResult<Integer> editComInfo(TdsCompanyDomain domain, @RequestParam("userId") Integer userId,
 			@RequestParam("userName") String userName, @RequestParam("phone") String phone,
 			@RequestParam("contact") String contact);
+	
+	
+	@RequestMapping(value = "/tdsUser/updateHeadImg", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public BackResult<Integer> updateHeadImg(@RequestParam("id")Integer id,@RequestParam("hedehref")String hedehref);
 
 }

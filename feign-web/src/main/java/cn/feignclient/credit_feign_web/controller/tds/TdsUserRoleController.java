@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import cn.feignclient.credit_feign_web.controller.BaseController;
@@ -98,7 +97,7 @@ public class TdsUserRoleController extends BaseController {
 	}
 	
 	@RequestMapping(value="/deleteById")
-	public BackResult<Integer> deleteById(@RequestParam("id")Integer id,HttpServletRequest request, HttpServletResponse response,String token){
+	public BackResult<Integer> deleteById(Integer id,HttpServletRequest request, HttpServletResponse response,String token){
 		BackResult<Integer> result = new BackResult<Integer>();
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
@@ -133,8 +132,10 @@ public class TdsUserRoleController extends BaseController {
 	
 	
 	@RequestMapping(value="/upStatusById",method = RequestMethod.POST)
-	public BackResult<Integer> upStatusById(String token,String status,Integer id){
+	public BackResult<Integer> upStatusById(String token,String status,Integer id,HttpServletRequest request, HttpServletResponse response){
 		BackResult<Integer> result=new BackResult<Integer>();
+		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
+		response.setContentType("text/json;charset=UTF-8");
 		if (CommonUtils.isNotString(token)) {
 			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
 			result.setResultMsg("token不能为空");
@@ -157,8 +158,13 @@ public class TdsUserRoleController extends BaseController {
 	
 	
 	@RequestMapping(value="/queryRoleIsStatus",method = RequestMethod.POST)
-	public BackResult<PageDomain<PageAuto>> queryRoleIsStatus(PageAuto auto){
+	public BackResult<PageDomain<PageAuto>> queryRoleIsStatus(PageAuto auto,HttpServletRequest request, HttpServletResponse response){
+		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
+		response.setContentType("text/json;charset=UTF-8");
 		return tdsUserRoleFeignService.queryRoleIsStatus(auto);
 	}
+	
+ 
+	
 
 }
