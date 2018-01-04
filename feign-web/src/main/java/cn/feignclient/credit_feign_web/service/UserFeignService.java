@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import main.java.cn.common.BackResult;
 import main.java.cn.domain.CreUserDomain;
 
-@FeignClient(value = "user-provider-service")
+@FeignClient(value = "user-provider-service",fallback = UserFeignServiceHiHystric.class)
 public interface UserFeignService {
 	
 	@RequestMapping(value = "/user/findbyMobile", method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)

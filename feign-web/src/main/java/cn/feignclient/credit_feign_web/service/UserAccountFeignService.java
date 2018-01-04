@@ -15,7 +15,7 @@ import main.java.cn.domain.TrdOrderDomain;
 import main.java.cn.domain.UserAccountDomain;
 import main.java.cn.domain.page.PageDomain;
 
-@FeignClient(value = "user-provider-service")
+@FeignClient(value = "user-provider-service",fallback = UserAccountFeignServiceHiHystric.class)
 public interface UserAccountFeignService {
 	
 	@RequestMapping(value = "/userAccount/findbyMobile", method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
