@@ -85,7 +85,7 @@ public class TdsStateInfoController  extends BaseController{
 	
 	
 	@RequestMapping(value="/save",method = RequestMethod.POST)
-    public BackResult<Integer>  save(TdsStateInfoDomain tdsStateInfoDomain,HttpServletRequest request, HttpServletResponse response, String token){
+    public BackResult<Integer>  addState(TdsStateInfoDomain tdsStateInfoDomain,HttpServletRequest request, HttpServletResponse response, String token){
 		BackResult<Integer> result = new BackResult<Integer>();
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
