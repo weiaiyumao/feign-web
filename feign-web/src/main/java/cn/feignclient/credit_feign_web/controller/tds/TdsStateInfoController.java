@@ -1,6 +1,8 @@
 package cn.feignclient.credit_feign_web.controller.tds;
 
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -18,6 +20,8 @@ import main.java.cn.common.BackResult;
 import main.java.cn.common.ResultCode;
 import main.java.cn.domain.page.PageAuto;
 import main.java.cn.domain.page.PageDomain;
+import main.java.cn.domain.tds.TdsEnumDomain;
+import main.java.cn.domain.tds.TdsProductMoneyDomain;
 import main.java.cn.domain.tds.TdsStateInfoDomain;
 
 @RestController
@@ -107,6 +111,46 @@ public class TdsStateInfoController  extends BaseController{
 			 return new BackResult<TdsStateInfoDomain>(ResultCode.RESULT_PARAM_EXCEPTIONS,"id不能为空");
 		}
 		return tdsStateInfoFeignService.loadById(id);
+	}
+	
+	
+	/**
+	 * 增加项目价格表信息
+	 * @param domain  
+	 * @param request 
+	 * @param response
+	 * @param token  
+	 * @param logiUserId  
+	 * @return
+	 */
+	@RequestMapping(value = "/addProductTable", method = RequestMethod.POST)
+	public BackResult<Integer> addProductTable(TdsProductMoneyDomain domain,HttpServletRequest request,HttpServletResponse response,String token,Integer logiUserId){
+		response.setHeader("Access-Control-Allow-Origin","*"); // 有效，前端可以访问
+		response.setContentType("text/json;charset=UTF-8");
+		if (CommonUtils.isNotString(token)) {
+			 return new BackResult<Integer>(ResultCode.RESULT_PARAM_EXCEPTIONS,"token不能为空");
+		}
+	    
+		if (CommonUtils.isNotIngeter(logiUserId)) {
+			 return new BackResult<Integer>(ResultCode.RESULT_PARAM_EXCEPTIONS,"登录用户id不能为空");
+		}
+		logger.info("============项目价格管理==========");
+		domain.setCreater(logiUserId);
+		return tdsStateInfoFeignService.addProductTable(domain);
+	}
+	
+	/**
+	 * 获取项目列表信息
+	 * @param codeName
+	 * @return
+	 */
+	@RequestMapping(value = "/queryByTypeCode", method = RequestMethod.POST)
+	public BackResult<List<TdsEnumDomain>> queryByTypeCode(HttpServletRequest request,HttpServletResponse response){
+		response.setHeader("Access-Control-Allow-Origin","*"); // 有效，前端可以访问
+		response.setContentType("text/json;charset=UTF-8");
+		//获取项目类型代码 TDS
+		return tdsStateInfoFeignService.queryByTypeCode("TDS");
+		
 	}
 	
 }

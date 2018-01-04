@@ -19,7 +19,7 @@ import cn.feignclient.credit_feign_web.utils.CommonUtils;
 import main.java.cn.common.BackResult;
 import main.java.cn.common.ResultCode;
 import main.java.cn.domain.tds.TdsCompanyDomain;
-import main.java.cn.domain.tds.TdsFunctionDomain;
+import main.java.cn.domain.tds.TdsModularDomain;
 import main.java.cn.domain.tds.TdsUserDomain;
 import main.java.cn.hhtp.util.MD5Util;
 
@@ -106,11 +106,11 @@ public class TdsLoginUserController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping("/moduleLoadingByUsreId")
-	public BackResult<List<TdsFunctionDomain>> moduleLoadingByUsreId(Integer userId, HttpServletRequest request,
+	public BackResult<List<TdsModularDomain>> moduleLoadingByUsreId(Integer userId, HttpServletRequest request,
 			HttpServletResponse response,String token) {
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
-		BackResult<List<TdsFunctionDomain>> result = new BackResult<List<TdsFunctionDomain>>();
+		BackResult<List<TdsModularDomain>> result = new BackResult<List<TdsModularDomain>>();
 		
 		if (CommonUtils.isNotIngeter(userId)) {
 			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
@@ -125,10 +125,9 @@ public class TdsLoginUserController extends BaseController {
 		 result=tdsUserLoginFeignService.moduleLoadingByUsreId(userId);
 		 
 		 // TODO redis保存
-		 
 		  	 
 		 //end
-		 logger.info("用户id"+userId+"==========模块加载成功============！");
+		 logger.info("用户id:"+userId+"==========模块加载成功============！");
 		 return result;
 		
  	 }
