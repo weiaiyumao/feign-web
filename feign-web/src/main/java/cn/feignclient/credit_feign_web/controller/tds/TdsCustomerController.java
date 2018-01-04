@@ -19,7 +19,6 @@ import cn.feignclient.credit_feign_web.service.tds.TdsUserRoleFeignService;
 import cn.feignclient.credit_feign_web.utils.CommonUtils;
 import main.java.cn.common.BackResult;
 import main.java.cn.common.ResultCode;
-import main.java.cn.common.StatusType;
 import main.java.cn.domain.page.PageAuto;
 import main.java.cn.domain.page.PageDomain;
 import main.java.cn.domain.tds.TdsAttornLogDomain;
@@ -182,7 +181,7 @@ public class TdsCustomerController extends BaseController {
 			HttpServletResponse response,String contact) {
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
-		return tdsUserRoleFeignService.queryUserByRoleName(StatusType.ROLE_NAME_YWY,contact);  //3：业务员
+		return tdsUserRoleFeignService.queryUserByRoleName("业务员",contact);  //3：业务员
 	}
 
 	
