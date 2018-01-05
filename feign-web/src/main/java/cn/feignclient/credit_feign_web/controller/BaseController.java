@@ -1,7 +1,6 @@
 package cn.feignclient.credit_feign_web.controller;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -20,8 +19,6 @@ import org.springframework.web.bind.annotation.InitBinder;
 
 import cn.feignclient.credit_feign_web.redis.RedisClient;
 import cn.feignclient.credit_feign_web.service.UserFeignService;
-import cn.feignclient.credit_feign_web.service.tds.TdsUserFeignService;
-import cn.feignclient.credit_feign_web.service.tds.TdsUserLoginFeignService;
 import cn.feignclient.credit_feign_web.thread.ThreadExecutorService;
 import main.java.cn.common.BackResult;
 import main.java.cn.common.RedisKeys;
@@ -42,13 +39,6 @@ public class BaseController {
 	@Autowired
 	protected ThreadExecutorService threadExecutorService;
 	
-	@Autowired
-	protected TdsUserFeignService tdsUserFeignService;
-	
-	
-	@Autowired
-	private TdsUserLoginFeignService tdsUserLoginFeignService;
-
 	@Value("${api_key}")
 	protected String apiKey;
 
@@ -179,28 +169,6 @@ public class BaseController {
 	}
 	
 	
-	/**
-	 * 根据手机号码获取用户对象 (缓存30分钟)
-	 * @param mobile
-	 * @return tds
-	 */
-	protected TdsUserDomain getUserInfo(String mobile) {
-
-		TdsUserDomain tdsUserDomain = new TdsUserDomain();
-		String skey = RedisKeys.getInstance().getUserInfokey(mobile);
-		tdsUserDomain = redisTemplateTds.opsForValue().get(skey);
-
-		if (null == tdsUserDomain) {
-			BackResult<TdsUserDomain> result = tdsUserFeignService.loadByPhone(mobile);
-
-			if (result.getResultCode().equals(ResultCode.RESULT_SUCCEED)) {
-				tdsUserDomain = result.getResultObj();
-				redisTemplateTds.opsForValue().set(skey, tdsUserDomain, 30 * 60, TimeUnit.SECONDS);
-			}
-		} 
-		return tdsUserDomain;
-	}
-	
 	
 //	/**
 //	 * 根据手机号码获取用户对象 (缓存30分钟)
@@ -226,15 +194,6 @@ public class BaseController {
 	
 	
 	
-	/**
-	 * 根据手机号码重新覆盖对象信息
-	 */
-	protected void replaceAndSaveObj(String mobile){
-		BackResult<TdsUserDomain> result = tdsUserFeignService.loadByPhone(mobile);
-		String skey = RedisKeys.getInstance().getUserInfokey(mobile);
-		redisTemplateTds.opsForValue().set(skey,result.getResultObj(),30 * 60, TimeUnit.SECONDS);
-	 
-	}
 	
 
 }
