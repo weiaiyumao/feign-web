@@ -4,7 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -24,8 +23,6 @@ import main.java.cn.common.BackResult;
 import main.java.cn.common.RedisKeys;
 import main.java.cn.common.ResultCode;
 import main.java.cn.domain.CreUserDomain;
-import main.java.cn.domain.tds.TdsFunctionDomain;
-import main.java.cn.domain.tds.TdsUserDomain;
 import main.java.cn.hhtp.util.MD5Util;
 
 public class BaseController {
@@ -45,14 +42,6 @@ public class BaseController {
 	@Autowired
 	private RedisTemplate<String, CreUserDomain> redisTemplate;
 	
-	
-	@Autowired
-	private RedisTemplate<String,TdsUserDomain> redisTemplateTds;
-	
-	
-	@Autowired
-	private RedisTemplate<String,List<TdsFunctionDomain>> redisTemplateTdList;
-
 	@InitBinder
 	protected void initBinder(WebDataBinder binder) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
