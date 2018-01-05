@@ -12,19 +12,19 @@ import cn.feignclient.credit_feign_web.service.tds.TdsMoneyApprovalFeignService;
 import cn.feignclient.credit_feign_web.utils.CommonUtils;
 import main.java.cn.common.BackResult;
 import main.java.cn.common.ResultCode;
+import main.java.cn.domain.page.PageDomain;
 import main.java.cn.domain.tds.TdsMoneyApprovalDomain;
 
 @RestController
 @RequestMapping("/moneyApproval")
 public class TdsMoneyApprovalController {
-	
+
 	@Autowired
 	private TdsMoneyApprovalFeignService tdsMoneyApprovalFeignService;
-	
-	
-	
+
 	/**
 	 * 下单
+	 * 
 	 * @param domain
 	 * @param request
 	 * @param response
@@ -32,8 +32,9 @@ public class TdsMoneyApprovalController {
 	 * @return
 	 */
 	@RequestMapping(value = "/downAddOrder", method = RequestMethod.POST)
-	public BackResult<Integer> downAddOrder(TdsMoneyApprovalDomain domain,HttpServletRequest request, HttpServletResponse response,String token){
-		BackResult<Integer> result=new BackResult<Integer>();
+	public BackResult<Integer> downAddOrder(TdsMoneyApprovalDomain domain, HttpServletRequest request,
+			HttpServletResponse response, String token) {
+		BackResult<Integer> result = new BackResult<Integer>();
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
 		if (CommonUtils.isNotString(token)) {
@@ -41,11 +42,89 @@ public class TdsMoneyApprovalController {
 			result.setResultMsg("token不能为空");
 			return result;
 		}
-		result=tdsMoneyApprovalFeignService.downAddOrder(domain);
+		result = tdsMoneyApprovalFeignService.downAddOrder(domain);
 		return result;
 	}
-	
-	
-	
+
+	/**
+	 * 进账分页查询
+	 * 
+	 * @param domain
+	 * @return
+	 */
+	@RequestMapping(value = "/pageApprovalByUpStatusGo", method = RequestMethod.POST)
+	public BackResult<PageDomain<TdsMoneyApprovalDomain>> pageApprovalByUpStatusGo(TdsMoneyApprovalDomain domain,
+			HttpServletRequest request, HttpServletResponse response) {
+		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
+		response.setContentType("text/json;charset=UTF-8");
+		return tdsMoneyApprovalFeignService.pageApprovalByUpStatusGo(domain);
+	}
+
+	/**
+	 * 出账分页查询
+	 * 
+	 * @param domain
+	 * @return
+	 */
+	@RequestMapping(value = "/pageApprovalByUpStatusOut", method = RequestMethod.POST)
+	public BackResult<PageDomain<TdsMoneyApprovalDomain>> pageApprovalByUpStatusOut(TdsMoneyApprovalDomain domain,
+			HttpServletRequest request, HttpServletResponse response) {
+		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
+		response.setContentType("text/json;charset=UTF-8");
+		return tdsMoneyApprovalFeignService.pageApprovalByUpStatusOut(domain);
+	}
+
+	/**
+	 * 退账分页查询
+	 * 
+	 * @param domain
+	 * @return
+	 */
+	@RequestMapping(value = "/pageApprovalByUpStatusBack", method = RequestMethod.POST)
+	public BackResult<PageDomain<TdsMoneyApprovalDomain>> pageApprovalByUpStatusBack(TdsMoneyApprovalDomain domain,
+			HttpServletRequest request, HttpServletResponse response) {
+		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
+		response.setContentType("text/json;charset=UTF-8");
+		return tdsMoneyApprovalFeignService.pageApprovalByUpStatusBack(domain);
+	}
+
+	/**
+	 * 1进账审核操作 审核类型 1进账审核 2出账审核 3退款审核 : approval_type
+	 * 
+	 * @return obj
+	 */
+	@RequestMapping(value = "/approvalByUpStatusGo", method = RequestMethod.POST)
+	public BackResult<Integer> approvalByUpStatusGo(TdsMoneyApprovalDomain domain, String appRemarks,
+			HttpServletRequest request, HttpServletResponse response) {
+		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
+		response.setContentType("text/json;charset=UTF-8");
+		return tdsMoneyApprovalFeignService.approvalByUpStatusGo(domain, appRemarks);
+	}
+
+	/**
+	 * 2出账审核操作 审核类型 1进账审核 2出账审核 3退款审核 : approval_type
+	 * 
+	 * @return obj
+	 */
+	@RequestMapping(value = "/approvalByUpStatusOut", method = RequestMethod.POST)
+	public BackResult<Integer> approvalByUpStatusOut(TdsMoneyApprovalDomain domain, String appRemarks,
+			HttpServletRequest request, HttpServletResponse response) {
+		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
+		response.setContentType("text/json;charset=UTF-8");
+		return tdsMoneyApprovalFeignService.approvalByUpStatusOut(domain, appRemarks);
+	}
+
+	/**
+	 * 3退款审核操作 审核类型 1进账审核 2出账审核 3退款审核 : approval_type
+	 * 
+	 * @return obj
+	 */
+	@RequestMapping(value = "/approvalByUpStatusBack", method = RequestMethod.POST)
+	public BackResult<Integer> approvalByUpStatusBack(TdsMoneyApprovalDomain domain, String appRemarks,
+			HttpServletRequest request, HttpServletResponse response) {
+		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
+		response.setContentType("text/json;charset=UTF-8");
+		return tdsMoneyApprovalFeignService.approvalByUpStatusBack(domain, appRemarks);
+	}
 
 }
