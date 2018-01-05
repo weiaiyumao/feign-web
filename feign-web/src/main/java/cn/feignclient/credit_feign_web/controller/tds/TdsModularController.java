@@ -42,11 +42,6 @@ public class TdsModularController extends BaseController {
 			result.setResultMsg("模块id不能为空");
 			return result;
 		}
-		if (CommonUtils.isNotString(token)) {
-			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
-			result.setResultMsg("token不能为空");
-			return result;
-		}
 		result = tdsModularFeignService.loadById(id);
 		return result;
 	}

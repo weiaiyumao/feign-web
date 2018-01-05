@@ -94,7 +94,7 @@ public class TdsAccounBankController extends BaseController{
 	}
 
 	/**
-	 * 禁用
+	 * 停用
 	 * 
 	 * @param id
 	 * @param request
@@ -110,7 +110,7 @@ public class TdsAccounBankController extends BaseController{
 		response.setContentType("text/json;charset=UTF-8");
 		if (CommonUtils.isNotIngeter(id)) {
 			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
-			result.setResultMsg("角色id不能为空");
+			result.setResultMsg("id不能为空");
 			return result;
 		}
 		if (CommonUtils.isNotString(token)) {
@@ -118,11 +118,6 @@ public class TdsAccounBankController extends BaseController{
 			result.setResultMsg("token不能为空");
 			return result;
 		}
-//		if (CommonUtils.isNotString(loginMobile)) {
-//			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
-//			result.setResultMsg("登录者手机不能为空");
-//			return result;
-//		}
 		TdsUserDomain loginUser=this.getUserInfo(loginMobile);
 		logger.info("用户ID:"+loginUser.getId()+"==========入账银行进行停用===========");
 		result = tdsAccounBankFeignService.isDisableById(id);
@@ -149,5 +144,38 @@ public class TdsAccounBankController extends BaseController{
 		result = tdsAccounBankFeignService.pageTdsAccountBank(likeName, currentPage, numPerPage, selected);
 		return result;
 	}
+	
+	
+	
+	/**
+	 * 根据id获取对象
+	 * 
+	 * @param id
+	 * @param request
+	 * @param response
+	 * @param token
+	 * @return
+	 */
+	@RequestMapping(value = "/loadById")
+	public BackResult<TdsAccountBankDomain> loadById(Integer id, HttpServletRequest request, HttpServletResponse response,String token) {
+		BackResult<TdsAccountBankDomain> result = new BackResult<TdsAccountBankDomain>();
+		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
+		response.setContentType("text/json;charset=UTF-8");
+		if (CommonUtils.isNotIngeter(id)) {
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("id不能为空");
+			return result;
+		}
+		if (CommonUtils.isNotString(token)) {
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("token不能为空");
+			return result;
+		}
+
+		result = tdsAccounBankFeignService.loadById(id);
+		return result;
+	}
+	
+	
 
 }

@@ -1,6 +1,7 @@
 package cn.feignclient.credit_feign_web.service.tds;
 
 
+
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,5 +28,9 @@ public interface TdsAccounBankFeignService {
 	public BackResult<PageDomain<TdsAccountBankDomain>> pageTdsAccountBank(@RequestParam("likeName") String likeName,
 			@RequestParam("currentPage") Integer currentPage, @RequestParam("numPerPage") Integer numPerPage,
 			@RequestParam("selected") Integer selected);
+	
+	
+	@RequestMapping(value = "/accounBank/loadById", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public BackResult<TdsAccountBankDomain> loadById(@RequestParam("id")Integer id);
 
 }
