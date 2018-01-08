@@ -43,6 +43,7 @@ public class TdsApprovalController extends BaseController{
 		if (CommonUtils.isNotString(token)) {
 			 return new BackResult<PageDomain<TdsCustomerViewDomain>>(ResultCode.RESULT_PARAM_EXCEPTIONS,"token不能为空");
 		}
+		
 		result=tdsApprovalFeignService.pageTdsApproval(auto);
 		logger.info("===客户审核展示===");
 		return result;
