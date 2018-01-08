@@ -1,6 +1,7 @@
 package cn.feignclient.credit_feign_web.controller.tds;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -177,11 +178,11 @@ public class TdsCustomerController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(value = "/queryUserByRoleName", method = RequestMethod.POST)
-	public BackResult<List<TdsUserDomain>> queryUserByRoleName(HttpServletRequest request,
+	public BackResult<List<Map<String,String>>> queryUserByRoleName(HttpServletRequest request,
 			HttpServletResponse response,String contact) {
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
-		return tdsUserRoleFeignService.queryUserByRoleName("业务员",contact);  //3：业务员
+		return tdsUserRoleFeignService.queryUserByRoleName(contact);  
 	}
 
 	
