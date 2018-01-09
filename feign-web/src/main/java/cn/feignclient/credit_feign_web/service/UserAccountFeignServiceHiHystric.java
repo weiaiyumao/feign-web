@@ -35,6 +35,11 @@ public class UserAccountFeignServiceHiHystric implements UserAccountFeignService
 	}
 
 	@Override
+	public BackResult<Boolean> consumeRqApiAccount(String creUserId, String count) {
+		return new BackResult<>(ResultCode.RESULT_FAILED, "user-provider-service服务consumeRqApiAccount出现异常");
+	}
+
+	@Override
 	public BackResult<Boolean> consumeAccount(String creUserId, String count) {
 		return new BackResult<>(ResultCode.RESULT_FAILED, "user-provider-service服务consumeAccount出现异常");
 	}

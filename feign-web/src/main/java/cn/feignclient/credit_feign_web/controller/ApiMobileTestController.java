@@ -79,7 +79,7 @@ public class ApiMobileTestController extends BaseController {
 			logger.info("账户号：" + apiName + "的IP地址是：" + ip);
 
 			// 1、账户信息检测
-			BackResult<Integer> resultCreUser = apiAccountInfoFeignService.checkApiAccount(apiName, password, ip,
+			BackResult<Integer> resultCreUser = apiAccountInfoFeignService.checkRqApiAccount(apiName, password, ip,
 					phones.length);
 
 			if (!resultCreUser.getResultCode().equals(ResultCode.RESULT_SUCCEED)) {
@@ -120,7 +120,7 @@ public class ApiMobileTestController extends BaseController {
 //				threadExecutorService.execute(run);
 				// 3、结算
 				BackResult<Boolean> resultConsume = userAccountFeignService
-						.consumeApiAccount(resultCreUser.getResultObj().toString(), String.valueOf("1"));
+						.consumeRqApiAccount(resultCreUser.getResultObj().toString(), String.valueOf("1"));
 
 				if (!resultConsume.getResultCode().equals(ResultCode.RESULT_SUCCEED)) {
 					logger.error("------------------------------------商户号：" + apiName + "执行账户2次清洗出现记账系统异常："
@@ -142,7 +142,7 @@ public class ApiMobileTestController extends BaseController {
 
 	@RequestMapping(value = "/getPageByUserId", method = RequestMethod.POST)
 	public BackResult<PageDomain<MobileTestLogDomain>> getPageByUserId(HttpServletRequest request,
-			HttpServletResponse response, int pageNo, int pageSize, String creUserId, String mobile, String token) {
+			HttpServletResponse response, int pageNo, int pageSize, String creUserId, String mobile, String token,String type) {
 
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
@@ -169,6 +169,12 @@ public class ApiMobileTestController extends BaseController {
 				return result;
 			}
 
+			if (CommonUtils.isNotString(type)) {
+				result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+				result.setResultMsg("类型不能为空");
+				return result;
+			}
+
 			if (CommonUtils.isNotString(mobile)) {
 				result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
 				result.setResultMsg("手机号码不能为空");
@@ -187,7 +193,7 @@ public class ApiMobileTestController extends BaseController {
 				return result;
 			}
 
-			result = apiMobileTestService.getPageByUserId(pageNo, pageSize, creUserId);
+			result = apiMobileTestService.getPageByUserId(pageNo, pageSize, creUserId,type);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error("用户ID：" + creUserId + "获取检测列表系统异常：" + e.getMessage());

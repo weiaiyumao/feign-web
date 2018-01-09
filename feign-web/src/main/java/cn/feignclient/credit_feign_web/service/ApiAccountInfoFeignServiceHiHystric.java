@@ -24,4 +24,9 @@ public class ApiAccountInfoFeignServiceHiHystric implements ApiAccountInfoFeignS
 		return new BackResult<>(ResultCode.RESULT_FAILED, "user-provider-service服务checkApiAccount出现异常");
 	}
 
+	@Override
+	public BackResult<Integer> checkRqApiAccount(String apiName, String password, String ip, int checkCount) {
+		return new BackResult<>(ResultCode.RESULT_FAILED, "user-provider-service服务checkRqApiAccount出现异常");
+	}
+
 }

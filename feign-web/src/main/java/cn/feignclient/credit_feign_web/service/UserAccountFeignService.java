@@ -29,6 +29,9 @@ public interface UserAccountFeignService {
 	
 	@RequestMapping(value = "/userAccount/consumeApiAccount" , method = RequestMethod.POST)
 	BackResult<Boolean> consumeApiAccount(@RequestParam("creUserId")String creUserId,@RequestParam("count")String count);
+
+	@RequestMapping(value = "/userAccount/consumeRqApiAccount" , method = RequestMethod.POST)
+	BackResult<Boolean> consumeRqApiAccount(@RequestParam("creUserId")String creUserId,@RequestParam("count")String count);
 	
 	@RequestMapping(value = "/userAccount/consumeAccount" , method = RequestMethod.POST)
 	BackResult<Boolean> consumeAccount(@RequestParam("creUserId")String creUserId,@RequestParam("count")String count);
