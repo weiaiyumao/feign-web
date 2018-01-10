@@ -3,7 +3,7 @@ eureka:
     serviceUrl:
       defaultZone: http://192.168.1.245:8080/eureka/
 server:
-  port: 8765
+  port: 8766
 spring:
   application:
     name: service-feign   
@@ -13,11 +13,15 @@ jedis :
   pool :  
 <<<<<<< HEAD
     host : 172.16.4.218
+<<<<<<< HEAD
     port : 6379
 =======
     host : 192.168.1.245
     port : 6379  
 >>>>>>> refs/remotes/origin/master
+=======
+    port : 6379  
+>>>>>>> refs/heads/20171207_Lsw_quanxian
     config :  
       maxTotal: 100  
       maxIdle: 10  
@@ -25,5 +29,7 @@ jedis :
       
       
       
-
+      
+      
+      
       
