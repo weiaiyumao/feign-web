@@ -19,7 +19,7 @@ public interface ApiMobileTestService {
 	public BackResult<List<MobileInfoDomain>> findByMobileNumbers(@RequestParam(value = "mobileNumbers")String mobileNumbers,@RequestParam(value = "userId")String userId);
 
 	@RequestMapping(value = "/apiMobileTest/getPageByUserId",  method = RequestMethod.POST)
-	public BackResult<PageDomain<MobileTestLogDomain>> getPageByUserId(@RequestParam(value = "pageNo")int pageNo, @RequestParam(value = "pageSize")int pageSize, @RequestParam(value = "userId")String userId);
+	public BackResult<PageDomain<MobileTestLogDomain>> getPageByUserId(@RequestParam(value = "pageNo")int pageNo, @RequestParam(value = "pageSize")int pageSize, @RequestParam(value = "userId")String userId, @RequestParam(value = "type")String type);
 
 	@RequestMapping(value = "/apiMobileTest/findByMobile", method = RequestMethod.POST)
 	public BackResult<MobileInfoDomain> findByMobile(@RequestParam(value = "mobile")String mobile,@RequestParam(value = "userId")String userId);

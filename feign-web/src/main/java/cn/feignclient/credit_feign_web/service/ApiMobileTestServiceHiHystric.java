@@ -19,7 +19,7 @@ public class ApiMobileTestServiceHiHystric implements ApiMobileTestService {
 	}
 
 	@Override
-	public BackResult<PageDomain<MobileTestLogDomain>> getPageByUserId(int pageNo, int pageSize, String userId) {
+	public BackResult<PageDomain<MobileTestLogDomain>> getPageByUserId(int pageNo, int pageSize, String userId,String type) {
 		return new BackResult<>(ResultCode.RESULT_FAILED, "credit-provider-service服务getPageByUserId出现异常");
 	}
 
