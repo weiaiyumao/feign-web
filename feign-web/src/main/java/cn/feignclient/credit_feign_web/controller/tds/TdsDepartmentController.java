@@ -174,6 +174,7 @@ public class TdsDepartmentController extends BaseController {
 		}
 		
 		TdsUserDomain loginUser = this.getUserInfo(loginMobile); // 获取登录用户信息
+		logger.info("=======自定义角色权限=======");
 		result = tdsDeparTmentFeignService.addCustomPermissions(soleName, loginUser.getId(), arrfuns);
 		return result;
 
