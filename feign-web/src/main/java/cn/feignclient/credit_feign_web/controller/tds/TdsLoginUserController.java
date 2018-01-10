@@ -1,8 +1,6 @@
 package cn.feignclient.credit_feign_web.controller.tds;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,7 +16,6 @@ import cn.feignclient.credit_feign_web.service.tds.TdsUserLoginFeignService;
 import cn.feignclient.credit_feign_web.utils.CommonUtils;
 import main.java.cn.common.BackResult;
 import main.java.cn.common.ResultCode;
-import main.java.cn.domain.tds.TdsCompanyDomain;
 import main.java.cn.domain.tds.TdsModularDomain;
 import main.java.cn.domain.tds.TdsUserDomain;
 import main.java.cn.hhtp.util.MD5Util;
@@ -42,22 +39,21 @@ public class TdsLoginUserController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping("/login")
-	public BackResult<Map<String,Object>> userLogin(HttpServletRequest request, HttpServletResponse response, String name,
+	public BackResult<TdsUserDomain> userLogin(HttpServletRequest request, HttpServletResponse response, String name,
 			String passWord) {
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
 		BackResult<TdsUserDomain> result = new BackResult<TdsUserDomain>();
-		BackResult<Map<String,Object>> resultMap=new BackResult<Map<String,Object>>();
 		if (CommonUtils.isNotString(name)) {
 			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
-			result.setResultMsg("用户名不能为空");
-			return resultMap;
+			result.setResultMsg("用户账号不能为空");
+			return result;
 		}
 
 		if (CommonUtils.isNotString(passWord)) {
 			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
 			result.setResultMsg("密码不能为空");
-			return resultMap;
+			return result;
 		}
 		
 		TdsUserDomain tdsUserDomain = new TdsUserDomain();
@@ -81,17 +77,9 @@ public class TdsLoginUserController extends BaseController {
 		// 清空 se_ken_
 		// redisClinet.remove("tdsse_ken_" + mobile);//
 		redisClinet.set("tds_user_token_" + result.getResultObj().getPhone(), tokenUserPhone);
-		result.getResultObj().setToken(tokenUserPhone);
-		logger.info("=========用户名：" +name+ "用户登录成功============");
-		BackResult<TdsCompanyDomain> comDomain=new BackResult<TdsCompanyDomain>();
-		Map<String,Object> map=new HashMap<>();
-		if(null!=result.getResultObj().getComId() && !"".equals(result.getResultObj().getComId())){
-			comDomain=tdsUserLoginFeignService.loadComById(result.getResultObj().getComId());
-			map.put("com", comDomain.getResultObj());
-		}
-		map.put("user", result.getResultObj());
-		resultMap.setResultObj(map);
-		return resultMap;
+		result.getResultObj().setToken(tokenUserPhone);//保存tonke
+		logger.info("=========用户名：" +name+ "用户登录============");
+		return result;
 	}
 	
 	

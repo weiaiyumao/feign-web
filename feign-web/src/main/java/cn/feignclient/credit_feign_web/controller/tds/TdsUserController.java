@@ -30,6 +30,7 @@ public class TdsUserController extends BaseController {
 	@Autowired
 	private TdsUserFeignService tdsUserFeignService;
 
+	
 	@RequestMapping(value = "/loadById", method = RequestMethod.POST)
 	public BackResult<TdsUserDomain> loadById(Integer id, HttpServletRequest request, HttpServletResponse response,
 			String token) {
@@ -45,6 +46,36 @@ public class TdsUserController extends BaseController {
 		result = tdsUserFeignService.loadById(id);
 		return result;
 	}
+	
+	
+	/**
+	 * 先从缓存获取用户信息，如果没有则调用接口
+	 * @param request
+	 * @param response
+	 * @param token
+	 * @param phone
+	 * @return
+	 */
+	@RequestMapping(value = "/loadByPhone", method = RequestMethod.POST)
+	public BackResult<TdsUserDomain> loadById(HttpServletRequest request, HttpServletResponse response,
+			String token,String phone) {
+		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
+		response.setContentType("text/json;charset=UTF-8");
+		BackResult<TdsUserDomain> result = new BackResult<TdsUserDomain>();
+		if (CommonUtils.isNotString(token)) {
+			return new BackResult<TdsUserDomain>(ResultCode.RESULT_PARAM_EXCEPTIONS, "token不能为空");
+		}
+		if (CommonUtils.isNotString(phone)) {
+			return new BackResult<TdsUserDomain>(ResultCode.RESULT_PARAM_EXCEPTIONS, "手机号不能为空");
+		}
+		//进入缓存
+		TdsUserDomain user=this.getUserInfo(phone);
+		user.setPassword(null);
+		result.setResultObj(user);
+		return result;
+	}
+	
+	
 
 	/**
 	 * 注册 
@@ -154,6 +185,8 @@ public class TdsUserController extends BaseController {
 		logger.info("用户Id:" + userId + "===编辑个人信息===");
 		domain.setId(userId);
 		result=tdsUserFeignService.editUserInfo(domain);
+		
+		//重新覆盖redias缓存
 		if(result.getResultCode().equals("000000")){	
 			this.replaceAndSaveObj(phone);
 		}
@@ -192,6 +225,7 @@ public class TdsUserController extends BaseController {
 			return new BackResult<Integer>(ResultCode.RESULT_PARAM_EXCEPTIONS, "token不能为空");
 		}
 		result=tdsUserFeignService.editComInfo(domain, userId, userName, phone, contact);
+		//重新覆盖redias缓存
 		if(result.getResultCode().equals("000000")){	
 			this.replaceAndSaveObj(phone);
 		}
@@ -199,7 +233,22 @@ public class TdsUserController extends BaseController {
 		return result;
 	}
 	
-	
-	
+	/**
+	 * 获取企业信息
+	 * @param userId
+	 * @return
+	 */
+	@RequestMapping(value = "/queryComByUserId", method = RequestMethod.POST)
+	public BackResult<TdsCompanyDomain> queryComByUserId(Integer userId,String token, HttpServletRequest request, HttpServletResponse response){
+		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
+		response.setContentType("text/json;charset=UTF-8");
+		if (CommonUtils.isNotString(token)) {
+			return new BackResult<TdsCompanyDomain>(ResultCode.RESULT_PARAM_EXCEPTIONS, "token不能为空");
+		}
+		if (CommonUtils.isNotIngeter(userId)) {
+			return new BackResult<TdsCompanyDomain>(ResultCode.RESULT_PARAM_EXCEPTIONS, "用户id不能为空");
+		}
+		return tdsUserFeignService.queryComByUserId(userId);
+	}
 
 }

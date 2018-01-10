@@ -1,6 +1,7 @@
 package cn.feignclient.credit_feign_web.controller.tds;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,6 +17,8 @@ import cn.feignclient.credit_feign_web.service.tds.TdsModularFeignService;
 import cn.feignclient.credit_feign_web.utils.CommonUtils;
 import main.java.cn.common.BackResult;
 import main.java.cn.common.ResultCode;
+import main.java.cn.domain.page.BasePageParam;
+import main.java.cn.domain.page.PageDomain;
 import main.java.cn.domain.tds.TdsModularDomain;
 
 @RestController
@@ -111,6 +114,15 @@ public class TdsModularController extends BaseController {
 		response.setContentType("text/json;charset=UTF-8");
 
 		result = tdsModularFeignService.selectAll(tdsModularDomain);
+		return result;
+	}
+	
+	@RequestMapping(value="pageByModular")
+	BackResult<PageDomain<Map<String,Object>>> pageByModular(String name,BasePageParam basePageParam,HttpServletRequest request, HttpServletResponse response){
+		BackResult<PageDomain<Map<String,Object>>> result = new BackResult<PageDomain<Map<String,Object>>>();
+		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
+		response.setContentType("text/json;charset=UTF-8");
+		result = tdsModularFeignService.pageByModular(name,basePageParam);
 		return result;
 	}
 

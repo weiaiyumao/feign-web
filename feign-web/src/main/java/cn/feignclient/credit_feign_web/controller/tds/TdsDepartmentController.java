@@ -203,14 +203,15 @@ public class TdsDepartmentController extends BaseController {
 		}
 		if(CommonUtils.isNotString(domain.getName())){
 			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
-			result.setResultMsg("权限名称不能为空");
+			result.setResultMsg("功能名称不能为空");
 			return result;
 		}
 		if(CommonUtils.isNotString(domain.getUrl())){
 			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
-			result.setResultMsg("权限url不能为空");
+			result.setResultMsg("功能url不能为空");
 			return result;
 		}
+		logger.info("=====新增功能："+domain.getName()+"======");
 		domain.setCreater(loginUserId); //创建人
 		result = tdsDeparTmentFeignService.addFun(domain);
 		return result;

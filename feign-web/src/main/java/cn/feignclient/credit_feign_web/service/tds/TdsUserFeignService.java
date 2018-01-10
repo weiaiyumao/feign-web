@@ -45,5 +45,10 @@ public interface TdsUserFeignService {
 	
 	@RequestMapping(value = "/tdsUser/updateHeadImg", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public BackResult<Integer> updateHeadImg(@RequestParam("id")Integer id,@RequestParam("hedehref")String hedehref);
+	
+	
+	
+	@RequestMapping(value = "/tdsUser/queryComByUserId", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public BackResult<TdsCompanyDomain> queryComByUserId(@RequestParam("userId")Integer userId);
 
 }

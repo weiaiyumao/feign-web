@@ -1,6 +1,7 @@
 package cn.feignclient.credit_feign_web.service.tds;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.http.MediaType;
@@ -9,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import main.java.cn.common.BackResult;
+import main.java.cn.domain.page.BasePageParam;
+import main.java.cn.domain.page.PageDomain;
 import main.java.cn.domain.tds.TdsModularDomain;
 
 @FeignClient(value = "user-provider-service")
@@ -28,4 +31,7 @@ public interface TdsModularFeignService {
 	
 	@RequestMapping(value="/modular/selectAll",method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
 	public BackResult<List<TdsModularDomain>> selectAll(TdsModularDomain tdsModularDomain);
+	
+	@RequestMapping(value="/modular/pageByModular",method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
+	BackResult<PageDomain<Map<String,Object>>> pageByModular(@RequestParam("name")String name,BasePageParam basePageParam);
 }
