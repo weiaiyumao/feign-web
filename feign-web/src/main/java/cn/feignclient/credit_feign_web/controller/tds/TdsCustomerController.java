@@ -43,40 +43,53 @@ public class TdsCustomerController extends BaseController {
 
 	@Autowired
 	private TdsUserFeignService tdsUserFeignService;
-	
+
 	@Autowired
 	private TdsUserRoleFeignService tdsUserRoleFeignService;
 
 	/**
 	 * 修改编辑客户信息
 	 */
-	@RequestMapping(value = "/update", method = RequestMethod.POST)
-	public BackResult<Integer> update(HttpServletRequest request, HttpServletResponse response, String token,
-			Integer loginUserId, PageAuto auto, Integer upUserId, Integer[] arrRoles) {
+	@RequestMapping(value = "/updateCustomer", method = RequestMethod.POST)
+	public BackResult<Integer> updateCustomer(HttpServletRequest request, HttpServletResponse response, String token,
+			TdsCustomerViewDomain domain, Integer loginUserId, String passWord, String comName, String comUrl) {
 		BackResult<Integer> result = new BackResult<Integer>();
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
 		if (CommonUtils.isNotString(token)) {
 			return new BackResult<Integer>(ResultCode.RESULT_PARAM_EXCEPTIONS, "token不能为空");
 		}
-		if (CommonUtils.isNotIngeter(upUserId)) {
-			return new BackResult<Integer>(ResultCode.RESULT_PARAM_EXCEPTIONS, "更新用户id不能为空-参数：upUserId");
-		}
-		if (CommonUtils.isNotIngeter(loginUserId)) {
-			return new BackResult<Integer>(ResultCode.RESULT_PARAM_EXCEPTIONS, "登录者用户id不能为空-参数：loginUserId");
-		}
-		if (CommonUtils.isNotString(auto.getPassWord())) {
-			return new BackResult<Integer>(ResultCode.RESULT_PARAM_EXCEPTIONS, "密码不能为空-参数：passWord");
-		}
-		if (CommonUtils.isNotString(auto.getComUrl())) {
-			return new BackResult<Integer>(ResultCode.RESULT_PARAM_EXCEPTIONS, "公司网址不能空-参数：comUrl");
-		}
-
 		// 获取登录用户信息，增加修改人
-		logger.info("用户ID:" + loginUserId + "===修改客户列表操作,修改信息用户id:" + upUserId + "===");
-		result = tdsCustomerFeignService.update(loginUserId, auto, upUserId, arrRoles);
-
+		domain.setCom_name(comName);
+		domain.setCom_url(comUrl);
+		result = tdsCustomerFeignService.updateCustomer(domain, loginUserId, passWord);
 		return result;
+	}
+
+	/**
+	 * 客服列表新增
+	 * 
+	 * @param auto
+	 * @param loginUserId
+	 * @param request
+	 * @param response
+	 * @param token
+	 * @return
+	 */
+	@RequestMapping(value = "/addTdsCustomer", method = RequestMethod.POST)
+	public BackResult<Integer> addTdsCustomer(HttpServletRequest request, HttpServletResponse response, String token,
+			TdsCustomerViewDomain domain, Integer loginUserId, String passWord, String comName, String comUrl) {
+		BackResult<Integer> result = new BackResult<Integer>();
+		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
+		response.setContentType("text/json;charset=UTF-8");
+		if (CommonUtils.isNotString(token)) {
+			return new BackResult<Integer>(ResultCode.RESULT_PARAM_EXCEPTIONS, "token不能为空");
+		}
+		domain.setCom_name(comName);
+		domain.setCom_url(comUrl);
+		result = tdsCustomerFeignService.addTdsCustomer(domain, loginUserId, passWord);
+		return result;
+
 	}
 
 	/**
@@ -168,54 +181,29 @@ public class TdsCustomerController extends BaseController {
 		return tdsUserFeignService.loadById(userId);
 	}
 
-    
 	/**
-	 *  根据角色名 or 联系人 获取用户信息
+	 * 根据角色名 or 联系人 获取用户信息
+	 * 
 	 * @param request
 	 * @param response
-	 * @param contact 联系人
+	 * @param contact
+	 *            联系人
 	 * @return
 	 */
 	@RequestMapping(value = "/queryUserByRoleName", method = RequestMethod.POST)
-	public BackResult<List<TdsUserDomain>> queryUserByRoleName(HttpServletRequest request,
-			HttpServletResponse response,String contact) {
+	public BackResult<List<TdsUserDomain>> queryUserByRoleName(HttpServletRequest request, HttpServletResponse response,
+			String contact) {
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
-		return tdsUserRoleFeignService.queryUserByRoleName("业务员",contact);  //3：业务员
+		return tdsUserRoleFeignService.queryUserByRoleName("业务员", contact); // 3：业务员
 	}
-
-	
-	/**
-	 * 客服列表新增
-	 * 
-	 * @param auto
-	 * @param loginUserId
-	 * @param request
-	 * @param response
-	 * @param token
-	 * @return
-	 */
-	@RequestMapping(value = "/addTdsCustomer", method = RequestMethod.POST)
-	public BackResult<Integer> addTdsCustomer(PageAuto auto, Integer loginUserId, Integer[] arrRoles,
-			HttpServletRequest request, HttpServletResponse response, String token) {
-		BackResult<Integer> result = new BackResult<Integer>();
-		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
-		response.setContentType("text/json;charset=UTF-8");
-		if (CommonUtils.isNotString(token)) {
-			return new BackResult<Integer>(ResultCode.RESULT_PARAM_EXCEPTIONS, "token不能为空");
-		}
-		logger.info("====用户id:======" + loginUserId + " 新增客户");
-		result = tdsCustomerFeignService.addTdsCustomer(auto, loginUserId, arrRoles);
-		return result;
-
-	}
-
 
 	/**
 	 * 编辑改价
 	 */
 	@RequestMapping(value = "/updatePrice", method = RequestMethod.POST)
-	public BackResult<Integer> updatePrice(HttpServletRequest request, HttpServletResponse response, String token,TdsUserDiscountDomain domain) {
+	public BackResult<Integer> updatePrice(HttpServletRequest request, HttpServletResponse response, String token,
+			TdsUserDiscountDomain domain) {
 		BackResult<Integer> result = new BackResult<Integer>();
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
@@ -227,24 +215,24 @@ public class TdsCustomerController extends BaseController {
 		return result;
 
 	}
-	
-	
+
 	/**
 	 * 根据列表用户id查询改价信息
 	 */
 	@RequestMapping(value = "/selectAllByUserId", method = RequestMethod.POST)
-	public BackResult<List<TdsUserDiscountDomain>> selectAllByUserId(HttpServletRequest request, HttpServletResponse response,Integer userId) {
+	public BackResult<List<TdsUserDiscountDomain>> selectAllByUserId(HttpServletRequest request,
+			HttpServletResponse response, Integer userId) {
 		BackResult<List<TdsUserDiscountDomain>> result = new BackResult<List<TdsUserDiscountDomain>>();
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
 		result = tdsCustomerFeignService.selectAllByUserId(userId);
 		return result;
-		
+
 	}
-	
-	
+
 	/**
 	 * 新增改价信息
+	 * 
 	 * @param domain
 	 * @param request
 	 * @param response
@@ -252,7 +240,8 @@ public class TdsCustomerController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(value = "/addTdsUserDiscount", method = RequestMethod.POST)
-	public BackResult<Integer> addTdsUserDiscount(TdsUserDiscountDomain domain,HttpServletRequest request, HttpServletResponse response,String token){
+	public BackResult<Integer> addTdsUserDiscount(TdsUserDiscountDomain domain, HttpServletRequest request,
+			HttpServletResponse response, String token) {
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
 		if (CommonUtils.isNotString(token)) {
@@ -260,28 +249,26 @@ public class TdsCustomerController extends BaseController {
 		}
 		return tdsCustomerFeignService.addTdsUserDiscount(domain);
 	}
-	
-	
-	
-	
-    /**
-     * 删除改价信息
-     * @param id
-     * @param request
-     * @param response
-     * @param token
-     * @return
-     */
+
+	/**
+	 * 删除改价信息
+	 * 
+	 * @param id
+	 * @param request
+	 * @param response
+	 * @param token
+	 * @return
+	 */
 	@RequestMapping(value = "/deleteById", method = RequestMethod.POST)
-	public BackResult<Integer> deleteById(Integer id,HttpServletRequest request, HttpServletResponse response,String token){
+	public BackResult<Integer> deleteById(Integer id, HttpServletRequest request, HttpServletResponse response,
+			String token) {
 		if (CommonUtils.isNotString(token)) {
 			return new BackResult<Integer>(ResultCode.RESULT_PARAM_EXCEPTIONS, "token不能为空");
 		}
-		if(CommonUtils.isNotIngeter(id)){
+		if (CommonUtils.isNotIngeter(id)) {
 			return new BackResult<Integer>(ResultCode.RESULT_PARAM_EXCEPTIONS, "id不能为空");
 		}
 		return tdsCustomerFeignService.deleteById(id);
 	}
-	
 
 }

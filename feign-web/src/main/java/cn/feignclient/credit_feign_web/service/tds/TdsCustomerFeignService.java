@@ -20,13 +20,13 @@ public interface TdsCustomerFeignService {
 	@RequestMapping(value = "/customer/pageTdsCustomer", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public BackResult<PageDomain<TdsCustomerViewDomain>> pageTdsCustomer(PageAuto auto);
 
-	@RequestMapping(value = "/customer/update", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public BackResult<Integer> update(@RequestParam("loginUserId") Integer loginUserId, PageAuto auto,
-			@RequestParam("upUserId") Integer upUserId, @RequestParam("arrRoles") Integer[] arrRoles);
+	@RequestMapping(value = "/customer/updateCustomer", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public BackResult<Integer> updateCustomer(TdsCustomerViewDomain domain,
+			@RequestParam("loginUserId") Integer loginUserId, @RequestParam("passWord") String passWord);
 
 	@RequestMapping(value = "/customer/addTdsCustomer", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public BackResult<Integer> addTdsCustomer(PageAuto auto, @RequestParam("loginUserId") Integer loginUserId,
-			@RequestParam("arrRoles") Integer[] arrRoles);
+	public BackResult<Integer> addTdsCustomer(TdsCustomerViewDomain domain,
+			@RequestParam("loginUserId") Integer loginUserId, @RequestParam("passWord") String passWord);
 
 	@RequestMapping(value = "/customer/loadByIdView", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public BackResult<TdsCustomerViewDomain> loadByIdView(@RequestParam("userId") Integer userId);
@@ -34,8 +34,10 @@ public interface TdsCustomerFeignService {
 	@RequestMapping(value = "/customer/attorn", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public BackResult<Integer> attorn(TdsAttornLogDomain domain);
 
-	@RequestMapping(value = "/customer/updatePrice", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public BackResult<Integer> updatePrice(@RequestParam("id") Integer id, @RequestParam("discount") String discount);
+	// @RequestMapping(value = "/customer/updatePrice", method =
+	// RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	// public BackResult<Integer> updatePrice(@RequestParam("id") Integer id,
+	// @RequestParam("discount") String discount);
 
 	// ====改价
 	@RequestMapping(value = "/customer/updatePrice", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
