@@ -29,7 +29,7 @@ public interface TdsCustomerFeignService {
 			@RequestParam("arrRoles") Integer[] arrRoles);
 
 	@RequestMapping(value = "/customer/loadById", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public BackResult<TdsCustomerViewDomain> loadById(@RequestParam("id") Integer id);
+	public BackResult<TdsCustomerViewDomain> loadByIdView(@RequestParam("userId") Integer userId);
 
 	@RequestMapping(value = "/customer/attorn", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public BackResult<Integer> attorn(TdsAttornLogDomain domain);

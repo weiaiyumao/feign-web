@@ -112,15 +112,15 @@ public class TdsCustomerController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(value = "/loadById", method = RequestMethod.POST)
-	public BackResult<TdsCustomerViewDomain> loadById(Integer id, HttpServletRequest request,
+	public BackResult<TdsCustomerViewDomain> loadById(Integer userId, HttpServletRequest request,
 			HttpServletResponse response) {
 		BackResult<TdsCustomerViewDomain> result = new BackResult<TdsCustomerViewDomain>();
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
-		if (CommonUtils.isNotIngeter(id)) {
-			return new BackResult<>(ResultCode.RESULT_PARAM_EXCEPTIONS, "id不能为空");
+		if (CommonUtils.isNotIngeter(userId)) {
+			return new BackResult<>(ResultCode.RESULT_PARAM_EXCEPTIONS, "userId不能为空");
 		}
-		result = tdsCustomerFeignService.loadById(id);
+		result = tdsCustomerFeignService.loadByIdView(userId);
 		return result;
 
 	}
