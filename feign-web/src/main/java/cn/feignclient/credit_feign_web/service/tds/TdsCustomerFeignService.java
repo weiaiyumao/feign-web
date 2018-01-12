@@ -28,7 +28,7 @@ public interface TdsCustomerFeignService {
 	public BackResult<Integer> addTdsCustomer(PageAuto auto, @RequestParam("loginUserId") Integer loginUserId,
 			@RequestParam("arrRoles") Integer[] arrRoles);
 
-	@RequestMapping(value = "/customer/loadById", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/customer/loadByIdView", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public BackResult<TdsCustomerViewDomain> loadByIdView(@RequestParam("userId") Integer userId);
 
 	@RequestMapping(value = "/customer/attorn", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
