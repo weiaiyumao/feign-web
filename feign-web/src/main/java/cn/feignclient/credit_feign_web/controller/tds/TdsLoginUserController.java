@@ -112,7 +112,7 @@ public class TdsLoginUserController extends BaseController {
 		}
 		 result=tdsUserLoginFeignService.moduleLoadingByUsreId(userId);
 		 
-		 // TODO redis保存
+		 // TODO moduleLoadingByUsreId==redis保存
 		  	 
 		 //end
 		 logger.info("用户id:"+userId+"==========模块加载成功============！");
