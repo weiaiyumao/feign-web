@@ -181,6 +181,10 @@ public class TdsUserController extends BaseController {
 		if (CommonUtils.isNotString(token)) {
 			return new BackResult<Integer>(ResultCode.RESULT_PARAM_EXCEPTIONS, "token不能为空");
 		}
+		
+		if (CommonUtils.isNotIngeter(userId)) {
+			return new BackResult<Integer>(ResultCode.RESULT_PARAM_EXCEPTIONS, "userId不能为空");
+		}
 
 		logger.info("用户Id:" + userId + "===编辑个人信息===");
 		domain.setId(userId);

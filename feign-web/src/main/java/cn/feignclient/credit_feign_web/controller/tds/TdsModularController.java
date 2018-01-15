@@ -70,13 +70,13 @@ public class TdsModularController extends BaseController {
 	
 	
 	@RequestMapping(value="/update",method = RequestMethod.POST)
-    public BackResult<TdsModularDomain>  update(TdsModularDomain tdsModularDomain,HttpServletRequest request, HttpServletResponse response, String token){
-		BackResult<TdsModularDomain> result = new BackResult<TdsModularDomain>();
+    public BackResult<Integer>  update(String name,Integer selectedId,Integer newId,HttpServletRequest request, HttpServletResponse response, String token){
+		BackResult<Integer> result = new BackResult<Integer>();
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
-		if (CommonUtils.isNotIngeter(tdsModularDomain.getId())) {
+		if (CommonUtils.isNotIngeter(newId)) {
 			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
-			result.setResultMsg("模块id不能为空");
+			result.setResultMsg("更新newId不能为空");
 			return result;
 		}
 		if (CommonUtils.isNotString(token)) {
@@ -84,7 +84,7 @@ public class TdsModularController extends BaseController {
 			result.setResultMsg("token不能为空");
 			return result;
 		}
-		result = tdsModularFeignService.update(tdsModularDomain);
+		result = tdsModularFeignService.update(name,selectedId,newId);
 		return result;
 	}
 	
