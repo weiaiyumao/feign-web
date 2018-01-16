@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -50,7 +51,8 @@ public class TdsModularController extends BaseController {
 	}
 
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
-	public BackResult<Integer> saveTdsFunction(TdsModularDomain tdsModularDomain,HttpServletRequest request, HttpServletResponse response, String token) {
+	public BackResult<Integer> saveTdsFunction(TdsModularDomain tdsModularDomain,HttpServletRequest request, HttpServletResponse response, String token,
+			Integer[] arrModulars) {
 		BackResult<Integer> result = new BackResult<Integer>();
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
@@ -64,13 +66,15 @@ public class TdsModularController extends BaseController {
 			result.setResultMsg("token不能为空");
 			return result;
 		}
+		String strArr=StringUtils.join(arrModulars, ",");
+		tdsModularDomain.setRemarks(strArr);
 		result = tdsModularFeignService.save(tdsModularDomain);
 		return result;
 	}
 	
 	
 	@RequestMapping(value="/update",method = RequestMethod.POST)
-    public BackResult<Integer>  update(String name,Integer selectedId,Integer newId,HttpServletRequest request, HttpServletResponse response, String token){
+    public BackResult<Integer>  update(String name,Integer selectedId,Integer newId,HttpServletRequest request, HttpServletResponse response, String token,Integer[] arrModulars){
 		BackResult<Integer> result = new BackResult<Integer>();
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
@@ -84,7 +88,8 @@ public class TdsModularController extends BaseController {
 			result.setResultMsg("token不能为空");
 			return result;
 		}
-		result = tdsModularFeignService.update(name,selectedId,newId);
+		String strArr=StringUtils.join(arrModulars, ",");
+		result = tdsModularFeignService.update(name,selectedId,newId,strArr);
 		return result;
 	}
 	

@@ -16,6 +16,7 @@ import cn.feignclient.credit_feign_web.service.tds.TdsFunctionFeignService;
 import cn.feignclient.credit_feign_web.utils.CommonUtils;
 import main.java.cn.common.BackResult;
 import main.java.cn.common.ResultCode;
+import main.java.cn.domain.page.PageDomain;
 import main.java.cn.domain.tds.TdsFunctionDomain;
 
 @RestController
@@ -110,8 +111,8 @@ public class TdsFunctionController extends BaseController {
 	}
 	
 	@RequestMapping(value="selectAll")
-	public BackResult<List<TdsFunctionDomain>> selectAll(TdsFunctionDomain tdsFunctionDomain,HttpServletRequest request, HttpServletResponse response,String token){
-		BackResult<List<TdsFunctionDomain>> result = new BackResult<List<TdsFunctionDomain>>();
+	public BackResult<PageDomain<TdsFunctionDomain>> pageTdsFunction(TdsFunctionDomain tdsFunctionDomain,HttpServletRequest request, HttpServletResponse response,String token){
+		BackResult<PageDomain<TdsFunctionDomain>> result = new BackResult<PageDomain<TdsFunctionDomain>>();
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
 		
@@ -121,7 +122,7 @@ public class TdsFunctionController extends BaseController {
 			result.setResultMsg("token不能为空");
 			return result;
 		}
-		result = tdsFunctionFeignService.selectAll(tdsFunctionDomain);
+		result = tdsFunctionFeignService.pageTdsFunction(tdsFunctionDomain);
 		return result;
 	}
 
