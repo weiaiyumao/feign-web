@@ -16,7 +16,12 @@ public class TdsMoneyApprovalBackFeignServiceHiHystric implements TdsMoneyApprov
 	public BackResult<PageDomain<TdsMoneyApprovalBackDomain>> pageApprovalBack(TdsMoneyApprovalBackDomain domain) {
 		return new BackResult<>(ResultCode.RESULT_FAILED, "user-provider-service服务pageApprovalBack出现异常");
 	}
+
+	@Override
+	public BackResult<Integer> backOrderMoney(TdsMoneyApprovalBackDomain domain) {
+		return new BackResult<>(ResultCode.RESULT_FAILED, "user-provider-service服务backOrderMoney出现异常");
+	}
 	
 
-
+    
 }

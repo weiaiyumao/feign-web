@@ -17,7 +17,6 @@ import main.java.cn.common.BackResult;
 import main.java.cn.common.ResultCode;
 import main.java.cn.domain.page.PageDomain;
 import main.java.cn.domain.tds.TdsAccountBankDomain;
-import main.java.cn.domain.tds.TdsUserDomain;
 
 @RestController
 @RequestMapping("/accounBank")
@@ -40,7 +39,7 @@ public class TdsAccounBankController extends BaseController{
 	 */
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	public BackResult<Integer> saveTdsFunction(TdsAccountBankDomain tdsAccountBankDomain, HttpServletRequest request,
-			HttpServletResponse response, String token,String loginMobile) {
+			HttpServletResponse response, String token) {
 		BackResult<Integer> result = new BackResult<Integer>();
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
@@ -49,15 +48,8 @@ public class TdsAccounBankController extends BaseController{
 			result.setResultMsg("token不能为空");
 			return result;
 		}
-		
-		if (CommonUtils.isNotString(loginMobile)) {
-			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
-			result.setResultMsg("登录者手机不能为空");
-			return result;
-		}
-		TdsUserDomain loginUser=this.getUserInfo(loginMobile);
-		logger.info("用户ID:"+loginUser.getId()+"==========入账银行进行新增===========");
-		result = tdsAccounBankFeignService.save(tdsAccountBankDomain,loginUser.getId());
+		logger.info("==========入账银行进行新增===========");
+		result = tdsAccounBankFeignService.save(tdsAccountBankDomain);
 		return result;
 	}
 
@@ -72,7 +64,7 @@ public class TdsAccounBankController extends BaseController{
 	 */
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	public BackResult<Integer> update(TdsAccountBankDomain tdsAccountBankDomain, HttpServletRequest request,
-			HttpServletResponse response, String token,String loginMobile) {
+			HttpServletResponse response, String token) {
 		BackResult<Integer> result = new BackResult<Integer>();
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
@@ -82,14 +74,8 @@ public class TdsAccounBankController extends BaseController{
 			result.setResultMsg("token不能为空");
 			return result;
 		}
-		if (CommonUtils.isNotString(loginMobile)) {
-			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
-			result.setResultMsg("登录者手机不能为空");
-			return result;
-		}
-		TdsUserDomain loginUser=this.getUserInfo(loginMobile);
-		logger.info("用户ID:"+loginUser.getId()+"==========入账银行进行编辑修改===========");
-		result = tdsAccounBankFeignService.update(tdsAccountBankDomain,loginUser.getId());
+		logger.info("==========入账银行进行编辑修改===========");
+		result = tdsAccounBankFeignService.update(tdsAccountBankDomain);
 		return result;
 	}
 
@@ -104,7 +90,7 @@ public class TdsAccounBankController extends BaseController{
 	 */
 	@RequestMapping(value = "/isDisableById")
 	public BackResult<Integer> isDisableById(Integer id, HttpServletRequest request, HttpServletResponse response,
-			String token,String loginMobile) {
+			String token) {
 		BackResult<Integer> result = new BackResult<Integer>();
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
@@ -118,8 +104,7 @@ public class TdsAccounBankController extends BaseController{
 			result.setResultMsg("token不能为空");
 			return result;
 		}
-		TdsUserDomain loginUser=this.getUserInfo(loginMobile);
-		logger.info("用户ID:"+loginUser.getId()+"==========入账银行进行停用===========");
+		logger.info("==========入账银行进行停用===========");
 		result = tdsAccounBankFeignService.isDisableById(id);
 		return result;
 	}
@@ -137,11 +122,11 @@ public class TdsAccounBankController extends BaseController{
 	 */
 	@RequestMapping(value = "pageTdsAccountBank")
 	public BackResult<PageDomain<TdsAccountBankDomain>> pageTdsAccountBank(HttpServletRequest request,
-			HttpServletResponse response, String likeName, Integer currentPage, Integer numPerPage, Integer selected) {
+			HttpServletResponse response,TdsAccountBankDomain tdsAccountBankDomain) {
 		BackResult<PageDomain<TdsAccountBankDomain>> result = new BackResult<PageDomain<TdsAccountBankDomain>>();
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
-		result = tdsAccounBankFeignService.pageTdsAccountBank(likeName, currentPage, numPerPage, selected);
+		result = tdsAccounBankFeignService.pageTdsAccountBank(tdsAccountBankDomain);
 		return result;
 	}
 	
@@ -157,7 +142,7 @@ public class TdsAccounBankController extends BaseController{
 	 * @return
 	 */
 	@RequestMapping(value = "/loadById")
-	public BackResult<TdsAccountBankDomain> loadById(Integer id, HttpServletRequest request, HttpServletResponse response,String token) {
+	public BackResult<TdsAccountBankDomain> loadById(Integer id, HttpServletRequest request, HttpServletResponse response) {
 		BackResult<TdsAccountBankDomain> result = new BackResult<TdsAccountBankDomain>();
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
@@ -166,12 +151,6 @@ public class TdsAccounBankController extends BaseController{
 			result.setResultMsg("id不能为空");
 			return result;
 		}
-		if (CommonUtils.isNotString(token)) {
-			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
-			result.setResultMsg("token不能为空");
-			return result;
-		}
-
 		result = tdsAccounBankFeignService.loadById(id);
 		return result;
 	}

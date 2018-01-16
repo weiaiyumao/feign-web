@@ -16,18 +16,16 @@ import main.java.cn.domain.tds.TdsAccountBankDomain;
 public interface TdsAccounBankFeignService {
 
 	@RequestMapping(value = "/accounBank/save", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public BackResult<Integer> save(TdsAccountBankDomain tdsAccountBankDomain,@RequestParam("loginUserId")Integer loginUserId);
+	public BackResult<Integer> save(TdsAccountBankDomain tdsAccountBankDomain);
 
 	@RequestMapping(value = "/accounBank/update", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public BackResult<Integer> update(TdsAccountBankDomain tdsAccountBankDomain,@RequestParam("loginUserId")Integer loginUserId);
+	public BackResult<Integer> update(TdsAccountBankDomain tdsAccountBankDomain);
 
 	@RequestMapping(value = "/accounBank/isDisableById", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public BackResult<Integer> isDisableById(@RequestParam("id") Integer id);
 
 	@RequestMapping(value = "/accounBank/pageTdsAccountBank", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public BackResult<PageDomain<TdsAccountBankDomain>> pageTdsAccountBank(@RequestParam("likeName") String likeName,
-			@RequestParam("currentPage") Integer currentPage, @RequestParam("numPerPage") Integer numPerPage,
-			@RequestParam("selected") Integer selected);
+	public BackResult<PageDomain<TdsAccountBankDomain>> pageTdsAccountBank(TdsAccountBankDomain tdsAccountBankDomain);
 	
 	
 	@RequestMapping(value = "/accounBank/loadById", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)

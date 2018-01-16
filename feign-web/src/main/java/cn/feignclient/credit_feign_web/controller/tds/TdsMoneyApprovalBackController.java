@@ -40,6 +40,20 @@ public class TdsMoneyApprovalBackController extends BaseController {
 	
 	
 	
+	/**
+	 * 退单
+	 * 
+	 * @param id
+	 * @return obj
+	 * @throws Exception 
+	 */
+	@RequestMapping(value = "/backOrderMoney", method = RequestMethod.POST)
+	public BackResult<Integer> backOrderMoney(TdsMoneyApprovalBackDomain domain,HttpServletRequest request,
+			HttpServletResponse response){
+		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
+		response.setContentType("text/json;charset=UTF-8");
+		return tdsMoneyApprovalBackFeignService.backOrderMoney(domain);
+	}
 	
 	
 

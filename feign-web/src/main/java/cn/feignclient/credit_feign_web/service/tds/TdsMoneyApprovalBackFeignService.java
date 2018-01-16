@@ -23,4 +23,11 @@ public interface TdsMoneyApprovalBackFeignService {
 	public BackResult<PageDomain<TdsMoneyApprovalBackDomain>> pageApprovalBack(TdsMoneyApprovalBackDomain domain);
 	
 	
+	/**
+	 * 退单
+	 * @param domain
+	 * @return
+	 */
+	@RequestMapping(value="/moneyApprovalBack/backOrderMoney",method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
+	public BackResult<Integer> backOrderMoney(TdsMoneyApprovalBackDomain domain);
 }
