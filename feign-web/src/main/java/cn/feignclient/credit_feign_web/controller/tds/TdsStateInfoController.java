@@ -153,4 +153,13 @@ public class TdsStateInfoController  extends BaseController{
 		
 	}
 	
+	
+
+	@RequestMapping(value = "/queryPnameByPro", method = RequestMethod.POST)
+	public BackResult<List<TdsProductMoneyDomain>> queryPnameByPro(Integer pnameId,HttpServletRequest request,HttpServletResponse response){
+		response.setHeader("Access-Control-Allow-Origin","*"); // 有效，前端可以访问
+		response.setContentType("text/json;charset=UTF-8");
+		return tdsStateInfoFeignService.queryPnameByPro(pnameId);
+	}
+	
 }

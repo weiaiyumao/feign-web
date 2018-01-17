@@ -131,11 +131,6 @@ public class TdsDepartmentController extends BaseController {
 			result.setResultMsg("部门id不能为空");
 			return result;
 		}
-//		if (CommonUtils.isNotIngeter(positionId)) {
-//			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
-//			result.setResultMsg("职位id不能为空");
-//			return result;
-//		}
 		if (CommonUtils.isNotIngeter(comId)) {
 			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
 			result.setResultMsg("公司id不能为空");

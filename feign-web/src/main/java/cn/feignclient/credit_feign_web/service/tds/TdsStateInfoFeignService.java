@@ -46,4 +46,9 @@ public interface TdsStateInfoFeignService {
 	
 	@RequestMapping(value = "/state/queryByTypeCode", method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
 	public BackResult<List<TdsEnumDomain>> queryByTypeCode(@RequestParam("codeName")String codeName);
+	
+	
+	
+	@RequestMapping(value = "/state/queryPnameByPro", method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
+	public BackResult<List<TdsProductMoneyDomain>> queryPnameByPro(@RequestParam("pnameId")Integer pnameId);
 }
