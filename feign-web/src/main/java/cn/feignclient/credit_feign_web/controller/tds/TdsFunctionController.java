@@ -39,11 +39,6 @@ public class TdsFunctionController extends BaseController {
 			result.setResultMsg("id不能为空");
 			return result;
 		}
-		if (CommonUtils.isNotString(token)) {
-			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
-			result.setResultMsg("token不能为空");
-			return result;
-		}
 		result = tdsFunctionFeignService.loadByIdView(id);
 		return result;
 	}
@@ -58,6 +53,13 @@ public class TdsFunctionController extends BaseController {
 			result.setResultMsg("功能名称不能为空");
 			return result;
 		}
+		
+		if (CommonUtils.isNotString(tdsFunctionDomain.getUrl())) {
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("url不能为空");
+			return result;
+		}
+		
 		if (CommonUtils.isNotString(token)) {
 			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
 			result.setResultMsg("token不能为空");
@@ -116,13 +118,6 @@ public class TdsFunctionController extends BaseController {
 		BackResult<PageDomain<TdsFunMoViewDomain>> result = new BackResult<PageDomain<TdsFunMoViewDomain>>();
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
-		
-		
-		if (CommonUtils.isNotString(token)) {
-			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
-			result.setResultMsg("token不能为空");
-			return result;
-		}
 		result = tdsFunctionFeignService.pageTdsFunction(domain);
 		return result;
 	}
