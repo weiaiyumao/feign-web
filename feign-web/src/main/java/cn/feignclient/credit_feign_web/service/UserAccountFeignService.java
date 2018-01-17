@@ -14,6 +14,8 @@ import main.java.cn.domain.ErpTradeDomain;
 import main.java.cn.domain.TrdOrderDomain;
 import main.java.cn.domain.UserAccountDomain;
 import main.java.cn.domain.page.PageDomain;
+import main.java.cn.domain.tds.TdsCreUserAccountLogDomain;
+import main.java.cn.domain.tds.TdsUserAccountInfoDomain;
 
 @FeignClient(value = "user-provider-service",fallback = UserAccountFeignServiceHiHystric.class)
 public interface UserAccountFeignService {
@@ -38,4 +40,10 @@ public interface UserAccountFeignService {
 	
 	@RequestMapping(value = "/userAccount/pageFindTrdOrderByCreUserId", method = RequestMethod.POST)
 	public BackResult<PageDomain<TrdOrderDomain>> pageFindTrdOrderByCreUserId(@RequestParam("creUserId")Integer creUserId,@RequestParam("pageSize")Integer pageSize,@RequestParam("pageNum")Integer pageNum);
+	
+	@RequestMapping(value = "/userAccount/findTdsUserAccountInfoDomainByMobile", method = RequestMethod.POST)
+	public BackResult<TdsUserAccountInfoDomain> findTdsUserAccountInfoDomainByMobile(@RequestParam("mobile")String mobile);
+	
+	@RequestMapping(value = "/userAccount/updateUserAccountBytds", method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
+	public BackResult<Boolean> updateUserAccountByTds(@RequestBody TdsCreUserAccountLogDomain domain);
 }
