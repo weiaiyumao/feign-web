@@ -10,6 +10,8 @@ import main.java.cn.domain.ErpTradeDomain;
 import main.java.cn.domain.TrdOrderDomain;
 import main.java.cn.domain.UserAccountDomain;
 import main.java.cn.domain.page.PageDomain;
+import main.java.cn.domain.tds.TdsCreUserAccountLogDomain;
+import main.java.cn.domain.tds.TdsUserAccountInfoDomain;
 
 @Component
 public class UserAccountFeignServiceHiHystric implements UserAccountFeignService {
@@ -48,6 +50,16 @@ public class UserAccountFeignServiceHiHystric implements UserAccountFeignService
 	public BackResult<PageDomain<TrdOrderDomain>> pageFindTrdOrderByCreUserId(Integer creUserId, Integer pageSize,
 			Integer pageNum) {
 		return new BackResult<>(ResultCode.RESULT_FAILED, "user-provider-service服务pageFindTrdOrderByCreUserId出现异常");
+	}
+
+	@Override
+	public BackResult<TdsUserAccountInfoDomain> findTdsUserAccountInfoDomainByMobile(String mobile) {
+		return new BackResult<>(ResultCode.RESULT_FAILED, "user-provider-service服务findTdsUserAccountInfoDomainByMobile出现异常");
+	}
+
+	@Override
+	public BackResult<Boolean> updateUserAccountByTds(TdsCreUserAccountLogDomain domain) {
+		return new BackResult<>(ResultCode.RESULT_FAILED, "user-provider-service服务updateUserAccountByTds出现异常");
 	}
 
 }
