@@ -3,6 +3,7 @@ package cn.feignclient.credit_feign_web.service.tds;
 
 import java.util.List;
 
+
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -51,4 +52,8 @@ public interface TdsStateInfoFeignService {
 	
 	@RequestMapping(value = "/state/queryPnameByPro", method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
 	public BackResult<List<TdsProductMoneyDomain>> queryPnameByPro(@RequestParam("pnameId")Integer pnameId);
+	
+	
+	@RequestMapping(value = "/state/deleteByProId", method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
+	public BackResult<Integer> deleteByProId(@RequestParam("id")Integer id);
 }

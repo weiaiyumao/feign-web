@@ -162,4 +162,12 @@ public class TdsStateInfoController  extends BaseController{
 		return tdsStateInfoFeignService.queryPnameByPro(pnameId);
 	}
 	
+	
+	@RequestMapping(value = "/deleteByProId", method = RequestMethod.POST)
+	public BackResult<Integer> deleteByProId(Integer id,HttpServletRequest request,HttpServletResponse response){
+		response.setHeader("Access-Control-Allow-Origin","*"); // 有效，前端可以访问
+		response.setContentType("text/json;charset=UTF-8");
+		return tdsStateInfoFeignService.deleteByProId(id);
+	}
+	
 }

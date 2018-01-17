@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import main.java.cn.common.BackResult;
-import main.java.cn.domain.page.PageAuto;
 import main.java.cn.domain.page.PageDomain;
 import main.java.cn.domain.tds.TdsCustomerViewDomain;
 
@@ -18,7 +17,7 @@ public interface TdsApprovalFeignService {
 
     
 	@RequestMapping(value = "/approval/pageTdsApproval", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public BackResult<PageDomain<TdsCustomerViewDomain>> pageTdsApproval(PageAuto auto);
+	public BackResult<PageDomain<TdsCustomerViewDomain>> pageTdsApproval(TdsCustomerViewDomain domain);
 	
 	
 	

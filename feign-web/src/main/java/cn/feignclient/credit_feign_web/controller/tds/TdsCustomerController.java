@@ -1,6 +1,7 @@
 package cn.feignclient.credit_feign_web.controller.tds;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,7 +20,6 @@ import cn.feignclient.credit_feign_web.service.tds.TdsUserRoleFeignService;
 import cn.feignclient.credit_feign_web.utils.CommonUtils;
 import main.java.cn.common.BackResult;
 import main.java.cn.common.ResultCode;
-import main.java.cn.domain.page.PageAuto;
 import main.java.cn.domain.page.PageDomain;
 import main.java.cn.domain.tds.TdsAttornLogDomain;
 import main.java.cn.domain.tds.TdsCustomerViewDomain;
@@ -60,7 +60,7 @@ public class TdsCustomerController extends BaseController {
 			return new BackResult<Integer>(ResultCode.RESULT_PARAM_EXCEPTIONS, "token不能为空");
 		}
 		// 获取登录用户信息，增加修改人
-		domain.setCom_name(comName);
+		domain.setComName(comName);
 		domain.setCom_url(comUrl);
 		result = tdsCustomerFeignService.updateCustomer(domain, loginUserId, passWord);
 		return result;
@@ -85,7 +85,7 @@ public class TdsCustomerController extends BaseController {
 		if (CommonUtils.isNotString(token)) {
 			return new BackResult<Integer>(ResultCode.RESULT_PARAM_EXCEPTIONS, "token不能为空");
 		}
-		domain.setCom_name(comName);
+		domain.setComName(comName);
 		domain.setCom_url(comUrl);
 		result = tdsCustomerFeignService.addTdsCustomer(domain, loginUserId, passWord);
 		return result;
@@ -101,18 +101,18 @@ public class TdsCustomerController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(value = "/pageTdsCustomer", method = RequestMethod.POST)
-	public BackResult<PageDomain<TdsCustomerViewDomain>> pageTdsCustomer(PageAuto auto, HttpServletRequest request,
+	public BackResult<PageDomain<TdsCustomerViewDomain>> pageTdsCustomer(TdsCustomerViewDomain domain, HttpServletRequest request,
 			HttpServletResponse response) {
 		BackResult<PageDomain<TdsCustomerViewDomain>> result = new BackResult<PageDomain<TdsCustomerViewDomain>>();
 
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
 
-		if (CommonUtils.isNotString(auto.getParentUserId())) {
+		if (CommonUtils.isNotString(domain.getParentUserId())) {
 			return new BackResult<>(ResultCode.RESULT_PARAM_EXCEPTIONS, "登录者id不能为空参数<parentUserId>");
 		}
 
-		result = tdsCustomerFeignService.pageTdsCustomer(auto);
+		result = tdsCustomerFeignService.pageTdsCustomer(domain);
 		return result;
 
 	}
@@ -181,9 +181,10 @@ public class TdsCustomerController extends BaseController {
 		return tdsUserFeignService.loadById(userId);
 	}
 
+	
+	
 	/**
-	 * 根据角色名 or 联系人 获取用户信息
-	 * 
+	 * 搜索转让人
 	 * @param request
 	 * @param response
 	 * @param contact
@@ -191,11 +192,11 @@ public class TdsCustomerController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(value = "/queryUserByRoleName", method = RequestMethod.POST)
-	public BackResult<List<TdsUserDomain>> queryUserByRoleName(HttpServletRequest request, HttpServletResponse response,
+	public BackResult<List<Map<String,String>>> queryUserByRoleName(HttpServletRequest request, HttpServletResponse response,
 			String contact) {
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
-		return tdsUserRoleFeignService.queryUserByRoleName("业务员", contact); // 3：业务员
+		return tdsUserRoleFeignService.queryUserByRoleName(contact); //
 	}
 
 	/**

@@ -80,7 +80,7 @@ public class TdsUserController extends BaseController {
 	/**
 	 * 注册 
 	 */
-	@RequestMapping(value = "/save", method = RequestMethod.POST)
+	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public BackResult<Integer> save(TdsUserDomain tdsUserDomain, HttpServletRequest request,
 			HttpServletResponse response) {
 		BackResult<Integer> result = new BackResult<Integer>();
@@ -94,7 +94,7 @@ public class TdsUserController extends BaseController {
 			return new BackResult<Integer>(ResultCode.RESULT_PARAM_EXCEPTIONS, "密码不能为空");
 		}
 
-		tdsUserDomain.setUserName(tdsUserDomain.getPhone());// 用户名先默认手机号码
+		tdsUserDomain.setUserName("nic_"+tdsUserDomain.getPhone());// 用户名先默认手机号码
 		tdsUserDomain.setSource(StatusType.ADD_REGISTER);
 		result = tdsUserFeignService.save(tdsUserDomain);
 		return result;

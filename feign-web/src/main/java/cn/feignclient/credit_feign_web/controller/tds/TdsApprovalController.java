@@ -13,7 +13,6 @@ import cn.feignclient.credit_feign_web.service.tds.TdsApprovalFeignService;
 import cn.feignclient.credit_feign_web.utils.CommonUtils;
 import main.java.cn.common.BackResult;
 import main.java.cn.common.ResultCode;
-import main.java.cn.domain.page.PageAuto;
 import main.java.cn.domain.page.PageDomain;
 import main.java.cn.domain.tds.TdsCustomerViewDomain;
 
@@ -38,13 +37,15 @@ public class TdsApprovalController extends BaseController{
 	 * @return
 	 */
 	@RequestMapping(value = "/pageTdsApproval", method = RequestMethod.POST)
-	public BackResult<PageDomain<TdsCustomerViewDomain>> pageTdsApproval(PageAuto auto,String token){
+	public BackResult<PageDomain<TdsCustomerViewDomain>> pageTdsApproval(TdsCustomerViewDomain domain,String token){
 		BackResult<PageDomain<TdsCustomerViewDomain>> result=new BackResult<PageDomain<TdsCustomerViewDomain>>();
 		if (CommonUtils.isNotString(token)) {
 			 return new BackResult<PageDomain<TdsCustomerViewDomain>>(ResultCode.RESULT_PARAM_EXCEPTIONS,"token不能为空");
 		}
-		
-		result=tdsApprovalFeignService.pageTdsApproval(auto);
+		if (CommonUtils.isNotString(domain.getParentUserId())) {
+			 return new BackResult<PageDomain<TdsCustomerViewDomain>>(ResultCode.RESULT_PARAM_EXCEPTIONS,"parentUserId不能为空");
+		}
+		result=tdsApprovalFeignService.pageTdsApproval(domain);
 		logger.info("===客户审核展示===");
 		return result;
 	}
