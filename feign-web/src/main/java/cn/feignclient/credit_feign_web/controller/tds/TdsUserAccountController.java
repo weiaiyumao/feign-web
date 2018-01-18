@@ -46,6 +46,8 @@ public class TdsUserAccountController extends TdsBaseController {
 	 */
 	@RequestMapping(value = "/findTdsUserAccountInfoDomainByMobile", method = RequestMethod.POST)
 	public BackResult<TdsUserAccountInfoDomain> findTdsUserAccountInfoDomainByMobile(String mobile) {
+		
+		logger.info("》》》》》》代理商系统-手机号：" + mobile + "请求查询账户信息");
 
 		BackResult<TdsUserAccountInfoDomain> result = new BackResult<TdsUserAccountInfoDomain>();
 
@@ -68,7 +70,7 @@ public class TdsUserAccountController extends TdsBaseController {
 	}
 
 	/**
-	 * 分销商-查询账户信息
+	 * 分销商-修改账户信息
 	 * 
 	 * @param request
 	 * @param response
@@ -80,6 +82,8 @@ public class TdsUserAccountController extends TdsBaseController {
 	@RequestMapping(value = "/updateUserAccountByTds", method = RequestMethod.POST)
 	public BackResult<Boolean> updateUserAccountByTds(TdsCreUserAccountLogDomain domain) {
 
+		logger.info("》》》》》》代理商系统-用户id：" + domain.getCreUserId() + "请求修改账户信息");
+		
 		BackResult<Boolean> result = new BackResult<Boolean>();
 
 		if (CommonUtils.isNotIngeter(domain.getCreUserId())) {
@@ -118,10 +122,23 @@ public class TdsUserAccountController extends TdsBaseController {
 		return result;
 	}
 
+	/**
+	 * 获取订单记录
+	 * @param request
+	 * @param response
+	 * @param mobile
+	 * @param token
+	 * @param creUserId
+	 * @param pageSize
+	 * @param pageNum
+	 * @return
+	 */
 	@RequestMapping(value = "/pageFindTrdOrderByCreUserId", method = RequestMethod.POST)
 	public BackResult<PageDomain<TrdOrderDomain>> pageFindTrdOrderByCreUserId(HttpServletRequest request,
 			HttpServletResponse response, String mobile, String token, Integer creUserId, Integer pageSize,
 			Integer pageNum) {
+
+		logger.info("》》》》》》代理商系统-手机号：" + mobile + "请求分页获取订单记录");
 
 		BackResult<PageDomain<TrdOrderDomain>> result = new BackResult<PageDomain<TrdOrderDomain>>();
 
@@ -176,9 +193,9 @@ public class TdsUserAccountController extends TdsBaseController {
 	@RequestMapping(value = "/getPageByMobile", method = RequestMethod.POST)
 	public BackResult<PageDomain<CvsFilePathDomain>> getPageByUserId(HttpServletRequest request, Integer pageNo,
 			Integer pageSize, String mobile) {
+		logger.info("》》》》》》代理商系统-手机号：" + mobile + "请求分页获取历史检测记录");
 
 		BackResult<PageDomain<CvsFilePathDomain>> result = new BackResult<PageDomain<CvsFilePathDomain>>();
-
 
 		if (CommonUtils.isNotString(mobile)) {
 			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
