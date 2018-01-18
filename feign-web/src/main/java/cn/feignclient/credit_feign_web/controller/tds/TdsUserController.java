@@ -1,5 +1,6 @@
 package cn.feignclient.credit_feign_web.controller.tds;
 
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -96,6 +97,7 @@ public class TdsUserController extends BaseController {
 
 		tdsUserDomain.setUserName("nic_"+tdsUserDomain.getPhone());// 用户名先默认手机号码
 		tdsUserDomain.setSource(StatusType.ADD_REGISTER);
+		tdsUserDomain.setLoginIp(this.getIpAddr(request));
 		result = tdsUserFeignService.save(tdsUserDomain);
 		return result;
 	}
