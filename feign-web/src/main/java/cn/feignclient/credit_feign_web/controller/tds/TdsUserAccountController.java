@@ -177,8 +177,8 @@ public class TdsUserAccountController extends TdsBaseController {
 	 * @return
 	 */
 	@RequestMapping(value = "/getPageByMobile", method = RequestMethod.POST)
-	public BackResult<PageDomain<CvsFilePathDomain>> getPageByUserId(HttpServletRequest request, int pageNo,
-			int pageSize, String mobile) {
+	public BackResult<PageDomain<CvsFilePathDomain>> getPageByUserId(HttpServletRequest request, Integer pageNo,
+			Integer pageSize, String mobile) {
 		logger.info("自助通手机号：" + mobile + "请求分页获取历史检测记录");
 
 		BackResult<PageDomain<CvsFilePathDomain>> result = new BackResult<PageDomain<CvsFilePathDomain>>();
