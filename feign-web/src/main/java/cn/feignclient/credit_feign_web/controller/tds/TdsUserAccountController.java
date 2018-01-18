@@ -123,9 +123,6 @@ public class TdsUserAccountController extends TdsBaseController {
 			HttpServletResponse response, String mobile, String token, Integer creUserId, Integer pageSize,
 			Integer pageNum) {
 
-		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
-		response.setContentType("text/json;charset=UTF-8");
-
 		BackResult<PageDomain<TrdOrderDomain>> result = new BackResult<PageDomain<TrdOrderDomain>>();
 
 		if (CommonUtils.isNotString(mobile)) {
@@ -179,7 +176,6 @@ public class TdsUserAccountController extends TdsBaseController {
 	@RequestMapping(value = "/getPageByMobile", method = RequestMethod.POST)
 	public BackResult<PageDomain<CvsFilePathDomain>> getPageByUserId(HttpServletRequest request, Integer pageNo,
 			Integer pageSize, String mobile) {
-		logger.info("自助通手机号：" + mobile + "请求分页获取历史检测记录");
 
 		BackResult<PageDomain<CvsFilePathDomain>> result = new BackResult<PageDomain<CvsFilePathDomain>>();
 
