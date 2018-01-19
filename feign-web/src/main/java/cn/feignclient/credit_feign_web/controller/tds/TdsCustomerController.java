@@ -52,7 +52,7 @@ public class TdsCustomerController extends BaseController {
 	 */
 	@RequestMapping(value = "/updateCustomer", method = RequestMethod.POST)
 	public BackResult<Integer> updateCustomer(HttpServletRequest request, HttpServletResponse response, String token,
-			TdsCustomerViewDomain domain, Integer loginUserId, String passWord, String comName, String comUrl) {
+			TdsCustomerViewDomain domain, Integer loginUserId, String passWord) {
 		BackResult<Integer> result = new BackResult<Integer>();
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
@@ -60,8 +60,6 @@ public class TdsCustomerController extends BaseController {
 			return new BackResult<Integer>(ResultCode.RESULT_PARAM_EXCEPTIONS, "token不能为空");
 		}
 		// 获取登录用户信息，增加修改人
-		domain.setComName(comName);
-		domain.setCom_url(comUrl);
 		result = tdsCustomerFeignService.updateCustomer(domain, loginUserId, passWord);
 		return result;
 	}
@@ -78,15 +76,13 @@ public class TdsCustomerController extends BaseController {
 	 */
 	@RequestMapping(value = "/addTdsCustomer", method = RequestMethod.POST)
 	public BackResult<Integer> addTdsCustomer(HttpServletRequest request, HttpServletResponse response, String token,
-			TdsCustomerViewDomain domain, Integer loginUserId, String passWord, String comName, String comUrl) {
+			TdsCustomerViewDomain domain, Integer loginUserId, String passWord) {
 		BackResult<Integer> result = new BackResult<Integer>();
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
 		if (CommonUtils.isNotString(token)) {
 			return new BackResult<Integer>(ResultCode.RESULT_PARAM_EXCEPTIONS, "token不能为空");
 		}
-		domain.setComName(comName);
-		domain.setCom_url(comUrl);
 		result = tdsCustomerFeignService.addTdsCustomer(domain, loginUserId, passWord);
 		return result;
 

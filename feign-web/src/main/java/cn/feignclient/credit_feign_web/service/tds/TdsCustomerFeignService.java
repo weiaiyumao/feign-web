@@ -16,6 +16,7 @@ import main.java.cn.domain.tds.TdsUserDiscountDomain;
 
 @FeignClient(value = "user-provider-service")
 public interface TdsCustomerFeignService {
+	
 	@RequestMapping(value = "/customer/pageTdsCustomer", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public BackResult<PageDomain<TdsCustomerViewDomain>> pageTdsCustomer(TdsCustomerViewDomain domain);
 
