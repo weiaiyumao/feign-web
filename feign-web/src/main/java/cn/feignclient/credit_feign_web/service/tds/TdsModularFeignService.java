@@ -34,5 +34,9 @@ public interface TdsModularFeignService {
 	public BackResult<List<TdsModularDomain>> selectAll(TdsModularDomain tdsModularDomain);
 	
 	@RequestMapping(value="/modular/pageByModular",method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
-	BackResult<PageDomain<Map<String,Object>>> pageByModular(@RequestParam("name")String name,BasePageParam basePageParam);
+	public BackResult<PageDomain<Map<String,Object>>> pageByModular(@RequestParam("name")String name,BasePageParam basePageParam);
+	
+	
+	 @RequestMapping(value = "/modular/queryModular", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	 public BackResult<List<TdsModularDomain>> queryModular();
 }

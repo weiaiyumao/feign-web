@@ -16,6 +16,8 @@ import cn.feignclient.credit_feign_web.service.tds.TdsRoleFeignService;
 import cn.feignclient.credit_feign_web.utils.CommonUtils;
 import main.java.cn.common.BackResult;
 import main.java.cn.common.ResultCode;
+import main.java.cn.domain.page.BasePageParam;
+import main.java.cn.domain.page.PageDomain;
 import main.java.cn.domain.tds.TdsFunctionDomain;
 import main.java.cn.domain.tds.TdsRoleDomain;
 
@@ -164,15 +166,23 @@ public class TdsRoleController extends BaseController {
 	
 	
 	
-	@RequestMapping(value ="/queryfunByRoleId", method = RequestMethod.POST)
-	public BackResult<List<TdsFunctionDomain>> queryfunByRoleId(Integer roleId,HttpServletRequest request, HttpServletResponse response){
+	@RequestMapping(value ="/loadingBydRoleId", method = RequestMethod.POST)
+	public BackResult<List<TdsFunctionDomain>> loadingBydRoleId(Integer roleId,HttpServletRequest request, HttpServletResponse response){
 		BackResult<List<TdsFunctionDomain>> result = new BackResult<List<TdsFunctionDomain>>();
 		if (CommonUtils.isNotIngeter(roleId)) {
 			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
 			result.setResultMsg("roleId不能为空");
 			return result;
 		}
-		result = tdsRoleFeignService.queryfunByRoleId(roleId);
+		result = tdsRoleFeignService.loadingBydRoleId(roleId);
+		return result;
+	}
+	
+	
+	@RequestMapping(value ="/pageByRole", method = RequestMethod.POST)
+	public BackResult<PageDomain<TdsRoleDomain>> pageByRole(String roleName,HttpServletRequest request, HttpServletResponse response,BasePageParam basePageParam){
+		BackResult<PageDomain<TdsRoleDomain>> result = new BackResult<PageDomain<TdsRoleDomain>>();
+		result = tdsRoleFeignService.pageByRole(roleName,basePageParam);
 		return result;
 	}
 

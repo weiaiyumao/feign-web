@@ -131,4 +131,15 @@ public class TdsModularController extends BaseController {
 		return result;
 	}
 
+	
+	@RequestMapping(value = "/queryModular", method = RequestMethod.POST)
+    public BackResult<List<TdsModularDomain>> queryModular(HttpServletRequest request, HttpServletResponse response){
+		    response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
+			response.setContentType("text/json;charset=UTF-8");
+			
+			
+			BackResult<List<TdsModularDomain>> result=new BackResult<List<TdsModularDomain>>();
+			result=tdsModularFeignService.queryModular();
+			return result;
+	}
 }
