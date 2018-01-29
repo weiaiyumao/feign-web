@@ -132,7 +132,7 @@ public class TdsLoginUserController extends BaseController {
 		
 		if (CommonUtils.isNotIngeter(userId)) {
 			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
-			result.setResultMsg("用户id不能为空");
+			result.setResultMsg("用户userId不能为空");
 			return result;
 		}
 		if (CommonUtils.isNotString(token)) {

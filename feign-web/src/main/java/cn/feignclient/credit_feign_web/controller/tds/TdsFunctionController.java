@@ -31,6 +31,27 @@ public class TdsFunctionController extends BaseController {
 
 	@Autowired
 	private TdsFunctionFeignService tdsFunctionFeignService;
+	
+	
+	
+	/**
+	 * 查询所有
+	 * @param parentId
+	 * @param request
+	 * @param response
+	 * @param token
+	 * @return
+	 */
+	@RequestMapping(value = "/selectAll", method = RequestMethod.POST)
+	public BackResult<List<TdsFunctionDomain>> selectAll(Integer parentId, HttpServletRequest request, HttpServletResponse response,
+			String token) {
+		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
+		response.setContentType("text/json;charset=UTF-8");
+		return tdsFunctionFeignService.selectAll(parentId);
+	}
+	
+	
+	
 
 	@RequestMapping(value = "/loadByIdView", method = RequestMethod.POST)
 	public BackResult<TdsFunMoViewDomain> loadByIdView(Integer id, HttpServletRequest request, HttpServletResponse response,
@@ -117,14 +138,14 @@ public class TdsFunctionController extends BaseController {
 	}
 	
 	
-	@RequestMapping(value="/pageTdsFunction",method = RequestMethod.POST)
-	public BackResult<PageDomain<TdsFunMoViewDomain>> pageTdsFunction(TdsFunMoViewDomain domain,HttpServletRequest request, HttpServletResponse response,String token){
-		BackResult<PageDomain<TdsFunMoViewDomain>> result = new BackResult<PageDomain<TdsFunMoViewDomain>>();
-		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
-		response.setContentType("text/json;charset=UTF-8");
-		result = tdsFunctionFeignService.pageTdsFunction(domain);
-		return result;
-	}
+//	@RequestMapping(value="/pageTdsFunction",method = RequestMethod.POST)
+//	public BackResult<PageDomain<TdsFunMoViewDomain>> pageTdsFunction(TdsFunMoViewDomain domain,HttpServletRequest request, HttpServletResponse response,String token){
+//		BackResult<PageDomain<TdsFunMoViewDomain>> result = new BackResult<PageDomain<TdsFunMoViewDomain>>();
+//		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
+//		response.setContentType("text/json;charset=UTF-8");
+//		result = tdsFunctionFeignService.pageTdsFunction(domain);
+//		return result;
+//	}
 	
 	
     @RequestMapping(value="/queryFunction",method = RequestMethod.POST)

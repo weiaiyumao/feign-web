@@ -43,5 +43,7 @@ public interface TdsFunctionFeignService {
 	public BackResult<PageDomain<Map<String,Object>>> pageByFunction(@RequestParam("name")String name,BasePageParam basePageParam);
 	
 
+	@RequestMapping(value = "/function/selectAll", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public BackResult<List<TdsFunctionDomain>> selectAll(@RequestParam("parentId")Integer parentId);
 	
 }
