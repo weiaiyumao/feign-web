@@ -39,4 +39,9 @@ public class CreditProviderServiceHiHystric implements CreditProviderService {
 		return new BackResult<>(ResultCode.RESULT_FAILED, "credit-provider-service服务theTest出现异常");
 	}
 
+	@Override
+	public BackResult<RunTestDomian> runTheTest(String type) {
+		return new BackResult<>(ResultCode.RESULT_FAILED, "credit-provider-service服务runTheTest出现异常");
+	}
+
 }

@@ -42,6 +42,13 @@ public class CreditProviderController extends BaseController{
 	@Autowired
 	private RedisClient redisClient;
 	
+	   @RequestMapping(value = "/runTheTest", method = RequestMethod.GET)
+	   public BackResult<RunTestDomian> runTheTest(String type,HttpServletRequest request, HttpServletResponse response){
+			response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
+			response.setContentType("text/json;charset=UTF-8");
+		   return creditProviderService.runTheTest(type);
+	   }
+	
 //    @RequestMapping(value = "/runTheTest", method = RequestMethod.GET)
 //	public BackResult<RunTestDomian> runTheTest(HttpServletRequest request, HttpServletResponse response,String fileUrl,String userId,String mobile,String token,String timestamp) {
 //    	

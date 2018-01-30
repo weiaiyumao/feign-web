@@ -30,4 +30,7 @@ public interface CreditProviderService {
 	
 	@RequestMapping(value = "/credit/theTest", method = RequestMethod.POST)
 	public BackResult<RunTestDomian> theTest(@RequestParam(value = "fileUrl")String fileUrl,@RequestParam(value = "userId")String userId, @RequestParam(value = "source")String source,@RequestParam(value = "mobile")String mobile,@RequestParam(value = "startLine")String startLine,@RequestParam(value = "type")String type);
+
+	@RequestMapping(value = "/test/runTheTest", method = RequestMethod.GET)
+	 public BackResult<RunTestDomian> runTheTest(@RequestParam(value = "type")String type);
 }

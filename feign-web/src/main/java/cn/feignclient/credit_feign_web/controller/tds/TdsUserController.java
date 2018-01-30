@@ -163,7 +163,7 @@ public class TdsUserController extends BaseController {
 		if (CommonUtils.isNotString(token)) {
 			return new BackResult<Integer>(ResultCode.RESULT_PARAM_EXCEPTIONS, "token不能为空");
 		}
-		tdsUserFeignService.upPassWord(usedPass, newPass, userId);
+		result=tdsUserFeignService.upPassWord(usedPass, newPass, userId);
 		logger.info("用户id：" + userId + "===密码修改===");
 		return result;
 	}
