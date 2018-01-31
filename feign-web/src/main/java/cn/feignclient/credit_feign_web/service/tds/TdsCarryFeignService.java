@@ -25,4 +25,14 @@ public interface TdsCarryFeignService {
 	
 	@RequestMapping(value = "/carry/getCarryByUserId", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public BackResult<Map<String,Object>> getCarryByUserId(@RequestParam("userId") Integer userId);
+	
+	
+	@RequestMapping(value = "/carry/getSubCarry", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public BackResult<Integer> getSubCarry(TdsCarryDomain domain,@RequestParam("type") String type);
+	
+	
+	
+	
+	
 }
+

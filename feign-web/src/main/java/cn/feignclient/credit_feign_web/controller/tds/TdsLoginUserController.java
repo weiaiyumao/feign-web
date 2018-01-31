@@ -18,6 +18,7 @@ import cn.feignclient.credit_feign_web.utils.CommonUtils;
 import main.java.cn.common.BackResult;
 import main.java.cn.common.ResultCode;
 import main.java.cn.domain.tds.TdsFunctionDomain;
+import main.java.cn.domain.tds.TdsModularDomain;
 import main.java.cn.domain.tds.TdsUserDomain;
 import main.java.cn.hhtp.util.MD5Util;
 
@@ -86,39 +87,39 @@ public class TdsLoginUserController extends BaseController {
 
 	
 	
-//	/**
-//	 * 模块加载
-//	 * @param userId
-//	 * @param request
-//	 * @param response
-//	 * @return
-//	 */
-//	@RequestMapping("/moduleLoadingByUsreId")
-//	public BackResult<List<TdsModularDomain>> moduleLoadingByUsreId(Integer userId, HttpServletRequest request,
-//			HttpServletResponse response,String token) {
-//		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
-//		response.setContentType("text/json;charset=UTF-8");
-//		BackResult<List<TdsModularDomain>> result = new BackResult<List<TdsModularDomain>>();
-//		
-//		if (CommonUtils.isNotIngeter(userId)) {
-//			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
-//			result.setResultMsg("用户id不能为空");
-//			return result;
-//		}
-//		if (CommonUtils.isNotString(token)) {
-//			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
-//			result.setResultMsg("token不能为空");
-//			return result;
-//		}
-//		 result=tdsUserLoginFeignService.moduleLoadingByUsreId(userId);
-//		 
-//		 // TODO moduleLoadingByUsreId==redis保存
-//		  	 
-//		 //end
-//		 logger.info("用户id:"+userId+"==========模块加载成功============！");
-//		 return result;
-//		
-// 	 }
+	/**
+	 * 模块加载
+	 * @param userId
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/moduleLoadingByUsreId")
+	public BackResult<List<TdsModularDomain>> moduleLoadingByUsreId(Integer userId, HttpServletRequest request,
+			HttpServletResponse response,String token) {
+		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
+		response.setContentType("text/json;charset=UTF-8");
+		BackResult<List<TdsModularDomain>> result = new BackResult<List<TdsModularDomain>>();
+		
+		if (CommonUtils.isNotIngeter(userId)) {
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("用户id不能为空");
+			return result;
+		}
+		if (CommonUtils.isNotString(token)) {
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("token不能为空");
+			return result;
+		}
+		 result=tdsUserLoginFeignService.moduleLoadingByUsreId(userId);
+		 
+		 // TODO moduleLoadingByUsreId==redis保存
+		  	 
+		 //end
+		 logger.info("用户id:"+userId+"==========模块加载成功============！");
+		 return result;
+		
+ 	 }
 	
 	
 	

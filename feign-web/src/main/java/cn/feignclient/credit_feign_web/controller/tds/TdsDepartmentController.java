@@ -157,7 +157,7 @@ public class TdsDepartmentController extends BaseController {
 	 */
 	@RequestMapping(value = "/addCustomPermissions",method = RequestMethod.POST)
 	public BackResult<Integer> addCustomPermissions(String token, HttpServletRequest request,
-			HttpServletResponse response, String soleName, String loginMobile, Integer[] arrfuns) {
+			HttpServletResponse response, String soleName, Integer loginUserId, Integer[] arrfuns) {
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
 		BackResult<Integer> result = new BackResult<Integer>();
@@ -168,8 +168,7 @@ public class TdsDepartmentController extends BaseController {
 			return result;
 		}
 		
-		TdsUserDomain loginUser = this.getUserInfo(loginMobile); // 获取登录用户信息
-		result = tdsDeparTmentFeignService.addCustomPermissions(soleName, loginUser.getId(), arrfuns);
+		result = tdsDeparTmentFeignService.addCustomPermissions(soleName,loginUserId, arrfuns);
 		return result;
 
 	}
