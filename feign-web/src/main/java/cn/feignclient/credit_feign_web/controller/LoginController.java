@@ -126,7 +126,8 @@ public class LoginController extends BaseController {
 
 			ChuangLanSmsUtil.getInstance().sendSmsByMobile(mobile, String.valueOf(code));
 
-			System.out.println(mobile+"验证码：" + String.valueOf(code));
+//			System.out.println(mobile+"验证码：" + String.valueOf(code));
+			logger.info(mobile+"验证码：" + String.valueOf(code));
 
 			redisClinet.set("se_ken_" + mobile, String.valueOf(code));
 			
