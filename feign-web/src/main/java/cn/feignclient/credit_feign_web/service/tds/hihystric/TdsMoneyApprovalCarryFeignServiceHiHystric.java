@@ -30,6 +30,11 @@ public class TdsMoneyApprovalCarryFeignServiceHiHystric implements TdsCarryFeign
 		return new BackResult<>(ResultCode.RESULT_FAILED, "user-provider-service服务getSubCarry出现异常");
 	}
 
+	@Override
+	public BackResult<PageDomain<TdsCarryDomain>> checkTdsCarry(TdsCarryDomain domain) {
+		return new BackResult<>(ResultCode.RESULT_FAILED, "user-provider-service服务checkTdsCarry出现异常");
+	}
+
 
 	
 

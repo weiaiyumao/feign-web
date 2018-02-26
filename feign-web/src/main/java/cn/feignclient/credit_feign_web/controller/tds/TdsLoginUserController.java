@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,48 @@ public class TdsLoginUserController extends BaseController {
 	@Autowired
 	private TdsUserLoginFeignService tdsUserLoginFeignService;
 
+	/**
+	 * 用户是否登录
+	 * @param 
+	 *            
+	 * @return
+	 */
+	@RequestMapping("/isLogin")
+	public BackResult<Integer> isLogin(HttpServletRequest request, HttpServletResponse response, String mobile,
+			String token) {
+		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
+		response.setContentType("text/json;charset=UTF-8");
+		BackResult<Integer> result = new BackResult<Integer>();
+		if (CommonUtils.isNotString(mobile)) {
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("用户手机号码不能为空");
+			return result;
+		}
+
+		if (CommonUtils.isNotString(token)) {
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("token不能为空");
+			return result;
+		}
+		
+		//获取用户登录时的token
+		String redisToken = redisClinet.get("tds_user_token_" + mobile);
+		if(StringUtils.isNotBlank(redisToken)){
+			if(token.equals(redisToken)){
+				result.setResultCode(ResultCode.RESULT_SUCCEED);
+				result.setResultMsg("用户已登录");
+				result.setResultObj(1);
+			}else{
+				result.setResultCode(ResultCode.RESULT_SESSION_STALED);
+				result.setResultMsg("用户未登录");
+			}
+		}else{
+			result.setResultCode(ResultCode.RESULT_SESSION_STALED);
+			result.setResultMsg("用户未登录");
+		}
+		
+		return result;
+	}
 
 	/**
 	 * 登录

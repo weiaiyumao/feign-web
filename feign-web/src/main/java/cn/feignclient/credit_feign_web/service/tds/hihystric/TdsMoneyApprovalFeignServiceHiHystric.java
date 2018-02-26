@@ -7,6 +7,8 @@ import cn.feignclient.credit_feign_web.service.tds.TdsMoneyApprovalFeignService;
 import main.java.cn.common.BackResult;
 import main.java.cn.common.ResultCode;
 import main.java.cn.domain.page.PageDomain;
+import main.java.cn.domain.tds.TdsApprovalOutDomain;
+import main.java.cn.domain.tds.TdsApprovalOutQueryDomain;
 import main.java.cn.domain.tds.TdsCommissionDomain;
 import main.java.cn.domain.tds.TdsMoneyApprovalDomain;
 import main.java.cn.domain.tds.TdsSerualInfoDomain;
@@ -23,11 +25,6 @@ public class TdsMoneyApprovalFeignServiceHiHystric implements TdsMoneyApprovalFe
 	@Override
 	public BackResult<PageDomain<TdsMoneyApprovalDomain>> pageApprovalByUpStatusGo(TdsMoneyApprovalDomain domain) {
 	 	return new BackResult<PageDomain<TdsMoneyApprovalDomain>>(ResultCode.RESULT_FAILED, "user-provider-service服务pageApprovalByUpStatusGo出现异常");
-	}
-
-	@Override
-	public BackResult<PageDomain<TdsMoneyApprovalDomain>> pageApprovalByUpStatusOut(TdsMoneyApprovalDomain domain) {
-		return new BackResult<PageDomain<TdsMoneyApprovalDomain>>(ResultCode.RESULT_FAILED, "user-provider-service服务pageApprovalByUpStatusOut出现异常");
 	}
 
 	@Override
@@ -58,6 +55,16 @@ public class TdsMoneyApprovalFeignServiceHiHystric implements TdsMoneyApprovalFe
 	@Override
 	public BackResult<PageDomain<TdsCommissionDomain>> pageCommission(TdsCommissionDomain domain) {
 		return new BackResult<>(ResultCode.RESULT_FAILED, "user-provider-service服务pageCommission出现异常");
+	}
+
+	@Override
+	public BackResult<PageDomain<TdsApprovalOutDomain>> pageApprovalByUpStatusOut(TdsApprovalOutQueryDomain domain) {
+		return new BackResult<PageDomain<TdsApprovalOutDomain>>(ResultCode.RESULT_FAILED, "user-provider-service服务pageApprovalByUpStatusOut出现异常");
+	}
+
+	@Override
+	public BackResult<Integer> updatePageApprovalByUpStatus(String userId, String tdsCarryId, String status) {
+		return new BackResult<Integer>(ResultCode.RESULT_FAILED, "user-provider-service服务updatePageApprovalByUpStatus出现异常");
 	}
 
 	

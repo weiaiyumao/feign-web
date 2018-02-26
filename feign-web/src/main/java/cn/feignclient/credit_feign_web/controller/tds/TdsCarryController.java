@@ -31,6 +31,13 @@ public class TdsCarryController extends BaseController {
 	@Autowired
 	private TdsCarryFeignService tdsCarryFeignService;
 	
+	@RequestMapping(value = "/checkTdsCarry", method = RequestMethod.POST)
+    public  BackResult<PageDomain<TdsCarryDomain>> checkTdsCarry(TdsCarryDomain domain,HttpServletRequest request, HttpServletResponse response){
+		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
+		response.setContentType("text/json;charset=UTF-8");
+		return tdsCarryFeignService.checkTdsCarry(domain);
+	}
+	
 	@RequestMapping(value = "/pageTdsCarry", method = RequestMethod.POST)
     public  BackResult<PageDomain<TdsCarryDomain>> pageTdsCarry(TdsCarryDomain domain,HttpServletRequest request, HttpServletResponse response){
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问

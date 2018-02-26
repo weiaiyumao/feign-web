@@ -22,6 +22,8 @@ public interface TdsCarryFeignService {
 	@RequestMapping(value = "/carry/pageTdsCarry", method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
     public  BackResult<PageDomain<TdsCarryDomain>> pageTdsCarry(TdsCarryDomain domain);
 	
+	@RequestMapping(value = "/carry/checkTdsCarry", method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
+    public  BackResult<PageDomain<TdsCarryDomain>> checkTdsCarry(TdsCarryDomain domain);	
 	
 	@RequestMapping(value = "/carry/getCarryByUserId", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public BackResult<Map<String,Object>> getCarryByUserId(@RequestParam("userId") Integer userId);

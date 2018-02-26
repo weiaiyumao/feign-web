@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import cn.feignclient.credit_feign_web.service.tds.hihystric.TdsMoneyApprovalFeignServiceHiHystric;
 import main.java.cn.common.BackResult;
 import main.java.cn.domain.page.PageDomain;
+import main.java.cn.domain.tds.TdsApprovalOutDomain;
+import main.java.cn.domain.tds.TdsApprovalOutQueryDomain;
 import main.java.cn.domain.tds.TdsCommissionDomain;
 import main.java.cn.domain.tds.TdsMoneyApprovalDomain;
 import main.java.cn.domain.tds.TdsSerualInfoDomain;
@@ -61,8 +63,17 @@ public interface TdsMoneyApprovalFeignService {
 	 * @return
 	 */
 	@RequestMapping(value = "/moneyApproval/pageApprovalByUpStatusOut", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public BackResult<PageDomain<TdsMoneyApprovalDomain>> pageApprovalByUpStatusOut(TdsMoneyApprovalDomain domain);
+	public BackResult<PageDomain<TdsApprovalOutDomain>> pageApprovalByUpStatusOut(TdsApprovalOutQueryDomain domain);
 
+	/**
+	 * 出账审核状态修改
+	 * 
+	 * @return obj
+	 */
+	@RequestMapping(value = "/moneyApproval/updatePageApprovalByUpStatus", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public BackResult<Integer> updatePageApprovalByUpStatus(@RequestParam("userId") String userId,@RequestParam("tdsCarryId") String tdsCarryId,
+			@RequestParam("status") String status);
+	
 	/**
 	 * 退账分页查询
 	 * 

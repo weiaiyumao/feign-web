@@ -14,6 +14,8 @@ import cn.feignclient.credit_feign_web.utils.CommonUtils;
 import main.java.cn.common.BackResult;
 import main.java.cn.common.ResultCode;
 import main.java.cn.domain.page.PageDomain;
+import main.java.cn.domain.tds.TdsApprovalOutDomain;
+import main.java.cn.domain.tds.TdsApprovalOutQueryDomain;
 import main.java.cn.domain.tds.TdsCommissionDomain;
 import main.java.cn.domain.tds.TdsMoneyApprovalDomain;
 import main.java.cn.domain.tds.TdsSerualInfoDomain;
@@ -113,13 +115,27 @@ public class TdsMoneyApprovalController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(value = "/pageApprovalByUpStatusOut", method = RequestMethod.POST)
-	public BackResult<PageDomain<TdsMoneyApprovalDomain>> pageApprovalByUpStatusOut(TdsMoneyApprovalDomain domain,
+	public BackResult<PageDomain<TdsApprovalOutDomain>> pageApprovalByUpStatusOut(TdsApprovalOutQueryDomain domain,
 			HttpServletRequest request, HttpServletResponse response) {
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
 		return tdsMoneyApprovalFeignService.pageApprovalByUpStatusOut(domain);
 	}
-
+	
+	/**
+	 * 出账审核状态修改
+	 * 
+	 * @param domain
+	 * @return
+	 */
+	@RequestMapping(value = "/updatePageApprovalByUpStatus", method = RequestMethod.POST)
+	public BackResult<Integer> updatePageApprovalByUpStatus(String userId, String tdsCarryId, String status,
+			HttpServletRequest request, HttpServletResponse response) {
+		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
+		response.setContentType("text/json;charset=UTF-8");
+		return tdsMoneyApprovalFeignService.updatePageApprovalByUpStatus(userId,tdsCarryId,status);
+	}
+	
 	/**
 	 * 退账分页查询
 	 * 
