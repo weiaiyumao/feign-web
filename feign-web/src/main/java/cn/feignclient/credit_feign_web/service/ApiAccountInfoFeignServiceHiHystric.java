@@ -11,22 +11,22 @@ public class ApiAccountInfoFeignServiceHiHystric implements ApiAccountInfoFeignS
 
 	@Override
 	public BackResult<ApiAccountInfoDomain> findByCreUserId(String creUserId) {
-		return new BackResult<>(ResultCode.RESULT_FAILED, "user-provider-service服务findByCreUserId出现异常");
+		return new BackResult<ApiAccountInfoDomain>(ResultCode.RESULT_FAILED, "user-provider-service服务findByCreUserId出现异常");
 	}
 
 	@Override
 	public BackResult<ApiAccountInfoDomain> updateApiAccountInfo(ApiAccountInfoDomain domain) {
-		return new BackResult<>(ResultCode.RESULT_FAILED, "user-provider-service服务updateApiAccountInfo出现异常");
+		return new BackResult<ApiAccountInfoDomain>(ResultCode.RESULT_FAILED, "user-provider-service服务updateApiAccountInfo出现异常");
 	}
 
 	@Override
-	public BackResult<Integer> checkApiAccount(String apiName, String password, String ip, int checkCount) {
-		return new BackResult<>(ResultCode.RESULT_FAILED, "user-provider-service服务checkApiAccount出现异常");
+	public BackResult<Integer> checkApiAccount(String apiName, String password, String ip, int checkCount,String mobile,String type) {
+		return new BackResult<Integer>(ResultCode.RESULT_FAILED, "user-provider-service服务checkApiAccount出现异常");
 	}
 
 	@Override
 	public BackResult<Integer> checkRqApiAccount(String apiName, String password, String ip, int checkCount) {
-		return new BackResult<>(ResultCode.RESULT_FAILED, "user-provider-service服务checkRqApiAccount出现异常");
+		return new BackResult<Integer>(ResultCode.RESULT_FAILED, "user-provider-service服务checkRqApiAccount出现异常");
 	}
 
 }

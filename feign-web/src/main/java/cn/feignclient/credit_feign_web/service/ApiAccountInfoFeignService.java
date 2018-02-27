@@ -20,7 +20,7 @@ public interface ApiAccountInfoFeignService {
 	public BackResult<ApiAccountInfoDomain> updateApiAccountInfo(@RequestBody ApiAccountInfoDomain domain);
 	
 	@RequestMapping(value = "/apiAccountInfo/checkApiAccount", method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
-	public BackResult<Integer> checkApiAccount(@RequestParam("apiName")String apiName, @RequestParam("password")String password, @RequestParam("ip")String ip, @RequestParam("checkCount")int checkCount);
+	public BackResult<Integer> checkApiAccount(@RequestParam("apiName")String apiName, @RequestParam("password")String password, @RequestParam("ip")String ip, @RequestParam("checkCount")int checkCount,@RequestParam("mobile")String mobile,@RequestParam("type")String type);
 
 	@RequestMapping(value = "/apiAccountInfo/checkRqApiAccount", method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
 	public BackResult<Integer> checkRqApiAccount(@RequestParam("apiName")String apiName, @RequestParam("password")String password, @RequestParam("ip")String ip, @RequestParam("checkCount")int checkCount);
