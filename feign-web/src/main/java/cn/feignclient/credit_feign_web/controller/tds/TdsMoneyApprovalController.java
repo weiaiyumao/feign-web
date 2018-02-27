@@ -129,11 +129,11 @@ public class TdsMoneyApprovalController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(value = "/updatePageApprovalByUpStatus", method = RequestMethod.POST)
-	public BackResult<Integer> updatePageApprovalByUpStatus(String userId, String tdsCarryId, String status,
+	public BackResult<Integer> updatePageApprovalByUpStatus(String userId, String tdsCarryId, String status,String remarks,
 			HttpServletRequest request, HttpServletResponse response) {
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
-		return tdsMoneyApprovalFeignService.updatePageApprovalByUpStatus(userId,tdsCarryId,status);
+		return tdsMoneyApprovalFeignService.updatePageApprovalByUpStatus(userId,tdsCarryId,status,remarks);
 	}
 	
 	/**

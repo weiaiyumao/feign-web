@@ -63,7 +63,7 @@ public class TdsMoneyApprovalFeignServiceHiHystric implements TdsMoneyApprovalFe
 	}
 
 	@Override
-	public BackResult<Integer> updatePageApprovalByUpStatus(String userId, String tdsCarryId, String status) {
+	public BackResult<Integer> updatePageApprovalByUpStatus(String userId, String tdsCarryId, String status,String remarks) {
 		return new BackResult<Integer>(ResultCode.RESULT_FAILED, "user-provider-service服务updatePageApprovalByUpStatus出现异常");
 	}
 
