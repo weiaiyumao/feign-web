@@ -15,17 +15,17 @@ public class ApiMobileTestServiceHiHystric implements ApiMobileTestService {
 
 	@Override
 	public BackResult<List<MobileInfoDomain>> findByMobileNumbers(String mobileNumbers, String userId) {
-		return new BackResult<>(ResultCode.RESULT_FAILED, "credit-provider-service服务findByMobileNumbers出现异常");
+		return new BackResult<List<MobileInfoDomain>>(ResultCode.RESULT_FAILED, "credit-provider-service服务findByMobileNumbers出现异常");
 	}
 
 	@Override
 	public BackResult<PageDomain<MobileTestLogDomain>> getPageByUserId(int pageNo, int pageSize, String userId,String type) {
-		return new BackResult<>(ResultCode.RESULT_FAILED, "credit-provider-service服务getPageByUserId出现异常");
+		return new BackResult<PageDomain<MobileTestLogDomain>>(ResultCode.RESULT_FAILED, "credit-provider-service服务getPageByUserId出现异常");
 	}
 
 	@Override
 	public BackResult<MobileInfoDomain> findByMobile(String mobile, String userId) {
-		return new BackResult<>(ResultCode.RESULT_FAILED, "credit-provider-service服务findByMobile出现异常");
+		return new BackResult<MobileInfoDomain>(ResultCode.RESULT_FAILED, "credit-provider-service服务findByMobile出现异常");
 	}
 
 }

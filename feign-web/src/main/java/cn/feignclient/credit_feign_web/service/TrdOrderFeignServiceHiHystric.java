@@ -14,12 +14,12 @@ public class TrdOrderFeignServiceHiHystric implements TrdOrderFeignService {
 	@Override
 	public BackResult<String> alipayrecharge(Integer creUserId, Integer productsId, Integer number, BigDecimal money,
 			String payType, String type) {
-		return new BackResult<>(ResultCode.RESULT_FAILED, "user-provider-service服务alipayrecharge出现异常");
+		return new BackResult<String>(ResultCode.RESULT_FAILED, "user-provider-service服务alipayrecharge出现异常");
 	}
 
 	@Override
 	public BackResult<TrdOrderDomain> findOrderInfoByOrderNo(String orderNo) {
-		return new BackResult<>(ResultCode.RESULT_FAILED, "user-provider-service服务findOrderInfoByOrderNo出现异常");
+		return new BackResult<TrdOrderDomain>(ResultCode.RESULT_FAILED, "user-provider-service服务findOrderInfoByOrderNo出现异常");
 	}
 
 }

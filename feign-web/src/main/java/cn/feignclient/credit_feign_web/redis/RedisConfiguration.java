@@ -13,56 +13,38 @@ import redis.clients.jedis.JedisPoolConfig;
 
 @Configuration
 public class RedisConfiguration {
-
-	// @Bean(name = "jedis.pool")
-	// @Autowired
-	// public JedisPool jedisPool(@Qualifier("jedis.pool.config")
-	// JedisPoolConfig config,
-	// @Value("${jedis.pool.host}") String host, @Value("${jedis.pool.port}")
-	// int port,@Value("${jedis.pool.password}") String password) {
-	// return new JedisPool(config, host, port, 10000, password);
-	// }
-	//
-	// @Bean(name = "jedis.pool.config")
-	// public JedisPoolConfig
-	// jedisPoolConfig(@Value("${jedis.pool.config.maxTotal}") int maxTotal,
-	// @Value("${jedis.pool.config.maxIdle}") int maxIdle,
-	// @Value("${jedis.pool.config.maxWaitMillis}") int maxWaitMillis) {
-	// JedisPoolConfig config = new JedisPoolConfig();
-	// config.setMaxTotal(maxTotal);
-	// config.setMaxIdle(maxIdle);
-	// config.setMaxWaitMillis(maxWaitMillis);
-	// return config;
-	// }
-	
-	@Value("${jedis.pool.host}")
+	@Value("${spring.redis.host}")
 	private String host;
 
-	@Value("${jedis.pool.port}")
+	@Value("${spring.redis.port}")
 	private int port;
 
-	@Value("${jedis.pool.config.maxTotal}")
+	@Value("${spring.redis.pool.max-active}")
 	private int maxTotal;
 
-	@Value("${jedis.pool.config.maxIdle}")
+	@Value("${spring.redis.pool.max-idle}")
 	private int maxIdle;
 
-	@Value("${jedis.pool.config.maxWaitMillis}")
+	@Value("${spring.redis.pool.max-wait}")
 	private int maxWaitMillis;
+
+	@Value("${spring.redis.password}")
+	private String password;
 	
 
 	@Bean(name = "jedis.pool")
 	@Autowired
 	public JedisPool jedisPool(@Qualifier("jedis.pool.config") JedisPoolConfig config) {
-		return new JedisPool(config, host, port);
+		return new JedisPool(config, host, port,maxWaitMillis,password);
 	}
 
 	@Bean(name = "jedis.pool.config")
 	public JedisPoolConfig jedisPoolConfig() {
 		JedisPoolConfig config = new JedisPoolConfig();
-		config.setMaxTotal(maxTotal);
 		config.setMaxIdle(maxIdle);
 		config.setMaxWaitMillis(maxWaitMillis);
+		config.setTestOnBorrow(false);
+		config.setTestOnReturn(false);
 		return config;
 	}
 
@@ -73,6 +55,7 @@ public class RedisConfiguration {
 		jedisConnectionFactory.setPoolConfig(this.jedisPoolConfig());
 		jedisConnectionFactory.setHostName(host);
 		jedisConnectionFactory.setPort(port);
+		jedisConnectionFactory.setPassword(password);
 		return jedisConnectionFactory;
 	}
 

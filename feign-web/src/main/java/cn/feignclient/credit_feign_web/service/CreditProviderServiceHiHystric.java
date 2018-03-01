@@ -15,28 +15,28 @@ public class CreditProviderServiceHiHystric implements CreditProviderService {
 
 	@Override
 	public BackResult<RunTestDomian> runTheTest(String fileUrl, String userId, String timestamp, String mobile) {
-		return new BackResult<>(ResultCode.RESULT_FAILED, "credit-provider-service服务runTheTest出现异常");
+		return new BackResult<RunTestDomian>(ResultCode.RESULT_FAILED, "credit-provider-service服务runTheTest出现异常");
 	}
 
 	@Override
 	public BackResult<List<CvsFilePathDomain>> findByUserId(String userId) {
-		return new BackResult<>(ResultCode.RESULT_FAILED, "credit-provider-service服务findByUserId出现异常");
+		return new BackResult<List<CvsFilePathDomain>>(ResultCode.RESULT_FAILED, "credit-provider-service服务findByUserId出现异常");
 	}
 
 	@Override
 	public BackResult<Boolean> deleteCvsByIds(String ids, String userId) {
-		return new BackResult<>(ResultCode.RESULT_FAILED, "credit-provider-service服务deleteCvsByIds出现异常");
+		return new BackResult<Boolean>(ResultCode.RESULT_FAILED, "credit-provider-service服务deleteCvsByIds出现异常");
 	}
 
 	@Override
 	public BackResult<PageDomain<CvsFilePathDomain>> getPageByUserId(int pageNo, int pageSize, String userId) {
-		return new BackResult<>(ResultCode.RESULT_FAILED, "credit-provider-service服务getPageByUserId出现异常");
+		return new BackResult<PageDomain<CvsFilePathDomain>>(ResultCode.RESULT_FAILED, "credit-provider-service服务getPageByUserId出现异常");
 	}
 
 	@Override
 	public BackResult<RunTestDomian> theTest(String fileUrl, String userId, String source, String mobile,
 			String startLine, String type) {
-		return new BackResult<>(ResultCode.RESULT_FAILED, "credit-provider-service服务theTest出现异常");
+		return new BackResult<RunTestDomian>(ResultCode.RESULT_FAILED, "credit-provider-service服务theTest出现异常");
 	}
 
 }
