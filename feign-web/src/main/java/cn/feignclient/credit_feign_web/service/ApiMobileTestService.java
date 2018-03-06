@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import main.java.cn.common.BackResult;
+import main.java.cn.domain.ApiLogPageDomain;
 import main.java.cn.domain.MobileInfoDomain;
 import main.java.cn.domain.MobileTestLogDomain;
 import main.java.cn.domain.page.PageDomain;
@@ -20,7 +21,13 @@ public interface ApiMobileTestService {
 
 	@RequestMapping(value = "/apiMobileTest/getPageByUserId",  method = RequestMethod.POST)
 	public BackResult<PageDomain<MobileTestLogDomain>> getPageByUserId(@RequestParam(value = "pageNo")int pageNo, @RequestParam(value = "pageSize")int pageSize, @RequestParam(value = "userId")String userId, @RequestParam(value = "type")String type);
-
+	
+	@RequestMapping(value = "/apiMobileTest/getPageByCustomerId",  method = RequestMethod.POST)
+	public BackResult<PageDomain<ApiLogPageDomain>> getPageByCustomerId(@RequestParam(value = "pageNo")int pageNo, @RequestParam(value = "pageSize")int pageSize, @RequestParam(value = "customerId")String customerId, @RequestParam(value = "method")String method);
+	
 	@RequestMapping(value = "/apiMobileTest/findByMobile", method = RequestMethod.POST)
 	public BackResult<MobileInfoDomain> findByMobile(@RequestParam(value = "mobile")String mobile,@RequestParam(value = "userId")String userId);
+	
+	@RequestMapping(value = "/apiMobileTest/findByMobileToAmi", method = RequestMethod.POST)
+	public BackResult<MobileInfoDomain> findByMobileToAmi(@RequestParam(value = "mobile")String mobile,@RequestParam(value = "userId")String userId,@RequestParam(value = "method")String method);
 }
