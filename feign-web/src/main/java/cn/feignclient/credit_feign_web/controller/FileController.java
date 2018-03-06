@@ -45,9 +45,8 @@ public class FileController extends BaseController{
 			result.setResultMsg("用户校验失败");
 			return result;
 		}
-		
-		
-		if (file.isEmpty()) {
+
+		if (null == file || file.isEmpty()) {
 			logger.error("用户手机号：【" + mobile + "】执行文件上传出现异常文件不存在");
 			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
 			result.setResultMsg("文件地址为空");
@@ -71,14 +70,14 @@ public class FileController extends BaseController{
 		}
 
 		try {
-
 			file.transferTo(dest);
-
 			FileDomain fileDomain = new FileDomain();
 			fileDomain.setFileUploadUrl(filePath + fileName);
 			fileDomain.setTxtCount(FileUtils.getFileLinesNotNullRow(filePath + fileName));
 			result.setResultObj(fileDomain);
 			result.setResultMsg("上传成功");
+
+			// 文件名存入数据库
 
 		} catch (IllegalStateException e) {
 			e.printStackTrace();
