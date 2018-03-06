@@ -317,15 +317,8 @@ public class ApiMobileTestController extends BaseController {
 
 			String ip = super.getIpAddr(request);
 			
-			logger.info("手机号：" + mobile + "请求基础验证消耗时间：" + (s - System.currentTimeMillis()));
-
-//			logger.info("---------不发短息----------账户号：" + apiName + "的IP地址是：" + ip);
-
-			
-			Long m = System.currentTimeMillis();
 			// 1、账户信息检测
 			BackResult<Integer> resultCreUser = apiAccountInfoFeignService.checkApiAccount(apiName, password, ip, 1);
-			logger.info("手机号：" + mobile + "请求userService账户检测消耗时间：" + (m - System.currentTimeMillis()));
 			
 			if (!resultCreUser.getResultCode().equals(ResultCode.RESULT_SUCCEED)) {
 				result.setResultCode(resultCreUser.getResultCode());
@@ -333,23 +326,11 @@ public class ApiMobileTestController extends BaseController {
 				return result;
 			}
 
-			Long l = System.currentTimeMillis();
 			// 2、执行检测返回检测结果
 			result = apiMobileTestService.findByMobile(mobile, resultCreUser.getResultObj().toString());
-			logger.info("手机号：" + mobile + "请求credit检测消耗时间：" + (l - System.currentTimeMillis()));
 			
-//			if (result.getResultCode().equals(ResultCode.RESULT_SUCCEED) && result.getResultObj().getChargesStatus().equals("1")) {
-//				// 3、结算
-//				BackResult<Boolean> resultConsume = userAccountFeignService
-//						.consumeApiAccount(resultCreUser.getResultObj().toString(), String.valueOf(1));
-//
-//				if (!resultConsume.getResultCode().equals(ResultCode.RESULT_SUCCEED)) {
-//					logger.error("------------------------------------商户号：" + apiName + "执行空号API出现记账系统异常："
-//							+ resultConsume.getResultMsg());
-//				}
-//
-//			}
-			logger.info("手机号：" + mobile + "请求总共消耗时间：" + (s - System.currentTimeMillis()));
+			logger.info("---------不发短息----------账户号：" + apiName + "的IP地址是：[" + ip + "],请求总共消耗时间：" + (System.currentTimeMillis() - s) + "ms");
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error("商户号：" + apiName + "执行空号API出现系统异常：" + e.getMessage());
@@ -405,7 +386,6 @@ public class ApiMobileTestController extends BaseController {
 			String ip = super.getIpAddr(request);			
 			// 1、账户信息检测
 			BackResult<AccountInfoDomain> resultCreUser = apiAccountInfoFeignService.checkTcAccount(apiName, password,method, ip);
-			logger.info("API帐号：" + apiName + "请求userService账户检测消耗时间：" + (System.currentTimeMillis()-s));
 			
 			if (!resultCreUser.getResultCode().equals(ResultCode.RESULT_SUCCEED)) {
 				result.setResultCode(resultCreUser.getResultCode());
@@ -413,7 +393,7 @@ public class ApiMobileTestController extends BaseController {
 				return result;
 			}
 
-			Long l = System.currentTimeMillis();
+//			Long l = System.currentTimeMillis();
 			//获取参数json串
 			JSONObject paramJson = KeyUtil.getParamJson(apiName, method, paramString);
 			// 2、执行检测返回检测结果
@@ -440,9 +420,7 @@ public class ApiMobileTestController extends BaseController {
 				result.setResultCode(ResultCode.RESULT_FAILED);
 				result.setResultMsg("接口调用失败！");
 			}
-			logger.info("API帐号：" + apiName + "请求credit检测消耗时间：" + (System.currentTimeMillis()-l));
-			
-			logger.info("API帐号：" + apiName + "请求总共消耗时间：" + (System.currentTimeMillis()-s));
+			logger.info("---------不发短息----------账户号：" + apiName + "的IP地址是：[" + ip + "],请求总共消耗时间：" + (System.currentTimeMillis() - s) + "ms");
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error("商户号：" + apiName + "执行外部接口："+method+"API出现系统异常：" + e.getMessage());
@@ -498,7 +476,6 @@ public class ApiMobileTestController extends BaseController {
 			String ip = super.getIpAddr(request);			
 			// 1、账户信息检测
 			BackResult<Integer> resultCreUser = apiAccountInfoFeignService.checkMsAccount(apiName, password, ip,1);
-			logger.info("API帐号：" + apiName + "请求userService账户检测消耗时间：" + (System.currentTimeMillis()-s));			
 			if (!resultCreUser.getResultCode().equals(ResultCode.RESULT_SUCCEED)) {
 				result.setResultCode(resultCreUser.getResultCode());
 				result.setResultMsg(resultCreUser.getResultMsg());
@@ -507,8 +484,7 @@ public class ApiMobileTestController extends BaseController {
 
 			Long l = System.currentTimeMillis();
 			result =  apiMobileTestService.findByMobileToAmi(mobile,resultCreUser.getResultObj().toString(),method);
-			logger.info("API帐号：" + apiName + "请求credit检测消耗时间：" + (System.currentTimeMillis()-l));			
-			logger.info("API帐号：" + apiName + "请求总共消耗时间：" + (System.currentTimeMillis()-s));
+			logger.info("---------不发短息----------账户号：" + apiName + "的IP地址是：[" + ip + "],请求总共消耗时间：" + (System.currentTimeMillis() - s) + "ms");
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error("商户号：" + apiName + "执行外部接口："+method+"API出现系统异常：" + e.getMessage());
