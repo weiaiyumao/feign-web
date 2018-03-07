@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import main.java.cn.common.BackResult;
 import main.java.cn.common.ResultCode;
+import main.java.cn.domain.ApiLogPageDomain;
 import main.java.cn.domain.MobileInfoDomain;
 import main.java.cn.domain.MobileTestLogDomain;
 import main.java.cn.domain.page.PageDomain;
@@ -26,6 +27,17 @@ public class ApiMobileTestServiceHiHystric implements ApiMobileTestService {
 	@Override
 	public BackResult<MobileInfoDomain> findByMobile(String mobile, String userId) {
 		return new BackResult<MobileInfoDomain>(ResultCode.RESULT_FAILED, "credit-provider-service服务findByMobile出现异常");
+	}
+
+	@Override
+	public BackResult<PageDomain<ApiLogPageDomain>> getPageByCustomerId(int pageNo, int pageSize, String customerId,
+			String method) {
+		return new BackResult<>(ResultCode.RESULT_FAILED, "credit-provider-service服务getPageByCustomerId出现异常");
+	}
+
+	@Override
+	public BackResult<MobileInfoDomain> findByMobileToAmi(String mobile, String userId, String method) {
+		return new BackResult<>(ResultCode.RESULT_FAILED, "credit-provider-service服务findByMobileToAmi出现异常");
 	}
 
 }
