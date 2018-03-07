@@ -375,6 +375,8 @@ public class ApiMobileTestController extends BaseController {
 		//返回结果
 		BackResult<List<ApiResultDomain>> result = new BackResult<List<ApiResultDomain>>();
 
+		BackResult<List<ApiResultDomain>> resultApi = new BackResult<List<ApiResultDomain>>();
+		
 		Long s = System.currentTimeMillis();
 		try {
 
@@ -412,20 +414,30 @@ public class ApiMobileTestController extends BaseController {
 				result.setResultMsg(resultCreUser.getResultMsg());
 				return result;
 			}
-
-			Long l = System.currentTimeMillis();
+			AccountInfoDomain accountInfo = resultCreUser.getResultObj();
+			Integer tcAccount = accountInfo.getTcAccount();
+			Integer fcAccount = accountInfo.getFcAccount();
+			if("normal_checkUserNameByIDno".equals(method) && tcAccount<=0){
+				result.setResultCode(ResultCode.RESULT_API_NOTCOUNT);
+				result.setResultMsg("API商户信息剩余可消费条数为：" + tcAccount + ",本次执行需消费：" + 1 + " 条, 无法执行消费，请充值！");
+				return result;
+			}
+			if("normal_checkBankInfo".equals(method) && fcAccount<=0){
+				result.setResultCode(ResultCode.RESULT_API_NOTCOUNT);
+				result.setResultMsg("API商户信息剩余可消费条数为：" + fcAccount + ",本次执行需消费：" + 1 + " 条, 无法执行消费，请充值！");
+				return result;
+			}
 			//获取参数json串
 			JSONObject paramJson = KeyUtil.getParamJson(apiName, method, paramString);
 			// 2、执行检测返回检测结果
-			result = openApiService.openApi(paramJson);
-			if(result != null){
-				if("0".equals(result.getResultCode())){
-						AccountInfoDomain accountInfo = resultCreUser.getResultObj();
+			resultApi = openApiService.openApi(paramJson);
+			if(resultApi != null){
+				if("0".equals(resultApi.getResultCode())){
 						//调用成功扣除用户的条数
 						Map<String,Object> params = new HashMap<>();
 						params.put("method", method);
-						params.put("tcAccount", accountInfo.getTcAccount());
-						params.put("fcAccount", accountInfo.getFcAccount());
+						params.put("tcAccount", tcAccount);
+						params.put("fcAccount", fcAccount);
 						params.put("msAccount", accountInfo.getMsAccount());
 						params.put("creUserId", accountInfo.getCreUserId());
 						params.put("checkCount", 1);
@@ -434,13 +446,14 @@ public class ApiMobileTestController extends BaseController {
 						if(!ResultCode.RESULT_SUCCEED.equals(apiResult.getResultCode())){
 							result.setResultCode(apiResult.getResultCode());
 							result.setResultMsg(apiResult.getResultMsg());
+							return result;
 						}
 				}
 			}else{
 				result.setResultCode(ResultCode.RESULT_FAILED);
 				result.setResultMsg("接口调用失败！");
+				return result;
 			}
-			logger.info("API帐号：" + apiName + "请求credit检测消耗时间：" + (System.currentTimeMillis()-l));
 			
 			logger.info("API帐号：" + apiName + "请求总共消耗时间：" + (System.currentTimeMillis()-s));
 		} catch (Exception e) {
@@ -448,9 +461,10 @@ public class ApiMobileTestController extends BaseController {
 			logger.error("商户号：" + apiName + "执行外部接口："+method+"API出现系统异常：" + e.getMessage());
 			result.setResultCode(ResultCode.RESULT_FAILED);
 			result.setResultMsg("系统异常！");
+			return result;
 		}
 
-		return result;
+		return resultApi;
 	}
 
 	/**
