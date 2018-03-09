@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import main.java.cn.common.BackResult;
 import main.java.cn.common.ResultCode;
 import main.java.cn.domain.CvsFilePathDomain;
+import main.java.cn.domain.FileUploadDomain;
 import main.java.cn.domain.RunTestDomian;
 import main.java.cn.domain.page.PageDomain;
 
@@ -20,7 +21,8 @@ public class CreditProviderServiceHiHystric implements CreditProviderService {
 
 	@Override
 	public BackResult<List<CvsFilePathDomain>> findByUserId(String userId) {
-		return new BackResult<List<CvsFilePathDomain>>(ResultCode.RESULT_FAILED, "credit-provider-service服务findByUserId出现异常");
+		return new BackResult<List<CvsFilePathDomain>>(ResultCode.RESULT_FAILED,
+				"credit-provider-service服务findByUserId出现异常");
 	}
 
 	@Override
@@ -30,13 +32,26 @@ public class CreditProviderServiceHiHystric implements CreditProviderService {
 
 	@Override
 	public BackResult<PageDomain<CvsFilePathDomain>> getPageByUserId(int pageNo, int pageSize, String userId) {
-		return new BackResult<PageDomain<CvsFilePathDomain>>(ResultCode.RESULT_FAILED, "credit-provider-service服务getPageByUserId出现异常");
+		return new BackResult<PageDomain<CvsFilePathDomain>>(ResultCode.RESULT_FAILED,
+				"credit-provider-service服务getPageByUserId出现异常");
 	}
 
 	@Override
 	public BackResult<RunTestDomian> theTest(String fileUrl, String userId, String source, String mobile,
 			String startLine, String type) {
 		return new BackResult<RunTestDomian>(ResultCode.RESULT_FAILED, "credit-provider-service服务theTest出现异常");
+	}
+
+	@Override
+	public BackResult<FileUploadDomain> saveFileUpload(FileUploadDomain domain) {
+		return new BackResult<FileUploadDomain>(ResultCode.RESULT_FAILED,
+				"credit-provider-service服务saveFileUpload出现异常");
+	}
+
+	@Override
+	public BackResult<FileUploadDomain> findFileUploadById(String id) {
+		return new BackResult<FileUploadDomain>(ResultCode.RESULT_FAILED,
+				"credit-provider-service服务findFileUploadById出现异常");
 	}
 
 }

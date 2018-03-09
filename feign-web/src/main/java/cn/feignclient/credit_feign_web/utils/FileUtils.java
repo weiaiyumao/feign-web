@@ -335,9 +335,11 @@ public class FileUtils {
 				String lineTxt = null;
 
 				while ((lineTxt = br.readLine()) != null) {
+					
 					if (CommonUtils.isNotString(lineTxt)) {
 						continue;
 					}
+					
 					rows = rows + 1;
 				}
 

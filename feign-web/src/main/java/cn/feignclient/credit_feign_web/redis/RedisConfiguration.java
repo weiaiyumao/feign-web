@@ -30,12 +30,15 @@ public class RedisConfiguration {
 
 	@Value("${spring.redis.password}")
 	private String password;
-	
+
 
 	@Bean(name = "jedis.pool")
 	@Autowired
 	public JedisPool jedisPool(@Qualifier("jedis.pool.config") JedisPoolConfig config) {
-		return new JedisPool(config, host, port,maxWaitMillis,password);
+		if (!password.equals("")) {
+			return new JedisPool(config, host, port,maxWaitMillis,password);
+		}
+		return new JedisPool(config, host, port);
 	}
 
 	@Bean(name = "jedis.pool.config")
@@ -55,7 +58,9 @@ public class RedisConfiguration {
 		jedisConnectionFactory.setPoolConfig(this.jedisPoolConfig());
 		jedisConnectionFactory.setHostName(host);
 		jedisConnectionFactory.setPort(port);
-		jedisConnectionFactory.setPassword(password);
+		if (!password.equals("")) {
+			jedisConnectionFactory.setPassword(password);
+		}
 		return jedisConnectionFactory;
 	}
 
@@ -66,3 +71,4 @@ public class RedisConfiguration {
 		return rt;
 	}
 }
+
