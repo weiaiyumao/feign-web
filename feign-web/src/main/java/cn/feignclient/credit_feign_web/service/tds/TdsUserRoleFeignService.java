@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import main.java.cn.common.BackResult;
-import main.java.cn.domain.page.PageAuto;
 import main.java.cn.domain.page.PageDomain;
 import main.java.cn.domain.tds.TdsUserRoleDomain;
 
@@ -37,7 +36,7 @@ public interface TdsUserRoleFeignService {
 
 
 	@RequestMapping(value="/userRole/queryRoleIsStatus",method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
-	public BackResult<PageDomain<PageAuto>> queryRoleIsStatus(PageAuto auto);
+	public BackResult<PageDomain<TdsUserRoleDomain>> queryRoleIsStatus(TdsUserRoleDomain auto);
 	
 	
 	@RequestMapping(value="/userRole/queryUserByRoleName",method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)

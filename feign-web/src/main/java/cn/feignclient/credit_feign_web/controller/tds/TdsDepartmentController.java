@@ -17,7 +17,6 @@ import cn.feignclient.credit_feign_web.service.tds.TdsDeparTmentFeignService;
 import cn.feignclient.credit_feign_web.utils.CommonUtils;
 import main.java.cn.common.BackResult;
 import main.java.cn.common.ResultCode;
-import main.java.cn.domain.page.PageAuto;
 import main.java.cn.domain.page.PageDomain;
 import main.java.cn.domain.tds.TdsDepartmentDomain;
 import main.java.cn.domain.tds.TdsFunctionDomain;
@@ -42,11 +41,11 @@ public class TdsDepartmentController extends BaseController {
 	 */
 	@RequestMapping(value = "/pageUserRoleDepartmentView", method = RequestMethod.POST)
 	public BackResult<PageDomain<UserRoleDepartmentViewDomain>> pageUserRoleDepartmentView(String token,
-			HttpServletRequest request, HttpServletResponse response,PageAuto auto) {
+			HttpServletRequest request, HttpServletResponse response,UserRoleDepartmentViewDomain domain) {
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
 		BackResult<PageDomain<UserRoleDepartmentViewDomain>> result = new BackResult<PageDomain<UserRoleDepartmentViewDomain>>();
-		result = tdsDeparTmentFeignService.pageUserRoleDepartmentView(auto);
+		result = tdsDeparTmentFeignService.pageUserRoleDepartmentView(domain);
 		return result;
 	}
 
@@ -141,6 +140,7 @@ public class TdsDepartmentController extends BaseController {
 			result.setResultMsg("角色分配不能为空");
 			return result;
 		}
+		
 		TdsUserDomain loginUser = this.getUserInfo(loginMobile); // 获取登录用户信息
 		result = tdsDeparTmentFeignService.addUserConfig(name, passWord, phone, departmentId, positionId, comId,
 				arrRoles, loginUser.getId());

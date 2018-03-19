@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import main.java.cn.common.BackResult;
-import main.java.cn.domain.page.PageAuto;
 import main.java.cn.domain.page.PageDomain;
 import main.java.cn.domain.tds.TdsDepartmentDomain;
 import main.java.cn.domain.tds.TdsFunctionDomain;
@@ -20,7 +19,7 @@ import main.java.cn.domain.tds.UserRoleDepartmentViewDomain;
 public interface TdsDeparTmentFeignService {
 
 	@RequestMapping(value = "/super/pageUserRoleDepartmentView", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public BackResult<PageDomain<UserRoleDepartmentViewDomain>> pageUserRoleDepartmentView(PageAuto auto);
+	public BackResult<PageDomain<UserRoleDepartmentViewDomain>> pageUserRoleDepartmentView(UserRoleDepartmentViewDomain domain);
 
 	@RequestMapping(value = "/super/funByUserId", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public BackResult<List<TdsFunctionDomain>> funByuserId(@RequestParam("userId") Integer userId);
@@ -33,10 +32,12 @@ public interface TdsDeparTmentFeignService {
 			@RequestParam("phone") String phone, @RequestParam("departmentId") Integer departmentId,
 			@RequestParam("positionId") Integer positionId, @RequestParam("comId") Integer comId,
 			@RequestParam("arrRoles") Integer[] arrRoles, @RequestParam("loginUserId") Integer loginUserId);
+	
 
 	@RequestMapping(value = "/super/addCustomPermissions", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public BackResult<Integer> addCustomPermissions(@RequestParam("soleName") String soleName,
 			@RequestParam("loginUserId") Integer loginUserId, @RequestParam("arrfuns") Integer[] arrfuns);
+	
 	
 	@RequestMapping(value = "/super/addFun", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public BackResult<Integer> addFun(@RequestBody TdsFunctionDomain domain);

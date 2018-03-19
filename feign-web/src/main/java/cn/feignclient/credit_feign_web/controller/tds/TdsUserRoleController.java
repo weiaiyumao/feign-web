@@ -15,7 +15,6 @@ import cn.feignclient.credit_feign_web.service.tds.TdsUserRoleFeignService;
 import cn.feignclient.credit_feign_web.utils.CommonUtils;
 import main.java.cn.common.BackResult;
 import main.java.cn.common.ResultCode;
-import main.java.cn.domain.page.PageAuto;
 import main.java.cn.domain.page.PageDomain;
 import main.java.cn.domain.tds.TdsUserRoleDomain;
 
@@ -158,7 +157,7 @@ public class TdsUserRoleController extends BaseController {
 	
 	
 	@RequestMapping(value="/queryRoleIsStatus",method = RequestMethod.POST)
-	public BackResult<PageDomain<PageAuto>> queryRoleIsStatus(PageAuto auto,HttpServletRequest request, HttpServletResponse response){
+	public BackResult<PageDomain<TdsUserRoleDomain>> queryRoleIsStatus(TdsUserRoleDomain auto,HttpServletRequest request, HttpServletResponse response){
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
 		return tdsUserRoleFeignService.queryRoleIsStatus(auto);
