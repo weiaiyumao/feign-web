@@ -118,27 +118,27 @@ public class TdsUserController extends BaseController {
 		return result;
 	}
 
-	@RequestMapping(value = "/pageSelectAll", method = RequestMethod.POST)
-	public BackResult<PageDomain<TdsUserDomain>> pageSelectAll(TdsUserDomain tdsUserDomain, Integer pageSize,
-			Integer curPage, HttpServletRequest request, HttpServletResponse response) {
-		BackResult<PageDomain<TdsUserDomain>> result = new BackResult<PageDomain<TdsUserDomain>>();
-
-		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
-		response.setContentType("text/json;charset=UTF-8");
-
-		if (CommonUtils.isNotIngeter(pageSize)) {
-			return new BackResult<PageDomain<TdsUserDomain>>(ResultCode.RESULT_PARAM_EXCEPTIONS, "显示条数不能为空");
-		}
-
-		if (CommonUtils.isNotIngeter(curPage)) {
-			return new BackResult<PageDomain<TdsUserDomain>>(ResultCode.RESULT_PARAM_EXCEPTIONS, "显示页码不能为空");
-		}
-
-		logger.info("============用户分页查询==========");
-
-		result = tdsUserFeignService.pageSelectAll(tdsUserDomain, pageSize, curPage);
-		return result;
-	}
+//	@RequestMapping(value = "/pageSelectAll", method = RequestMethod.POST)
+//	public BackResult<PageDomain<TdsUserDomain>> pageSelectAll(TdsUserDomain tdsUserDomain, Integer pageSize,
+//			Integer curPage, HttpServletRequest request, HttpServletResponse response) {
+//		BackResult<PageDomain<TdsUserDomain>> result = new BackResult<PageDomain<TdsUserDomain>>();
+//
+//		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
+//		response.setContentType("text/json;charset=UTF-8");
+//
+//		if (CommonUtils.isNotIngeter(pageSize)) {
+//			return new BackResult<PageDomain<TdsUserDomain>>(ResultCode.RESULT_PARAM_EXCEPTIONS, "显示条数不能为空");
+//		}
+//
+//		if (CommonUtils.isNotIngeter(curPage)) {
+//			return new BackResult<PageDomain<TdsUserDomain>>(ResultCode.RESULT_PARAM_EXCEPTIONS, "显示页码不能为空");
+//		}
+//
+//		logger.info("============用户分页查询==========");
+//
+//		result = tdsUserFeignService.pageSelectAll(tdsUserDomain, pageSize, curPage);
+//		return result;
+//	}
 
 	/**
 	 * 修改密码
@@ -256,5 +256,9 @@ public class TdsUserController extends BaseController {
 		}
 		return tdsUserFeignService.queryComByUserId(userId);
 	}
+	
+	
+	
+	
 
 }

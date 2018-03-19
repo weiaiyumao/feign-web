@@ -23,9 +23,9 @@ public interface TdsUserFeignService {
 	@RequestMapping(value = "/tdsUser/deleteById", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public BackResult<Integer> deleteById(@RequestParam("id") Integer id);
 
-	@RequestMapping(value = "/tdsUser/pageSelectAll", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public BackResult<PageDomain<TdsUserDomain>> pageSelectAll(TdsUserDomain tdsUserDomain,
-			@RequestParam("pageSize") Integer pageSize, @RequestParam("curPage") Integer curPage);
+//	@RequestMapping(value = "/tdsUser/pageSelectAll", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+//	public BackResult<PageDomain<TdsUserDomain>> pageSelectAll(TdsUserDomain tdsUserDomain,
+//			@RequestParam("pageSize") Integer pageSize, @RequestParam("curPage") Integer curPage);
 
 	@RequestMapping(value = "/tdsUser/loadByPhone", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public BackResult<TdsUserDomain> loadByPhone(@RequestParam("phone") String phone);
