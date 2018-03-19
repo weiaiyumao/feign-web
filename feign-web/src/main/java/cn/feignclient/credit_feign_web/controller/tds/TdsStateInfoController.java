@@ -18,7 +18,6 @@ import cn.feignclient.credit_feign_web.service.tds.TdsStateInfoFeignService;
 import cn.feignclient.credit_feign_web.utils.CommonUtils;
 import main.java.cn.common.BackResult;
 import main.java.cn.common.ResultCode;
-import main.java.cn.domain.page.PageAuto;
 import main.java.cn.domain.page.PageDomain;
 import main.java.cn.domain.tds.TdsEnumDomain;
 import main.java.cn.domain.tds.TdsProductMoneyDomain;
@@ -73,14 +72,13 @@ public class TdsStateInfoController  extends BaseController{
 	
 	
 	@RequestMapping(value = "/pageTdsStateInfo", method = RequestMethod.POST)
-	public BackResult<PageDomain<TdsStateInfoDomain>> pageTdsStateInfo(PageAuto auto,HttpServletRequest request,HttpServletResponse response){
+	public BackResult<PageDomain<TdsStateInfoDomain>> pageTdsStateInfo(TdsStateInfoDomain domain,HttpServletRequest request,HttpServletResponse response){
 		response.setHeader("Access-Control-Allow-Origin","*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
-		logger.info("============用户分页查询==========");
-		if(CommonUtils.isNotString(auto.getRinput())){
-			auto.setRinput(null);
+		if(CommonUtils.isNotString(domain.getRinput())){
+			domain.setRinput(null);
 		}
-		return tdsStateInfoFeignService.pageTdsStateInfo(auto);
+		return tdsStateInfoFeignService.pageTdsStateInfo(domain);
 	}
 	
 	

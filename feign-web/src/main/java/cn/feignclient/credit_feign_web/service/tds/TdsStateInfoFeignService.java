@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import main.java.cn.common.BackResult;
-import main.java.cn.domain.page.PageAuto;
 import main.java.cn.domain.page.PageDomain;
 import main.java.cn.domain.tds.TdsEnumDomain;
 import main.java.cn.domain.tds.TdsProductMoneyDomain;
@@ -30,7 +29,7 @@ public interface TdsStateInfoFeignService {
 	
 	
 	@RequestMapping(value = "/state/pageTdsStateInfo", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public BackResult<PageDomain<TdsStateInfoDomain>> pageTdsStateInfo(PageAuto auto);
+	public BackResult<PageDomain<TdsStateInfoDomain>> pageTdsStateInfo(TdsStateInfoDomain domain);
 	
 	
 	
