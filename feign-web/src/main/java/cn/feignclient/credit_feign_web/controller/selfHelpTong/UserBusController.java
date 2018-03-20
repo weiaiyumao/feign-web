@@ -6,9 +6,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.alibaba.fastjson.JSONObject;
 
 import cn.feignclient.credit_feign_web.controller.BaseController;
 import cn.feignclient.credit_feign_web.service.ApiAccountInfoFeignService;
@@ -52,6 +56,61 @@ public class UserBusController extends BaseController {
 		BackResult<String> result = new BackResult<String>();
 
 		if (CommonUtils.isNotString(mobile)) {
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("手机号码不能为空");
+			result.setResultObj(null);
+			return result;
+		}
+
+		if (CommonUtils.isNotString(token)) {
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("token不能为空");
+			result.setResultObj(null);
+			return result;
+		}
+
+		String md5Token = MD5Util.getInstance().getMD5Code(timestamp + apiKey);
+
+		if (!md5Token.equals(token)) {
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("签名验证失败");
+			result.setResultObj(null);
+			return result;
+		}
+
+		CreUserDomain creUserDomain = new CreUserDomain();
+		creUserDomain.setUserPhone(mobile);
+
+		// 查询用户
+		BackResult<CreUserDomain> creResult = userFeignService.activateUserZzt(creUserDomain);
+
+		if (!creResult.getResultCode().equals(ResultCode.RESULT_SUCCEED)) {
+			result.setResultMsg(creResult.getResultMsg());
+			result.setResultCode(ResultCode.RESULT_FAILED);
+			result.setResultObj(null);
+			return result;
+		}
+
+		result.setResultObj(creResult.getResultObj().getId().toString());
+
+		return result;
+	}
+	
+	/**
+	 * Erp调用激活账户
+	 * 
+	 * @param request
+	 * @param response
+	 * @param mobile
+	 * @param code
+	 * @return
+	 */
+	@RequestMapping("/userActivation")
+	public BackResult<String> userActivation(HttpServletRequest request, HttpServletResponse response,  String mobile, String  token,String timestamp) {
+		BackResult<String> result = new BackResult<String>();
+		logger.info("自助通请求用户【" + mobile +"】，请求激活账户！token:"+token + "timestamp:" + timestamp);
+		
+		if (CommonUtils.isNotString(mobile)) {;
 			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
 			result.setResultMsg("手机号码不能为空");
 			result.setResultObj(null);

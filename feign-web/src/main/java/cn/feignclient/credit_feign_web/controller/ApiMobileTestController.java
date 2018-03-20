@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +17,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
 
+import cn.feignclient.credit_feign_web.encryption.Constants;
+import cn.feignclient.credit_feign_web.encryption.RsaSignature;
+import cn.feignclient.credit_feign_web.encryption.ThreeDesUtil;
 import cn.feignclient.credit_feign_web.service.ApiAccountInfoFeignService;
 import cn.feignclient.credit_feign_web.service.ApiMobileTestService;
 import cn.feignclient.credit_feign_web.service.OpenApiService;
 import cn.feignclient.credit_feign_web.utils.CommonUtils;
 import main.java.cn.common.BackResult;
+import main.java.cn.common.RedisKeys;
 import main.java.cn.common.ResultCode;
 import main.java.cn.domain.AccountInfoDomain;
 import main.java.cn.domain.ApiLogPageDomain;
@@ -428,7 +433,7 @@ public class ApiMobileTestController extends BaseController {
 				return result;
 			}
 			//获取参数json串
-			JSONObject paramJson = KeyUtil.getParamJson(apiName, method, paramString);
+			JSONObject paramJson = KeyUtil.getParamJson(apiName, method, paramString,System.nanoTime()+"");
 			// 2、执行检测返回检测结果
 			resultApi = openApiService.openApi(paramJson);
 			if(resultApi != null){
@@ -520,7 +525,287 @@ public class ApiMobileTestController extends BaseController {
 			}
 
 			Long l = System.currentTimeMillis();
-			result =  apiMobileTestService.findByMobileToAmi(mobile,resultCreUser.getResultObj().toString(),method);
+			result =  apiMobileTestService.findByMobileToAmi(mobile,resultCreUser.getResultObj().toString(),method,System.nanoTime()+"");
+			logger.info("API帐号：" + apiName + "请求credit检测消耗时间：" + (System.currentTimeMillis()-l));			
+			logger.info("API帐号：" + apiName + "请求总共消耗时间：" + (System.currentTimeMillis()-s));
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error("商户号：" + apiName + "执行外部接口："+method+"API出现系统异常：" + e.getMessage());
+			result.setResultCode(ResultCode.RESULT_FAILED);
+			result.setResultMsg("系统异常！");
+		}
+
+		return result;
+	}
+	
+	/**
+	 * 外部ApI接口
+	 * 
+	 * @param apiName
+	 * @param password
+	 * @param method
+	 * @param paramString
+	 * @return
+	 */
+	@RequestMapping(value = "/checkUserInfoN", method = RequestMethod.POST)
+	public synchronized BackResult<List<ApiResultDomain>> checkUserInfoN(HttpServletRequest request,
+			HttpServletResponse response,  String appid,String encryptParamStr) {
+		//返回结果
+		BackResult<List<ApiResultDomain>> result = new BackResult<List<ApiResultDomain>>();
+		BackResult<List<ApiResultDomain>> resultApi = new BackResult<List<ApiResultDomain>>();
+		String des_key = null;
+		String rsa_key = null;
+		
+		if (CommonUtils.isNotString(encryptParamStr)) {
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("参数不能为空");
+			return result;
+		}
+		
+		//获取用户的des密钥和rsa公钥
+		String key = redisClinet.get(RedisKeys.getInstance().getUserEncryptKey(appid));
+		if(StringUtils.isBlank(key)){
+			des_key = Constants.des_key;
+			rsa_key = Constants.rsa_key;
+		}else{
+			des_key = JSONObject.parseObject(key).getString("des_key");
+			rsa_key = JSONObject.parseObject(key).getString("rsa_key");
+		}
+		
+		//des解密参数串
+		String resultstr = new String(ThreeDesUtil.decryptMode(des_key.getBytes(),ThreeDesUtil.hexStringToBytes(encryptParamStr)));
+		JSONObject paramJson = JSONObject.parseObject(resultstr);
+		String apiName = paramJson.getString("apiName");
+		String password = paramJson.getString("password");
+		String method = paramJson.getString("method");
+		String paramString = paramJson.getString("paramString");
+		String order_no = paramJson.getString("order_no");
+		String sign = paramJson.getString("sign");
+		
+		Long s = System.currentTimeMillis();
+		try {
+
+			if (CommonUtils.isNotString(apiName)) {
+				result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+				result.setResultMsg("商户API账户名不能为空");
+				return result;
+			}
+
+			if (CommonUtils.isNotString(password)) {
+				result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+				result.setResultMsg("商户API账户密码不能为空");
+				return result;
+			}
+
+			if (CommonUtils.isNotString(method)) {
+				result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+				result.setResultMsg("检测的方法名不能为空");
+				return result;
+			}
+			
+			if (CommonUtils.isNotString(paramString)) {
+				result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+				result.setResultMsg("检测的参数字符串不能为空");
+				return result;
+			}
+			
+			if (CommonUtils.isNotString(order_no)) {
+				result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+				result.setResultMsg("交易流水号不能为空");
+				return result;
+			}
+			
+			if (CommonUtils.isNotString(sign)) {
+				result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+				result.setResultMsg("签名不能为空");
+				return result;
+			}
+			
+			StringBuilder builder = new StringBuilder();
+			builder.append(Constants.apiName + "=" + apiName);
+			builder.append("&" + Constants.method + "=" + method);
+			builder.append("&" + Constants.order_no + "=" + order_no);
+			builder.append("&" + Constants.paramString + "=" + paramString);
+			builder.append("&" + Constants.password + "=" + password);
+			
+			//验证sign		
+			boolean signResult = RsaSignature.rsaCheckContent(builder.toString(), sign, rsa_key,
+					Constants.CHARSET_UTF8);
+			
+			if(signResult == false){
+				result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+				result.setResultMsg("签名错误");
+				return result;
+			}
+			
+			//获取用户调用接口的ip地址
+			String ip = super.getIpAddr(request);			
+			// 1、账户信息检测
+			BackResult<AccountInfoDomain> resultCreUser = apiAccountInfoFeignService.checkTcAccount(apiName, password,method, ip);
+			logger.info("API帐号：" + apiName + "请求userService账户检测消耗时间：" + (System.currentTimeMillis()-s));
+			
+			if (!resultCreUser.getResultCode().equals(ResultCode.RESULT_SUCCEED)) {
+				result.setResultCode(resultCreUser.getResultCode());
+				result.setResultMsg(resultCreUser.getResultMsg());
+				return result;
+			}
+			AccountInfoDomain accountInfo = resultCreUser.getResultObj();
+			Integer tcAccount = accountInfo.getTcAccount();
+			Integer fcAccount = accountInfo.getFcAccount();
+			if("normal_checkUserNameByIDno".equals(method) && tcAccount<=0){
+				result.setResultCode(ResultCode.RESULT_API_NOTCOUNT);
+				result.setResultMsg("API商户信息剩余可消费条数为：" + tcAccount + ",本次执行需消费：" + 1 + " 条, 无法执行消费，请充值！");
+				return result;
+			}
+			if("normal_checkBankInfo".equals(method) && fcAccount<=0){
+				result.setResultCode(ResultCode.RESULT_API_NOTCOUNT);
+				result.setResultMsg("API商户信息剩余可消费条数为：" + fcAccount + ",本次执行需消费：" + 1 + " 条, 无法执行消费，请充值！");
+				return result;
+			}
+			//获取参数json串
+			JSONObject paramJson2 = KeyUtil.getParamJson(apiName, method, paramString,order_no);
+			// 2、执行检测返回检测结果
+			resultApi = openApiService.openApi(paramJson2);
+			if(resultApi != null){
+				if("0".equals(resultApi.getResultCode())){
+						//调用成功扣除用户的条数
+						Map<String,Object> params = new HashMap<>();
+						params.put("method", method);
+						params.put("tcAccount", tcAccount);
+						params.put("fcAccount", fcAccount);
+						params.put("msAccount", accountInfo.getMsAccount());
+						params.put("creUserId", accountInfo.getCreUserId());
+						params.put("checkCount", 1);
+						params.put("version", accountInfo.getVersion());
+						BackResult<Integer> apiResult = apiAccountInfoFeignService.updateTcAccount(params);
+						if(!ResultCode.RESULT_SUCCEED.equals(apiResult.getResultCode())){
+							result.setResultCode(apiResult.getResultCode());
+							result.setResultMsg(apiResult.getResultMsg());
+							return result;
+						}
+				}
+			}else{
+				result.setResultCode(ResultCode.RESULT_FAILED);
+				result.setResultMsg("接口调用失败！");
+				return result;
+			}
+			
+			logger.info("API帐号：" + apiName + "请求总共消耗时间：" + (System.currentTimeMillis()-s));
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error("商户号：" + apiName + "执行外部接口："+method+"API出现系统异常：" + e.getMessage());
+			result.setResultCode(ResultCode.RESULT_FAILED);
+			result.setResultMsg("系统异常！");
+			return result;
+		}
+
+		return resultApi;
+	}
+
+	/**
+	 * 号码状态实时查询
+	 * 
+	 * @param apiName
+	 * @param password
+	 * @param method
+	 * @param mobile
+	 * @return
+	 */
+	@RequestMapping(value = "/checkMobileStateN", method = RequestMethod.POST)
+	public synchronized BackResult<MobileInfoDomain> checkMobileStateN(HttpServletRequest request,
+			HttpServletResponse response,String appid, String encryptParamStr) {
+		//返回结果
+		BackResult<MobileInfoDomain> result = new BackResult<MobileInfoDomain>();
+		String method = "normal_checkMobileState";
+		String des_key = null;
+		String rsa_key = null;
+		
+		if (CommonUtils.isNotString(encryptParamStr)) {
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("参数不能为空");
+			return result;
+		}
+		
+		//获取用户的des密钥和rsa公钥
+		String key = redisClinet.get(RedisKeys.getInstance().getUserEncryptKey(appid));
+		if(StringUtils.isBlank(key)){
+			des_key = Constants.des_key;
+			rsa_key = Constants.rsa_key;
+		}else{
+			des_key = JSONObject.parseObject(key).getString("des_key");
+			rsa_key = JSONObject.parseObject(key).getString("rsa_key");
+		}
+		
+		//des解密参数串
+		String resultstr = new String(ThreeDesUtil.decryptMode(des_key.getBytes(),ThreeDesUtil.hexStringToBytes(encryptParamStr)));
+		JSONObject paramJson = JSONObject.parseObject(resultstr);
+		String apiName = paramJson.getString("apiName");
+		String password = paramJson.getString("password");
+		String mobile = paramJson.getString("mobile");
+		String order_no = paramJson.getString("order_no");
+		String sign = paramJson.getString("sign");
+		
+		Long s = System.currentTimeMillis();
+		try {
+
+			if (CommonUtils.isNotString(apiName)) {
+				result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+				result.setResultMsg("商户API账户名不能为空");
+				return result;
+			}
+
+			if (CommonUtils.isNotString(password)) {
+				result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+				result.setResultMsg("商户API账户密码不能为空");
+				return result;
+			}
+			
+			if (CommonUtils.isNotString(mobile)) {
+				result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+				result.setResultMsg("检测的参数手机号码不能为空");
+				return result;
+			}
+			
+			if (CommonUtils.isNotString(order_no)) {
+				result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+				result.setResultMsg("交易流水号不能为空");
+				return result;
+			}
+			
+			if (CommonUtils.isNotString(sign)) {
+				result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+				result.setResultMsg("签名不能为空");
+				return result;
+			}
+			
+			StringBuilder builder = new StringBuilder();
+			builder.append(Constants.apiName + "=" + apiName);
+			builder.append("&" + Constants.mobile + "=" + mobile);
+			builder.append("&" + Constants.order_no + "=" + order_no);
+			builder.append("&" + Constants.password + "=" + password);
+			
+			//验证sign		
+			boolean signResult = RsaSignature.rsaCheckContent(builder.toString(), sign, rsa_key,
+					Constants.CHARSET_UTF8);
+			
+			if(signResult == false){
+				result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+				result.setResultMsg("签名错误");
+				return result;
+			}
+			//获取用户调用接口的ip地址
+			String ip = super.getIpAddr(request);			
+			// 1、账户信息检测
+			BackResult<Integer> resultCreUser = apiAccountInfoFeignService.checkMsAccount(apiName, password, ip,1);
+			logger.info("API帐号：" + apiName + "请求userService账户检测消耗时间：" + (System.currentTimeMillis()-s));			
+			if (!resultCreUser.getResultCode().equals(ResultCode.RESULT_SUCCEED)) {
+				result.setResultCode(resultCreUser.getResultCode());
+				result.setResultMsg(resultCreUser.getResultMsg());
+				return result;
+			}
+
+			Long l = System.currentTimeMillis();
+			result =  apiMobileTestService.findByMobileToAmi(mobile,resultCreUser.getResultObj().toString(),method,order_no);
 			logger.info("API帐号：" + apiName + "请求credit检测消耗时间：" + (System.currentTimeMillis()-l));			
 			logger.info("API帐号：" + apiName + "请求总共消耗时间：" + (System.currentTimeMillis()-s));
 		} catch (Exception e) {

@@ -29,5 +29,5 @@ public interface ApiMobileTestService {
 	public BackResult<MobileInfoDomain> findByMobile(@RequestParam(value = "mobile")String mobile,@RequestParam(value = "userId")String userId);
 	
 	@RequestMapping(value = "/apiMobileTest/findByMobileToAmi", method = RequestMethod.POST)
-	public BackResult<MobileInfoDomain> findByMobileToAmi(@RequestParam(value = "mobile")String mobile,@RequestParam(value = "userId")String userId,@RequestParam(value = "method")String method);
+	public BackResult<MobileInfoDomain> findByMobileToAmi(@RequestParam(value = "mobile")String mobile,@RequestParam(value = "userId")String userId,@RequestParam(value = "method")String method,@RequestParam(value = "orderNo")String orderNo);
 }
