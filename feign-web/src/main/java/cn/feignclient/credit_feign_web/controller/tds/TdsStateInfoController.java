@@ -47,7 +47,6 @@ public class TdsStateInfoController  extends BaseController{
 		if (CommonUtils.isNotString(token)) {
 			 return new BackResult<Integer>(ResultCode.RESULT_PARAM_EXCEPTIONS,"token不能为空");
 		}
-		logger.info("=====ID更新："+tdsStateInfoDomain.getId()+" 状态信息========");
 		result = tdsStateInfoFeignService.update(tdsStateInfoDomain);
 		return result;
 	}
@@ -66,7 +65,6 @@ public class TdsStateInfoController  extends BaseController{
 		}
 
 		result = tdsStateInfoFeignService.deleteById(id);
-		logger.info("=====ID删除："+id+" 状态信息========");
 		return result;
 	}
 	
@@ -101,7 +99,6 @@ public class TdsStateInfoController  extends BaseController{
 	public BackResult<TdsStateInfoDomain> loadById(Integer id,HttpServletRequest request,HttpServletResponse response,String token){
 		response.setHeader("Access-Control-Allow-Origin","*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
-		logger.info("============用户分页查询==========");
 		if (CommonUtils.isNotString(token)) {
 			 return new BackResult<TdsStateInfoDomain>(ResultCode.RESULT_PARAM_EXCEPTIONS,"token不能为空");
 		}
@@ -132,7 +129,6 @@ public class TdsStateInfoController  extends BaseController{
 		if (CommonUtils.isNotIngeter(logiUserId)) {
 			 return new BackResult<Integer>(ResultCode.RESULT_PARAM_EXCEPTIONS,"登录用户id不能为空");
 		}
-		logger.info("============项目价格管理==========");
 		domain.setCreater(logiUserId);
 		return tdsStateInfoFeignService.addProductTable(domain);
 	}

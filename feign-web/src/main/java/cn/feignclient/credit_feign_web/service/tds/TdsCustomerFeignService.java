@@ -19,6 +19,9 @@ public interface TdsCustomerFeignService {
 	
 	@RequestMapping(value = "/customer/pageTdsCustomer", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public BackResult<PageDomain<TdsCustomerViewDomain>> pageTdsCustomer(TdsCustomerViewDomain domain);
+	
+//	@RequestMapping(value = "/customer/pageCustomerApproval", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+//	public BackResult<PageDomain<TdsCustomerViewDomain>> pageCustomerApproval(TdsCustomerViewDomain domain);
 
 	@RequestMapping(value = "/customer/updateCustomer", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public BackResult<Integer> updateCustomer(TdsCustomerViewDomain domain,
@@ -47,7 +50,10 @@ public interface TdsCustomerFeignService {
 
 	@RequestMapping(value = "/customer/deleteById", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public BackResult<Integer> deleteById(@RequestParam("id") Integer id);
-
 	// ====end
+	
+	
+	@RequestMapping(value = "/customer/isAgree", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public BackResult<Integer> isAgree(@RequestParam("isAgree")Integer isAgree,@RequestParam("userId")Integer userId,@RequestParam("reas")String reas);
 
 }

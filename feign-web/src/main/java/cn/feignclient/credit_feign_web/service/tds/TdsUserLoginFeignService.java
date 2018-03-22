@@ -2,7 +2,6 @@ package cn.feignclient.credit_feign_web.service.tds;
 
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.http.MediaType;
@@ -38,12 +37,5 @@ public interface TdsUserLoginFeignService {
 	
 	
 	
-    //=============首页==========
-	@RequestMapping(value = "/home/countByUserId", method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
-	public BackResult<Map<String, Object>> countByUserId(@RequestParam("userId")Integer userId);
-	
-	
-	@RequestMapping(value = "/home/getAccByNumber", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public BackResult<Integer> getAccByNumber(@RequestParam("userId")Integer userId,@RequestParam("pnameId")Integer pnameId);
 	
 }

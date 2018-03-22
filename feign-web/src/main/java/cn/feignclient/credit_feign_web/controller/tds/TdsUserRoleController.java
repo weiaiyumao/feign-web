@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import cn.feignclient.credit_feign_web.controller.BaseController;
 import cn.feignclient.credit_feign_web.service.tds.TdsUserRoleFeignService;
 import cn.feignclient.credit_feign_web.utils.CommonUtils;
 import main.java.cn.common.BackResult;
@@ -20,7 +19,7 @@ import main.java.cn.domain.tds.TdsUserRoleDomain;
 
 @RestController
 @RequestMapping("/userRole")
-public class TdsUserRoleController extends BaseController {
+public class TdsUserRoleController{
 
 	/**
 	 * 检测token, 检测 是否登录， 登录的用户是否该有操作权限

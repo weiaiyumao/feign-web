@@ -162,9 +162,16 @@ public class TdsDepartmentController extends BaseController {
 		response.setContentType("text/json;charset=UTF-8");
 		BackResult<Integer> result = new BackResult<Integer>();
 
+		
 		if (CommonUtils.isNotString(token)) {
 			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
 			result.setResultMsg("token不能为空");
+			return result;
+		}
+		
+		if(null==arrfuns || arrfuns.length<=0){
+			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
+			result.setResultMsg("权限id不能为空");
 			return result;
 		}
 		

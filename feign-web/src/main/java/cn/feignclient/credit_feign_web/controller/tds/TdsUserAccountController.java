@@ -24,7 +24,7 @@ import main.java.cn.domain.tds.TdsUserAccountInfoDomain;
 
 @RestController
 @RequestMapping("/tdsUserAccount")
-public class TdsUserAccountController extends TdsBaseController {
+public class TdsUserAccountController extends BaseTdsController {
 
 	private final static Logger logger = LoggerFactory.getLogger(TdsUserAccountController.class);
 

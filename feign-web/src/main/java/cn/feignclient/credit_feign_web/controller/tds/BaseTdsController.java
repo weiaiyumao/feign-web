@@ -6,6 +6,8 @@ import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -15,13 +17,18 @@ import org.springframework.web.bind.annotation.InitBinder;
 import cn.feignclient.credit_feign_web.redis.RedisClient;
 import cn.feignclient.credit_feign_web.service.UserFeignService;
 import cn.feignclient.credit_feign_web.service.tds.TdsUserFeignService;
+import cn.feignclient.credit_feign_web.utils.CommonUtils;
 import main.java.cn.common.BackResult;
 import main.java.cn.common.RedisKeys;
 import main.java.cn.common.ResultCode;
 import main.java.cn.domain.CreUserDomain;
 import main.java.cn.domain.tds.TdsUserDomain;
+import main.java.cn.sms.util.AdminSmsUtil;
 
-public class TdsBaseController {
+public class BaseTdsController {
+	
+	
+	private final static Logger logger = LoggerFactory.getLogger(BaseTdsController.class);
 	
 	@Autowired
 	protected RedisClient redisClinet;
@@ -37,6 +44,7 @@ public class TdsBaseController {
 	
 	@Autowired
 	private RedisTemplate<String, CreUserDomain> redisTemplate;
+	
 
 	@InitBinder
 	protected void initBinder(WebDataBinder binder) {
@@ -44,6 +52,50 @@ public class TdsBaseController {
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
 	}
 
+	
+	
+	/**
+	 * 用户是否登录
+	 * @param
+	 */
+	public Boolean isAdminLogin(String mobile, String token) {
+
+
+		// 获取用户登录时的token
+		String redisToken = redisClinet.get("tds_user_token_" + mobile);
+
+
+		if (CommonUtils.isNotString(redisToken)) {
+			 return false;
+		}
+
+		return redisToken.equals(token) ? true : false;
+	}
+	
+	
+	//发送验证码
+	public boolean clickeCode(String mobile,String key) {
+
+		boolean flag = true;
+		try {
+
+			String code = AdminSmsUtil.generateCode(5);
+			// 发送短信
+			AdminSmsUtil.getInstance().sendAdminSmsByMobile(mobile, code);
+
+			// code 存入 redis
+			redisClinet.set(key, code, 60);
+
+			logger.info(mobile + "：验证码是：" + code);
+
+		} catch (Exception e) {
+			flag = false;
+			logger.error("验证码获取异常", e.getMessage());
+		}
+
+		return flag;
+	}
+	
 	
 	/**
 	 * 根据手机号码获取用户对象 (缓存30分钟)
@@ -88,6 +140,7 @@ public class TdsBaseController {
 		return ip;
 	}
 
+	
 	/**
 	 * 根据手机号码获取用户对象 (缓存30分钟)
 	 * @param mobile
@@ -107,31 +160,9 @@ public class TdsBaseController {
 				redisTemplateTds.opsForValue().set(skey, tdsUserDomain, 30 * 60, TimeUnit.SECONDS);
 			}
 		} 
+		
 		return tdsUserDomain;
 	}
-	
-	
-//	/**
-//	 * 根据手机号码获取用户对象 (缓存30分钟)
-//	 * @param mobile
-//	 * @return tds
-//	 */
-//	protected TdsUserDomain getUserModuRole(Integer userId) {
-//
-//		List<TdsFunctionDomain> tdsFunctionDomain = new ArrayList<TdsFunctionDomain>();
-//		String skey = RedisKeys.getInstance().getUserInfokey(userId);
-//		tdsFunctionDomain= redisTemplateTdList.opsForValue().get(skey);
-//
-//		if (null == tdsFunctionDomain) {
-//			BackResult<List<TdsFunctionDomain>> result = tdsUserLoginFeignService.moduleLoadingByUsreId(userId);
-//
-//			if (result.getResultCode().equals(ResultCode.RESULT_SUCCEED)) {
-//				tdsFunctionDomain = result.getResultObj();
-//				redisTemplateTds.opsForValue().set(skey, tdsFunctionDomain, 30 * 60, TimeUnit.SECONDS);
-//			}
-//		} 
-//		return tdsFunctionDomain;
-//	}
 	
 	
 	
@@ -142,7 +173,6 @@ public class TdsBaseController {
 		BackResult<TdsUserDomain> result = tdsUserFeignService.loadByPhone(mobile);
 		String skey = RedisKeys.getInstance().getUserInfokey(mobile);
 		redisTemplateTds.opsForValue().set(skey,result.getResultObj(),30 * 60, TimeUnit.SECONDS);
-	 
 	}
 	
 }
