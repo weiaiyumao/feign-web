@@ -5,7 +5,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import cn.feignclient.credit_feign_web.controller.BaseController;
 import cn.feignclient.credit_feign_web.service.tds.TdsUserLoginFeignService;
 import cn.feignclient.credit_feign_web.utils.CommonUtils;
 import main.java.cn.common.BackResult;
@@ -75,7 +73,7 @@ public class TdsLoginUserController extends BaseTdsController {
 		// redisClinet.remove("tdsse_ken_" + mobile);//
 		redisClinet.set("tds_user_token_" + result.getResultObj().getPhone(), tokenUserPhone);
 		result.getResultObj().setToken(tokenUserPhone);// 保存tonke
-		logger.info("=========用户名：" + name + "用户登录============");
+		//logger.info("=========用户名：" + name + "用户登录============");
 		return result;
 	}
 
@@ -109,7 +107,7 @@ public class TdsLoginUserController extends BaseTdsController {
 		// TODO moduleLoadingByUsreId==redis保存
 
 		// end
-		logger.info("用户id:" + userId + "==========模块加载成功============！");
+		logger.info("用户id:" + userId + "模块加载成功");
 		return result;
 
 	}
@@ -131,7 +129,6 @@ public class TdsLoginUserController extends BaseTdsController {
 			result.setResultMsg("token不能为空");
 			return result;
 		}
-		// logger.info("用户id:"+userId+"==========功能加载成功============！");
 		result = tdsUserLoginFeignService.loadingByUsreIdRole(userId);
 		return result;
 	}
