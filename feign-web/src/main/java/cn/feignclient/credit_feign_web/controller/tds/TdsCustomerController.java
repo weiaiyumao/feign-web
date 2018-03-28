@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,6 +27,8 @@ import main.java.cn.domain.tds.TdsCustomerViewDomain;
 import main.java.cn.domain.tds.TdsUserDiscountDomain;
 import main.java.cn.domain.tds.TdsUserDomain;
 import main.java.cn.enums.TdsEnum.CUSTOMERSTYPE;
+import main.java.cn.enums.TdsEnum.ISBUND_PHONE;
+import main.java.cn.sms.util.AdminSmsUtil;
 
 /**
  * 客服列表
@@ -49,6 +52,8 @@ public class TdsCustomerController extends BaseTdsController{
 	@Autowired
 	private TdsUserRoleFeignService tdsUserRoleFeignService;
 
+	@Value("${isSmsAdmin}")
+	private boolean isSmsAdmin;
 	
 	/**
 	 * 修改编辑客户信息
@@ -95,20 +100,11 @@ public class TdsCustomerController extends BaseTdsController{
 		if (CommonUtils.isNotString(domain.getUserName())) {
 			return BackResult.error("客户名称不能为空");
 		}
-		
-		if (CommonUtils.isNotString(domain.getPhone())) {
-			return BackResult.error("手机号码不能为空");
-		}
-		
-		if (CommonUtils.isNotString(passWord)) {
-			return BackResult.error("密码不能为空");
-		}
-		
+			
 //		if(!this.isAdminLogin(moblie, token)){
 //			return BackResult.error("用户为登录");
 //		}
-		
-		return tdsCustomerFeignService.addTdsCustomer(domain, loginUserId, passWord);
+		return tdsCustomerFeignService.addTdsCustomer(domain, loginUserId, "a123456");
 
 	}
 
@@ -320,7 +316,7 @@ public class TdsCustomerController extends BaseTdsController{
 	 * @return
 	 */
 	@RequestMapping(value = "/isAgree", method = RequestMethod.POST)
-	public BackResult<Integer> isAgree(Integer isAgree,Integer userId,String reas,String token){
+	public BackResult<Integer> isAgree(String isAgree,Integer userId,String reas,String token,String moblie){
 		BackResult<Integer> result=new BackResult<Integer>();
 		if (CommonUtils.isNotString(token)) {
 			 return new BackResult<Integer>(ResultCode.RESULT_PARAM_EXCEPTIONS,"token不能为空");
@@ -328,10 +324,19 @@ public class TdsCustomerController extends BaseTdsController{
 		if (CommonUtils.isNotIngeter(userId)) {
 			 return new BackResult<Integer>(ResultCode.RESULT_PARAM_EXCEPTIONS,"用户id不能为空");
 		}
-		if (CommonUtils.isNotIngeter(isAgree)) {
-			 return new BackResult<Integer>(ResultCode.RESULT_PARAM_EXCEPTIONS,"操作<isAgree>参数不能为空");
-		}
+		
 		result=tdsCustomerFeignService.isAgree(isAgree, userId, reas);
+		 
+		//短信发送
+		if(result.getResultCode().equals(ResultCode.RESULT_SUCCEED) && isSmsAdmin){
+		
+			if(isAgree.equals(CUSTOMERSTYPE.NORMAL.getCode()))
+				AdminSmsUtil.getInstance().sendAdminSmsByCustomer(moblie,true);  //审核通过，短信发送
+			else
+				AdminSmsUtil.getInstance().sendAdminSmsByCustomer(moblie,false); //审核驳回，短信发送
+			
+		}
+	    
 		return result;
 	}
 

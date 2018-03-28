@@ -69,7 +69,7 @@ public class TdsCarryController extends BaseController {
 		if (CommonUtils.isNotString(type)) {
 			return new BackResult<>(ResultCode.RESULT_PARAM_EXCEPTIONS, "type不能为空(提款方式)");
 		}
-		logger.info("用户："+domain.getUserId()+": 提款佣金:"+domain.getCarrMoney()+"+=====");
+		logger.info("用户ID："+domain.getUserId()+" 提款佣金:"+domain.getCarrMoney()+"");
 		return tdsCarryFeignService.getSubCarry(domain, type);
 	}
 	

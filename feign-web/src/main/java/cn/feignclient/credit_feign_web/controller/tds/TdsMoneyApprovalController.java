@@ -119,7 +119,8 @@ public class TdsMoneyApprovalController extends BaseController {
 			HttpServletRequest request, HttpServletResponse response) {
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
-		return tdsMoneyApprovalFeignService.pageApprovalByUpStatusOut(domain);
+		 BackResult<PageDomain<TdsApprovalOutDomain>> result=tdsMoneyApprovalFeignService.pageApprovalByUpStatusOut(domain);
+		return result;
 	}
 	
 	/**
@@ -128,12 +129,18 @@ public class TdsMoneyApprovalController extends BaseController {
 	 * @param domain
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/updatePageApprovalByUpStatus", method = RequestMethod.POST)
 	public BackResult<Integer> updatePageApprovalByUpStatus(String userId, String tdsCarryId, String status,String remarks,
-			HttpServletRequest request, HttpServletResponse response) {
+			HttpServletRequest request, HttpServletResponse response,String order,String token) {
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
-		return tdsMoneyApprovalFeignService.updatePageApprovalByUpStatus(userId,tdsCarryId,status,remarks);
+		
+		if (CommonUtils.isNotString(token)) {
+			return BackResult.error("token不能为空");
+		}
+		
+		return tdsMoneyApprovalFeignService.updatePageApprovalByUpStatus(userId,tdsCarryId,status,remarks,order);
 	}
 	
 	/**

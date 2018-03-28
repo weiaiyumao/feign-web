@@ -72,7 +72,7 @@ public interface TdsMoneyApprovalFeignService {
 	 */
 	@RequestMapping(value = "/moneyApproval/updatePageApprovalByUpStatus", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public BackResult<Integer> updatePageApprovalByUpStatus(@RequestParam("userId") String userId,@RequestParam("tdsCarryId") String tdsCarryId,
-			@RequestParam("status") String status,@RequestParam("remarks") String remarks);
+			@RequestParam("status") String status,@RequestParam("remarks") String remarks,@RequestParam("order") String order);
 	
 	/**
 	 * 退账分页查询

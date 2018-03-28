@@ -1,5 +1,8 @@
 package cn.feignclient.credit_feign_web.controller.tds;
 
+import java.util.List;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -156,5 +159,11 @@ public class TdsAccounBankController extends BaseController{
 	}
 	
 	
+	
+	@RequestMapping(value = "/selectAllBankName")
+	public BackResult<List<Map<String, Object>>> selectAllBankName(){
+		BackResult<List<Map<String, Object>>> result=tdsAccounBankFeignService.selectAllBankName();
+        return result;
+	}
 
 }

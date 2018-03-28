@@ -54,6 +54,6 @@ public interface TdsCustomerFeignService {
 	
 	
 	@RequestMapping(value = "/customer/isAgree", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public BackResult<Integer> isAgree(@RequestParam("isAgree")Integer isAgree,@RequestParam("userId")Integer userId,@RequestParam("reas")String reas);
+	public BackResult<Integer> isAgree(@RequestParam("isAgree")String isAgree,@RequestParam("userId")Integer userId,@RequestParam("reas")String reas);
 
 }

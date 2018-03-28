@@ -57,13 +57,13 @@ public class TdsMoneyApprovalFeignServiceHiHystric implements TdsMoneyApprovalFe
 		return new BackResult<>(ResultCode.RESULT_FAILED, "user-provider-service服务pageCommission出现异常");
 	}
 
-	@Override
+	@Override 
 	public BackResult<PageDomain<TdsApprovalOutDomain>> pageApprovalByUpStatusOut(TdsApprovalOutQueryDomain domain) {
 		return new BackResult<PageDomain<TdsApprovalOutDomain>>(ResultCode.RESULT_FAILED, "user-provider-service服务pageApprovalByUpStatusOut出现异常");
 	}
 
 	@Override
-	public BackResult<Integer> updatePageApprovalByUpStatus(String userId, String tdsCarryId, String status,String remarks) {
+	public BackResult<Integer> updatePageApprovalByUpStatus(String userId, String tdsCarryId, String status,String remarks,String order) {
 		return new BackResult<Integer>(ResultCode.RESULT_FAILED, "user-provider-service服务updatePageApprovalByUpStatus出现异常");
 	}
 
