@@ -33,7 +33,6 @@ public class TdsFunctionController extends BaseController {
 	private TdsFunctionFeignService tdsFunctionFeignService;
 	
 	
-	
 	/**
 	 * 查询所有
 	 * @param parentId
@@ -43,11 +42,13 @@ public class TdsFunctionController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(value = "/selectAll", method = RequestMethod.POST)
-	public BackResult<List<TdsFunctionDomain>> selectAll(Integer parentId, HttpServletRequest request, HttpServletResponse response,
+	public BackResult<List<TdsFunctionDomain>> selectAllByParentId(Integer parentId, HttpServletRequest request, HttpServletResponse response,
 			String token) {
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
-		return tdsFunctionFeignService.selectAll(parentId);
+		TdsFunctionDomain domain=new TdsFunctionDomain();
+		domain.setParentId(parentId);
+		return tdsFunctionFeignService.selectAll(domain);
 	}
 	
 	

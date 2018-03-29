@@ -26,7 +26,7 @@ public interface TdsFunctionFeignService {
 	public BackResult<Integer> save(TdsFunctionDomain tdsFunctionDomain);
 	
 	@RequestMapping(value="/function/update",method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
-    public BackResult<Integer>  update(TdsFunctionDomain TdsFunctionDomain);
+    public BackResult<Integer>  update(TdsFunctionDomain tdsFunctionDomain);
 	
 	@RequestMapping(value="/function/deleteById",method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
 	public BackResult<Integer> deleteById(@RequestParam("id")Integer id);
@@ -44,6 +44,6 @@ public interface TdsFunctionFeignService {
 	
 
 	@RequestMapping(value = "/function/selectAll", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public BackResult<List<TdsFunctionDomain>> selectAll(@RequestParam("parentId")Integer parentId);
+	public BackResult<List<TdsFunctionDomain>> selectAll(TdsFunctionDomain domain);
 	
 }
