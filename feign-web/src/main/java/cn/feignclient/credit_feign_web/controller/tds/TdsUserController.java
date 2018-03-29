@@ -114,8 +114,7 @@ public class TdsUserController extends BaseTdsController {
 		
 		String isCode=redisClinet.get(codeKey);
 		
-		//HttpSession session = request.getSession();
-		
+		//HttpSession session = request.getSession();	
 		//String isCode = (String) session.getAttribute("adminRegisterCode_"+tdsUserDomain.getPhone());
 		
 		if(CommonUtils.isNotString(isCode)){
@@ -135,8 +134,6 @@ public class TdsUserController extends BaseTdsController {
 		tdsUserDomain.setSource(StatusType.ADD_REGISTER);
 		
 		tdsUserDomain.setLoginIp(this.getIpAddr(request));
-		
-		tdsUserDomain.setIsDeleted("0");
 		
 		result = tdsUserFeignService.save(tdsUserDomain);
 		

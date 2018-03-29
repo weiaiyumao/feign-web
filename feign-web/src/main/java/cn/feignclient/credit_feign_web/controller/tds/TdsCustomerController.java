@@ -28,6 +28,7 @@ import main.java.cn.domain.tds.TdsUserDiscountDomain;
 import main.java.cn.domain.tds.TdsUserDomain;
 import main.java.cn.enums.TdsEnum.CUSTOMERSTYPE;
 import main.java.cn.enums.TdsEnum.ISBUND_PHONE;
+import main.java.cn.enums.TdsEnum.USERSTATUS;
 import main.java.cn.sms.util.AdminSmsUtil;
 
 /**
@@ -132,13 +133,12 @@ public class TdsCustomerController extends BaseTdsController{
 			return BackResult.error("类型值不能为空");
 		}
 		
-		if(customerType.equals(CUSTOMERSTYPE.NORMAL.getCode())){
-			//正常显示
-			domain.setIsDeleted(CUSTOMERSTYPE.NORMAL.getCode()); 
-			
+		if(customerType.equals(USERSTATUS.PASST.getCode())){
+			//正常
+			domain.setStatus(USERSTATUS.PASST.getCode());
 		}else{
-			//未审核
-			domain.setIsDeleted(CUSTOMERSTYPE.APPROVAL.getCode());
+			//申请中
+			domain.setStatus(USERSTATUS.PLEASE.getCode());
 		}
 
 		return tdsCustomerFeignService.pageTdsCustomer(domain);

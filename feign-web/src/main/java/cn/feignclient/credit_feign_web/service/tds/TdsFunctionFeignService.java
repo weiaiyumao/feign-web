@@ -22,9 +22,11 @@ public interface TdsFunctionFeignService {
 	@RequestMapping(value = "/function/loadByIdView", method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
     public BackResult<TdsFunMoViewDomain> loadByIdView(@RequestParam("id")Integer id);
 	
+	
 	@RequestMapping(value="/function/save",method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
 	public BackResult<Integer> save(TdsFunctionDomain tdsFunctionDomain);
 	
+
 	@RequestMapping(value="/function/update",method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
     public BackResult<Integer>  update(TdsFunctionDomain tdsFunctionDomain);
 	
@@ -45,5 +47,25 @@ public interface TdsFunctionFeignService {
 
 	@RequestMapping(value = "/function/selectAll", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public BackResult<List<TdsFunctionDomain>> selectAll(TdsFunctionDomain domain);
+	
+	
+	
+	
+	
+	
+	@RequestMapping(value = "/function/loadById", method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
+    public BackResult<TdsFunctionDomain> loadById(@RequestParam("id")Integer id);
+	
+	
+	@RequestMapping(value="/function/saveModular",method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
+	public BackResult<Integer> saveModular(TdsFunctionDomain tdsFunctionDomain);
+	
+	
+	
+	@RequestMapping(value="/function/updateModular",method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
+    public BackResult<Integer>  updateModular(@RequestParam("name")String name,@RequestParam("selectedId")Integer selectedId,@RequestParam("newId")Integer newId,
+    		@RequestParam("arrModulars")String arrModulars);
+	
+	
 	
 }

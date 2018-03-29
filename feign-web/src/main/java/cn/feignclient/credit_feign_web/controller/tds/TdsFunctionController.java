@@ -33,22 +33,31 @@ public class TdsFunctionController extends BaseController {
 	private TdsFunctionFeignService tdsFunctionFeignService;
 	
 	
-	/**
-	 * 查询所有
-	 * @param parentId
-	 * @param request
-	 * @param response
-	 * @param token
-	 * @return
-	 */
-	@RequestMapping(value = "/selectAll", method = RequestMethod.POST)
-	public BackResult<List<TdsFunctionDomain>> selectAllByParentId(Integer parentId, HttpServletRequest request, HttpServletResponse response,
-			String token) {
+//	/**
+//	 * 查询所有
+//	 * @param parentId
+//	 * @param request
+//	 * @param response
+//	 * @param token
+//	 * @return
+//	 */
+//	@RequestMapping(value = "/selectAll", method = RequestMethod.POST)
+//	public BackResult<List<TdsFunctionDomain>> selectAllByParentId(Integer parentId, HttpServletRequest request, HttpServletResponse response,
+//			String token) {
+//		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
+//		response.setContentType("text/json;charset=UTF-8");
+//		TdsFunctionDomain domain=new TdsFunctionDomain();
+//		domain.setParentId(parentId);
+//		return tdsFunctionFeignService.selectAll(domain);
+//	}
+	
+	
+	@RequestMapping(value="selectAll")
+	public BackResult<List<TdsFunctionDomain>> selectAll(TdsFunctionDomain tdsFunctionDomain,HttpServletResponse response){
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
-		TdsFunctionDomain domain=new TdsFunctionDomain();
-		domain.setParentId(parentId);
-		return tdsFunctionFeignService.selectAll(domain);
+		//查询所有
+		return tdsFunctionFeignService.selectAll(tdsFunctionDomain);
 	}
 	
 	
@@ -80,19 +89,13 @@ public class TdsFunctionController extends BaseController {
 			return result;
 		}
 		
-		if (CommonUtils.isNotString(tdsFunctionDomain.getUrl())) {
-			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
-			result.setResultMsg("url不能为空");
-			return result;
-		}
-		
 		if (CommonUtils.isNotString(token)) {
 			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
 			result.setResultMsg("token不能为空");
 			return result;
 		}
-		String strArr=StringUtils.join(arrFuns, ",");
-		tdsFunctionDomain.setRemarks(strArr);
+		//String strArr=StringUtils.join(arrFuns, ",");
+		//tdsFunctionDomain.setRemarks(strArr);
 		result = tdsFunctionFeignService.save(tdsFunctionDomain);
 		return result;
 	}

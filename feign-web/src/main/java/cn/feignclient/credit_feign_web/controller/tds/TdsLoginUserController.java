@@ -22,6 +22,7 @@ import main.java.cn.domain.tds.TdsUserDomain;
 import main.java.cn.hhtp.util.MD5Util;
 
 @RestController
+@SuppressWarnings("unchecked")
 @RequestMapping("/userLogin")
 public class TdsLoginUserController extends BaseTdsController {
 
@@ -41,19 +42,15 @@ public class TdsLoginUserController extends BaseTdsController {
 		response.setContentType("text/json;charset=UTF-8");
 		BackResult<TdsUserDomain> result = new BackResult<TdsUserDomain>();
 		if (CommonUtils.isNotString(name)) {
-			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
-			result.setResultMsg("用户账号不能为空");
-			return result;
+			return BackResult.error("用户账号不能为空");
 		}
 
 		if (CommonUtils.isNotString(passWord)) {
-			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
-			result.setResultMsg("密码不能为空");
-			return result;
+			return BackResult.error("密码不能为空");
 		}
 
 		TdsUserDomain tdsUserDomain = new TdsUserDomain();
-		tdsUserDomain.setPhone(name); // 手机号码
+		tdsUserDomain.setPhone(name); // 手机号码注册
 		// 密码加密
 		tdsUserDomain.setPassword(MD5Util.getInstance().getMD5Code(passWord)); // 先加密判断
 		// ip获取
@@ -62,7 +59,7 @@ public class TdsLoginUserController extends BaseTdsController {
 		result = tdsUserLoginFeignService.login(tdsUserDomain);
 		// 登录失败
 		if (result.getResultCode().equals(ResultCode.RESULT_FAILED)) {
-			return new BackResult<>(ResultCode.RESULT_FAILED, result.getResultMsg());
+			return BackResult.error(result.getResultMsg());
 		}
 		// 生成tonke
 		String tokenUserPhone = MD5Util.getInstance().getMD5Code("tds_user_token_" + result.getResultObj().getPhone());
@@ -73,7 +70,6 @@ public class TdsLoginUserController extends BaseTdsController {
 		// redisClinet.remove("tdsse_ken_" + mobile);//
 		redisClinet.set("tds_user_token_" + result.getResultObj().getPhone(), tokenUserPhone);
 		result.getResultObj().setToken(tokenUserPhone);// 保存tonke
-		//logger.info("=========用户名：" + name + "用户登录============");
 		return result;
 	}
 
@@ -90,25 +86,18 @@ public class TdsLoginUserController extends BaseTdsController {
 			HttpServletResponse response, String token) {
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
-		BackResult<List<TdsModularDomain>> result = new BackResult<List<TdsModularDomain>>();
 
 		if (CommonUtils.isNotIngeter(userId)) {
-			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
-			result.setResultMsg("用户id不能为空");
-			return result;
+			return BackResult.error("用户id不能为空");
 		}
 		if (CommonUtils.isNotString(token)) {
-			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
-			result.setResultMsg("token不能为空");
-			return result;
+			return BackResult.error("token不能为空");
 		}
-		result = tdsUserLoginFeignService.moduleLoadingByUsreId(userId);
 
 		// TODO moduleLoadingByUsreId==redis保存
 
 		// end
-		logger.info("用户id:" + userId + "模块加载成功");
-		return result;
+		return tdsUserLoginFeignService.moduleLoadingByUsreId(userId);
 
 	}
 
@@ -117,22 +106,19 @@ public class TdsLoginUserController extends BaseTdsController {
 			HttpServletResponse response, String token) {
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
-		BackResult<List<TdsFunctionDomain>> result = new BackResult<List<TdsFunctionDomain>>();
 
 		if (CommonUtils.isNotIngeter(userId)) {
-			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
-			result.setResultMsg("用户userId不能为空");
-			return result;
+			return BackResult.error("用户id不能为空");
 		}
+		
 		if (CommonUtils.isNotString(token)) {
-			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
-			result.setResultMsg("token不能为空");
-			return result;
+			return BackResult.error("token不能为空");
 		}
-		result = tdsUserLoginFeignService.loadingByUsreIdRole(userId);
-		return result;
+		
+		return tdsUserLoginFeignService.loadingByUsreIdRole(userId);
 	}
 
+	
 	@RequestMapping("/signOut")
 	public BackResult<Boolean> signOut(String mobile, String token, HttpServletRequest request,
 			HttpServletResponse response) {
@@ -141,15 +127,11 @@ public class TdsLoginUserController extends BaseTdsController {
 		BackResult<Boolean> result = new BackResult<Boolean>();
 
 		if (CommonUtils.isNotString(mobile)) {
-			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
-			result.setResultMsg("手机号码不能为空");
-			return result;
+			return BackResult.error("手机号码不能为空");
 		}
 
 		if (CommonUtils.isNotString(token)) {
-			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
-			result.setResultMsg("token不能为空");
-			return result;
+			return BackResult.error("token不能为空");
 		}
 
 		redisClinet.remove("tds_user_token_" + mobile); // 清空token
