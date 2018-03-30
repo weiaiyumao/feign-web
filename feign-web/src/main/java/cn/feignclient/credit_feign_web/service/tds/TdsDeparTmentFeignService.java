@@ -1,6 +1,7 @@
 package cn.feignclient.credit_feign_web.service.tds;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.http.MediaType;
@@ -26,6 +27,9 @@ public interface TdsDeparTmentFeignService {
 
 	@RequestMapping(value = "/super/selectAll", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public BackResult<List<TdsDepartmentDomain>> selectAll(TdsDepartmentDomain domain);
+	
+	@RequestMapping(value = "/super/getDepartmentByUserId", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public BackResult<List<Map<String,String>>> getDepartmentByUserId(@RequestParam("userId") Integer userId);
 
 	@RequestMapping(value = "/super/addUserConfig", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public BackResult<Integer> addUserConfig(@RequestParam("name") String name, @RequestParam("passWord") String passWord,
