@@ -67,5 +67,8 @@ public interface TdsFunctionFeignService {
     		@RequestParam("arrModulars")String arrModulars);
 	
 	
+	@RequestMapping(value="/function/pageByModular",method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
+	public BackResult<PageDomain<Map<String,Object>>> pageByModular(@RequestParam("name")String name,BasePageParam basePageParam);
+	
 	
 }

@@ -60,6 +60,7 @@ public class TdsLoginUserController extends BaseTdsController {
 		}
 		// 生成tonke
 		String tokenUserPhone = MD5Util.getInstance().getMD5Code("tds_user_token_" + result.getResultObj().getPhone());
+		
 		// 根据电话保存对象redis
 		this.getUserInfo(result.getResultObj().getPhone());
 
@@ -70,36 +71,7 @@ public class TdsLoginUserController extends BaseTdsController {
 		return result;
 	}
 
-//	/**
-//	 * 模块加载
-//	 * 
-//	 * @param userId
-//	 * @param request
-//	 * @param response
-//	 * @return
-//	 */
-//	@RequestMapping("/moduleLoadingByUsreId")
-//	public BackResult<List<TdsModularDomain>> moduleLoadingByUsreId(Integer userId, HttpServletRequest request,
-//			HttpServletResponse response, String token) {
-//		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
-//		response.setContentType("text/json;charset=UTF-8");
-//
-//		if (CommonUtils.isNotIngeter(userId)) {
-//			return BackResult.error("用户id不能为空");
-//		}
-//		if (CommonUtils.isNotString(token)) {
-//			return BackResult.error("token不能为空");
-//		}
-//
-//		// TODO moduleLoadingByUsreId==redis保存
-//
-//		// end
-//		return tdsUserLoginFeignService.moduleLoadingByUsreId(userId);
-//
-//	}
-//	
-     
-	
+     	
 	/**
 	 * 菜单渲染
 	 * @param userId
