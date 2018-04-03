@@ -1,10 +1,10 @@
 package cn.feignclient.credit_feign_web.service.tds;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -39,4 +39,11 @@ public interface TdsRoleFeignService {
 	
 	@RequestMapping(value = "/role/pageByRole", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public BackResult<PageDomain<TdsRoleDomain>> pageByRole(@RequestParam("roleName")String roleName,BasePageParam basePageParam);
+	
+	
+	@RequestMapping(value = "/role/upArrByRoleId", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public BackResult<Integer> upArrByRoleId(@RequestParam("roleId") Integer roleId,@RequestParam("soleName")String soleName,@RequestParam("arrfuns")Integer[] arrfuns);
+
+	@RequestMapping(value = "/role/selectBydRoleId", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public BackResult<Map<String,Object>> selectBydRoleId(@RequestParam("roleId")Integer roleId);
 }

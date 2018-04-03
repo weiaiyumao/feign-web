@@ -38,6 +38,7 @@ public class TdsModularController extends BaseController {
 		return tdsFunctionFeignService.selectAll(tdsFunctionDomain);
 	}
 	
+	
 	@RequestMapping(value = "/loadById", method = RequestMethod.POST)
 	public BackResult<TdsFunctionDomain> loadById(Integer id,HttpServletResponse response,
 			String token) {

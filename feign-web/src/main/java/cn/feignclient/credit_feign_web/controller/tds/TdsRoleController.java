@@ -1,6 +1,7 @@
 package cn.feignclient.credit_feign_web.controller.tds;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -174,8 +175,7 @@ public class TdsRoleController extends BaseController {
 			result.setResultMsg("roleId不能为空");
 			return result;
 		}
-		result = tdsRoleFeignService.loadingBydRoleId(roleId);
-		return result;
+		return tdsRoleFeignService.loadingBydRoleId(roleId);
 	}
 	
 	
@@ -186,4 +186,9 @@ public class TdsRoleController extends BaseController {
 		return result;
 	}
 
+	
+	@RequestMapping(value = "/selectBydRoleId", method = RequestMethod.POST)
+	public BackResult<Map<String,Object>> selectBydRoleId(Integer roleId){
+		return tdsRoleFeignService.selectBydRoleId(roleId);
+	}
 }

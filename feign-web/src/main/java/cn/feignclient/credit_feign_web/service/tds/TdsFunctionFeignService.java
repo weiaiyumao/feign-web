@@ -19,9 +19,6 @@ import main.java.cn.domain.tds.TdsFunctionDomain;
 @FeignClient(value = "user-provider-service")
 public interface TdsFunctionFeignService {
 	
-	@RequestMapping(value = "/function/loadByIdView", method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
-    public BackResult<TdsFunMoViewDomain> loadByIdView(@RequestParam("id")Integer id);
-	
 	
 	@RequestMapping(value="/function/save",method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
 	public BackResult<Integer> save(TdsFunctionDomain tdsFunctionDomain);
@@ -42,7 +39,7 @@ public interface TdsFunctionFeignService {
 	
 
 	@RequestMapping(value="/function/pageByFunction",method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
-	public BackResult<PageDomain<Map<String,Object>>> pageByFunction(@RequestParam("name")String name,BasePageParam basePageParam);
+	public BackResult<PageDomain<Map<String,Object>>> pageByFunction(@RequestParam("name")String name,BasePageParam basePageParam,@RequestParam("url")String url);
 	
 
 	@RequestMapping(value = "/function/selectAll", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)

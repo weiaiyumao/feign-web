@@ -20,7 +20,6 @@ import main.java.cn.common.BackResult;
 import main.java.cn.common.ResultCode;
 import main.java.cn.domain.page.BasePageParam;
 import main.java.cn.domain.page.PageDomain;
-import main.java.cn.domain.tds.TdsFunMoViewDomain;
 import main.java.cn.domain.tds.TdsFunctionDomain;
 
 @RestController
@@ -32,24 +31,6 @@ public class TdsFunctionController extends BaseController {
 	@Autowired
 	private TdsFunctionFeignService tdsFunctionFeignService;
 	
-	
-//	/**
-//	 * 查询所有
-//	 * @param parentId
-//	 * @param request
-//	 * @param response
-//	 * @param token
-//	 * @return
-//	 */
-//	@RequestMapping(value = "/selectAll", method = RequestMethod.POST)
-//	public BackResult<List<TdsFunctionDomain>> selectAllByParentId(Integer parentId, HttpServletRequest request, HttpServletResponse response,
-//			String token) {
-//		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
-//		response.setContentType("text/json;charset=UTF-8");
-//		TdsFunctionDomain domain=new TdsFunctionDomain();
-//		domain.setParentId(parentId);
-//		return tdsFunctionFeignService.selectAll(domain);
-//	}
 	
 	
 	@RequestMapping(value="selectAll")
@@ -63,18 +44,18 @@ public class TdsFunctionController extends BaseController {
 	
 	
 
-	@RequestMapping(value = "/loadByIdView", method = RequestMethod.POST)
-	public BackResult<TdsFunMoViewDomain> loadByIdView(Integer id, HttpServletRequest request, HttpServletResponse response,
+	@RequestMapping(value = "/loadById", method = RequestMethod.POST)
+	public BackResult<TdsFunctionDomain> loadById(Integer id, HttpServletRequest request, HttpServletResponse response,
 			String token) {
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
-		BackResult<TdsFunMoViewDomain> result = new BackResult<TdsFunMoViewDomain>();
+		BackResult<TdsFunctionDomain> result = new BackResult<TdsFunctionDomain>();
 		if (CommonUtils.isNotIngeter(id)) {
 			result.setResultCode(ResultCode.RESULT_PARAM_EXCEPTIONS);
 			result.setResultMsg("id不能为空");
 			return result;
 		}
-		result = tdsFunctionFeignService.loadByIdView(id);
+		result = tdsFunctionFeignService.loadById(id);
 		return result;
 	}
 
@@ -94,10 +75,7 @@ public class TdsFunctionController extends BaseController {
 			result.setResultMsg("token不能为空");
 			return result;
 		}
-		//String strArr=StringUtils.join(arrFuns, ",");
-		//tdsFunctionDomain.setRemarks(strArr);
-		result = tdsFunctionFeignService.save(tdsFunctionDomain);
-		return result;
+		return tdsFunctionFeignService.save(tdsFunctionDomain);
 	}
 	
 	
@@ -142,16 +120,6 @@ public class TdsFunctionController extends BaseController {
 	}
 	
 	
-//	@RequestMapping(value="/pageTdsFunction",method = RequestMethod.POST)
-//	public BackResult<PageDomain<TdsFunMoViewDomain>> pageTdsFunction(TdsFunMoViewDomain domain,HttpServletRequest request, HttpServletResponse response,String token){
-//		BackResult<PageDomain<TdsFunMoViewDomain>> result = new BackResult<PageDomain<TdsFunMoViewDomain>>();
-//		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
-//		response.setContentType("text/json;charset=UTF-8");
-//		result = tdsFunctionFeignService.pageTdsFunction(domain);
-//		return result;
-//	}
-	
-	
     @RequestMapping(value="/queryFunction",method = RequestMethod.POST)
     public BackResult<List<TdsFunctionDomain>> queryFunction(HttpServletRequest request, HttpServletResponse response){
     	BackResult<List<TdsFunctionDomain>> result = new BackResult<List<TdsFunctionDomain>>();
@@ -163,11 +131,11 @@ public class TdsFunctionController extends BaseController {
 	
 	
 	@RequestMapping(value="/pageByFunction",method = RequestMethod.POST)
-	BackResult<PageDomain<Map<String,Object>>> pageByFunction(String name,BasePageParam basePageParam,HttpServletRequest request, HttpServletResponse response){
+	BackResult<PageDomain<Map<String,Object>>> pageByFunction(String name,BasePageParam basePageParam,String url, HttpServletResponse response){
 		BackResult<PageDomain<Map<String,Object>>> result = new BackResult<PageDomain<Map<String,Object>>>();
 		response.setHeader("Access-Control-Allow-Origin", "*"); // 有效，前端可以访问
 		response.setContentType("text/json;charset=UTF-8");
-		result = tdsFunctionFeignService.pageByFunction(name,basePageParam);
+		result = tdsFunctionFeignService.pageByFunction(name,basePageParam,url);
 		return result;
 	}
 

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import cn.feignclient.credit_feign_web.controller.BaseController;
 import cn.feignclient.credit_feign_web.service.tds.TdsDeparTmentFeignService;
+import cn.feignclient.credit_feign_web.service.tds.TdsRoleFeignService;
 import cn.feignclient.credit_feign_web.utils.CommonUtils;
 import main.java.cn.common.BackResult;
 import main.java.cn.common.ResultCode;
@@ -32,6 +33,9 @@ public class TdsDepartmentController extends BaseController {
 
 	@Autowired
 	private TdsDeparTmentFeignService tdsDeparTmentFeignService;
+	
+	@Autowired
+	private TdsRoleFeignService tdsRoleFeignService;
 
 	/**
 	 * 账号权限-配置列表
@@ -50,6 +54,7 @@ public class TdsDepartmentController extends BaseController {
 		return result;
 	}
 
+	
 	@RequestMapping(value = "funByUserId", method = RequestMethod.POST)
 	public BackResult<List<TdsFunctionDomain>> funByuserId(Integer userId, HttpServletRequest request,
 			HttpServletResponse response) {
@@ -151,8 +156,7 @@ public class TdsDepartmentController extends BaseController {
 		}
 		
 		TdsUserDomain loginUser = this.getUserInfo(loginMobile); // 获取登录用户信息
-		result = tdsDeparTmentFeignService.addUserConfig(name, passWord, phone, departmentId, positionId, comId,
-				arrRoles, loginUser.getId());
+		result = tdsDeparTmentFeignService.addUserConfig(name, passWord, phone, departmentId, positionId, comId, arrRoles, loginUser.getId());
 		return result;
 	}
 
@@ -188,6 +192,25 @@ public class TdsDepartmentController extends BaseController {
 		result = tdsDeparTmentFeignService.addCustomPermissions(soleName,loginUserId, arrfuns);
 		return result;
 
+	}
+	
+	
+	
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/upArrByRoleId", method = RequestMethod.POST)
+	public BackResult<Integer> upArrByfunId(Integer roleId,String soleName,Integer[] arrfuns){
+		
+		if(null==arrfuns || arrfuns.length<=0){
+			return BackResult.error("权限id不能为空");
+		}
+		if (CommonUtils.isNotIngeter(roleId)) {
+			return BackResult.error("roleId不能为空");
+		}
+		if (CommonUtils.isNotString(soleName)) {
+			return BackResult.error("soleName不能为空");
+		}
+		return tdsRoleFeignService.upArrByRoleId(roleId, soleName, arrfuns);
 	}
 	
 	

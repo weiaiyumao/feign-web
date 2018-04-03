@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import cn.feignclient.credit_feign_web.redis.RedisClient;
 import cn.feignclient.credit_feign_web.service.tds.TdsUserBankApyFeignServer;
 import cn.feignclient.credit_feign_web.service.tds.TdsUserFeignService;
+import cn.feignclient.credit_feign_web.service.tds.TdsUserRoleFeignService;
 import cn.feignclient.credit_feign_web.utils.CommonUtils;
 import main.java.cn.common.BackResult;
 import main.java.cn.common.ResultCode;
@@ -24,6 +25,8 @@ import main.java.cn.constants.RedisConstants;
 import main.java.cn.domain.tds.TdsCompanyDomain;
 import main.java.cn.domain.tds.TdsUserBankApyDomain;
 import main.java.cn.domain.tds.TdsUserDomain;
+import main.java.cn.domain.tds.TdsUserRoleDomain;
+import main.java.cn.enums.TdsEnum.ROLETYPE;
 
 @RestController
 @RequestMapping("/tdsUser")
@@ -36,6 +39,9 @@ public class TdsUserController extends BaseTdsController {
 	
 	@Autowired
 	private TdsUserBankApyFeignServer tdsUserBankApyFeignServer;
+	
+	@Autowired
+	private TdsUserRoleFeignService tdsUserRoleFeignService;
     
 	@Autowired
 	protected RedisClient redisClinet;
@@ -141,6 +147,12 @@ public class TdsUserController extends BaseTdsController {
 		if(!result.getResultCode().equals(ResultCode.RESULT_SUCCEED)){
 		      return result;
 		}
+		
+		//新用户默认为业务员角色  
+		TdsUserRoleDomain userRole=new TdsUserRoleDomain();
+		userRole.setUserId(result.getResultObj());
+		userRole.setRoleId(ROLETYPE.SALESMAN.getCode()); //业务员角色
+		tdsUserRoleFeignService.save(userRole);
 		
 		///add 绑定信息
 		TdsUserBankApyDomain domain=new TdsUserBankApyDomain();
